@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "why_inheritance", "why_inheritance\why_inheritance.vcxproj", "{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbj.org.samples", "dbj.org.samples\dbj.org.samples.vcxproj", "{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
