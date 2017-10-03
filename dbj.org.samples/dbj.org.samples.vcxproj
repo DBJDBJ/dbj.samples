@@ -148,9 +148,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.md" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />
