@@ -1,6 +1,6 @@
 
-#Modern C++ SAMPLES and LESSONS
-##As presented and used on https://dbj.org
+# Modern C++ SAMPLES and LESSONS 
+## As presented and used on https://dbj.org 
 
 -------------------------------------
 
