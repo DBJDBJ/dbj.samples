@@ -79,9 +79,34 @@ namespace dbj {
 			}
 		};
 
+/*
+No inhertiance! No name lookup issues.
+*/
+template <
+	typename LanguagePolicy = LanguagePolicyEnglish,
+	typename OutputPolicy = WideWriterPolicy >
+	class HelloWorld2
+{
+public:
+	// Behaviour method
+	void run( string msg)
+	{
+		// not made before this point; if ever.
+		static LanguagePolicy language{};
+		static OutputPolicy printer{};
+		// Two policy methods
+		printer.write( 
+			language.translate(msg)
+		);
+	}
+};
+
 		inline void test() {
 			HelloWorld<> hello{};
 			hello.run("Default policies");
+
+			HelloWorld2<> hello2{};
+			hello2.run("No inheritance");
 		}
 
 	} // namespace philology 
