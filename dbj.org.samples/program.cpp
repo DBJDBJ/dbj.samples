@@ -16,8 +16,14 @@ limitations under the License.
 
 #include "stdafx.h"
 
+template<typename T>
+struct TypeHolder {
+	using type = T;
+};
+
 int main()
 {
+	dbj::util::test();
 	dbj::documents::test();
 	dbj::philology::test();
 	return 0;

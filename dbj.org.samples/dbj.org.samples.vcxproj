@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dbj_aplikators.h" />
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />

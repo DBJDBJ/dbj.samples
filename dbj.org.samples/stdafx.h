@@ -35,14 +35,18 @@ implementation of http://en.cppreference.com/w/cpp/language/parameter_pack
 */
 #include <dbjio.h>
 using dbj::io::print;
+using dbj::io::printex;
 
 #include <memory>
 #include <string>
+#include <array>
+#include <vector>
 /* 
-    not 'lame'
+    this is not 'lame'
 	this makes you understand std:: is part of the language
 */
 using namespace std;
 
 #include "policy_classes.h"
 #include "no_inheritance.h"
+#include "dbj_aplikators.h"

@@ -100,13 +100,52 @@ public:
 		);
 	}
 };
+        
+inline void print_line( bool new_line = true, const size_t len_ = 80, const char chr_ = '-')  {
+	const string line_( len_, chr_ );
+		print("\n%",line_.data());
+    }
 
 		inline void test() {
-			HelloWorld<> hello{};
-			hello.run("Default policies");
 
-			HelloWorld2<> hello2{};
-			hello2.run("No inheritance");
+			auto measure = []( auto object, const char * msg = "" ) -> void {
+				print_line();
+#if 0
+				print( "\n%\nType name:\t%"
+					  "\nSpace requirements in bytes"
+					  "\nType:\t\t%"
+					  "\nInstance:\t%"
+					  "\nAllocation:\t%",
+					msg,
+					typeid(object).name(),
+					sizeof(decltype(object)),
+					sizeof(object),
+					alignof(decltype(object))
+				);
+				// printext bellow is easier to read
+#endif
+				printex("\n", msg,"\nType name:\t", typeid(object).name(),
+					"\nSpace requirements in bytes",
+					"\nType:\t\t" , sizeof(decltype(object)),
+					"\nInstance:\t", sizeof(object),
+					"\nAllocation:\t",	alignof(decltype(object))
+				);
+
+			};
+
+		HelloWorld<> hello{};
+		HelloWorld2<> hello2{};
+
+		print("\nBEFORE RUN\n");
+			measure(hello);
+			measure(hello2);
+			print_line();
+			hello.run("\nHelloWorld -- Default policies");
+			hello2.run("\nHelloWorld2 -- No inheritance");
+			print_line();
+			print("\nAFTER RUN\n");
+			measure(hello);
+			measure(hello2);
 		}
 
 	} // namespace philology 
