@@ -149,6 +149,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dbj_aplikators.h" />
+    <ClInclude Include="dbj_testing.h" />
+    <ClInclude Include="dbj_traits.h" />
+    <ClInclude Include="dbj_tuple_unpack.h" />
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />

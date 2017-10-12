@@ -136,12 +136,13 @@ namespace documents {
 	*/
 	inline int opendoc(Document & doc, string name) { return doc.open(name); }
 
-	inline void test() {
+	auto dumsy = dbj::testing::add(
+		[]() -> void {
 		/* OPTIONAL: configure the docops to use online operations 
 		*/
 		auto ot = docops::operations_type(docops::IOperation::type::online);
 		TextDoc text;
 		opendoc(text, "world oyster");
-	}
+	});
 }
 } // dbj

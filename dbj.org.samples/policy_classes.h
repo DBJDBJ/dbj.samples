@@ -106,7 +106,8 @@ inline void print_line( bool new_line = true, const size_t len_ = 80, const char
 		print("\n%",line_.data());
     }
 
-		inline void test() {
+auto dumsy = dbj::testing::add(
+	[]() -> void {
 
 			auto measure = []( auto object, const char * msg = "" ) -> void {
 				print_line();
@@ -147,6 +148,7 @@ inline void print_line( bool new_line = true, const size_t len_ = 80, const char
 			measure(hello);
 			measure(hello2);
 		}
+);
 
 	} // namespace philology 
 } //namespace dbj 
