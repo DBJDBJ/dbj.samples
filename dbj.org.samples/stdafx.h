@@ -1,3 +1,4 @@
+#pragma once
 /*
 Copyright 2017 by dbj@dbj.org
 
@@ -16,7 +17,10 @@ limitations under the License.
 __interface msvc keyword
 explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 */
-#pragma once
+
+#ifndef UNICODE
+#error __FILE__ requires UNICODE builds
+#endif
 
 #ifndef _MSC_VER
 #error This code requires Visual C++ 
@@ -24,23 +28,30 @@ explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 #if _MSC_VER < 1911
 #error This code requires Visual C++ 14.1 or better
 #endif
-
-#define implements public
-
 #include <stdio.h>
+#include <stdarg.h>
 #include <tchar.h>
-
-/*
-implementation of http://en.cppreference.com/w/cpp/language/parameter_pack
-*/
-#include <dbjio.h>
-using dbj::io::print;
-using dbj::io::printex;
-
 #include <memory>
 #include <string>
 #include <array>
 #include <vector>
+/*
+dbj begins here
+*/
+#define implements public
+// inline is the keyword, in C++ and C99.
+#define DBJ_INLINE inline
+#define DBJ_ASSERT /*_ASSERTE*/
+
+#ifdef __cpp_lib_is_final
+#define DBJ_FINAL final
+#else
+#define DBJ_FINAL
+#endif
+#include <dbjio.h>
+using dbj::io::print;
+using dbj::io::printex;
+
 //
 #include "dbj_testing.h"
 #include "dbj_traits.h"
@@ -50,3 +61,5 @@ using dbj::io::printex;
 #include "dbj_tuple_unpack.h"
 #include "dbj_tokenizer.h"
 #include "dbj_experimental.h"
+#include "dbj_win32.h"
+#include "dbj_trace.h"

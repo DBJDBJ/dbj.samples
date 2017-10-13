@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-template <typename T> T identity(T); 
-
 int main()
 {
 #if DBJ_TESTING_EXISTS

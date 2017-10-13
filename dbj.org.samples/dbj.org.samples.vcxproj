@@ -149,11 +149,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dbj_tokenizer.h" />
+    <ClInclude Include="dbj_trace.h" />
     <ClInclude Include="dbj_util.h" />
     <ClInclude Include="dbj_testing.h" />
     <ClInclude Include="dbj_traits.h" />
     <ClInclude Include="dbj_tuple_unpack.h" />
     <ClInclude Include="dbj_experimental.h" />
+    <ClInclude Include="dbj_win32.h" />
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />
