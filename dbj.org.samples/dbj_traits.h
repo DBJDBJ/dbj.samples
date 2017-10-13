@@ -23,7 +23,7 @@ namespace dbj {
 /* usage:
     using mp_trait = MemberPointer_traits<decltype(&T::begin)>
     mp_trait::type if exists
-	is the type of the pinter to the method T::begin
+	is the type of the pointer to the method T::begin
 */
 template<typename>
 struct MemberPointer_traits {};
@@ -39,19 +39,16 @@ inline std::reference_wrapper<T> Referee()
 	static T value = {};
 	return std::ref(value);
 }
-
-              class X {};
-
-		auto dumsy = dbj::testing::add( 
+  auto dummy = dbj::testing::add(
 			[] () -> void {
-
+				  class X {};
 			auto THX = Referee<X>() ; // thx();
 
 			printex("\n\n", __func__,
 				"\nReferee<X> typeid:\t\t", typeid(THX).name()
 				);
 			}
-		);
+	);
 
 	} // traits
 } // dbj

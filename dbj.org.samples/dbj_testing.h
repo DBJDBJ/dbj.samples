@@ -123,16 +123,11 @@ namespace dbj {
 				for (auto tunit : TUV() )
 					unit_execute(tunit);
 			}
-#else // DBJ_TESTING_EXISTS
-		typedef struct empty_adder {
-			const bool operator ()(testunittype ) const {
-				return true;
-			}
-			} adder ;
-		adder & add = empty_adder();
+#else // DBJ_TESTING_EXISTS is false
+		auto add = [](void (*)() ) { return true; };
 		__forceinline void _stdcall execute() { }
 
-#endif // ! DBJ_TESTING_EXISTS
+#endif // 
 	} // testing
 } // dbj
 
