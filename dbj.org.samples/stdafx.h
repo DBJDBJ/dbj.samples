@@ -51,5 +51,5 @@ using namespace std;
 #include "dbj_traits.h"
 #include "policy_classes.h"
 #include "no_inheritance.h"
-#include "dbj_aplikators.h"
+#include "dbj_util.h"
 #include "dbj_tuple_unpack.h"

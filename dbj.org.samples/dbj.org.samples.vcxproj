@@ -148,7 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="dbj_aplikators.h" />
+    <ClInclude Include="dbj_util.h" />
     <ClInclude Include="dbj_testing.h" />
     <ClInclude Include="dbj_traits.h" />
     <ClInclude Include="dbj_tuple_unpack.h" />

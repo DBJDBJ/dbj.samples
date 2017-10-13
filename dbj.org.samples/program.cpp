@@ -1,12 +1,19 @@
 #include "stdafx.h"
 
+template <typename T> T identity(T); 
+
 int main()
 {
+#if DBJ_TESTING_EXISTS
+
 	try {
 		dbj::testing::execute();
-	} catch (dbj::testing::Exception & x ) {
-		print("\n\nException thrown from the testing unit\n\n%\n\n", x.what());
 	}
+	catch (...) {
+		printex("Unknown exception caught");
+	}
+	
+#endif
 	return 0;
 }
 

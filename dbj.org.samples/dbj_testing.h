@@ -117,15 +117,61 @@ namespace dbj {
 				}
 			};
 		}
+			/*
+			How to add tunit
+
+			#if DBJ_TESTING_EXISTS
+			  namespace { 
+			    auto dummy = dbj::testing::add(
+				     [](){ std::cout << "Test" ;}
+				) ;
+				}
+            #endif
+			
+			anonymous namespace is optional but good practice
+			#if DBJ_TESTING_EXISTS is also obviously
+			*/
 			adder & add = adder::instance();
 
+			/* mandatory macros for certified pain admirers */
+
+#define DBJ_TEST_UNIT( source_code ) namespace { auto dummy = dbj::testing::add( source_code ); }
+/*  NOTE: one can not use macros inside a code used as macro argument
+    This will not compile
+			DBJ_TEST_UNIT(  [](){
+				#if 1 
+				auto x = []() {}; 
+			    #endif
+			});
+
+  "... C and C++ languages explicitly prohibit forming preprocessor directives as the result of macro expansion. .."
+  Therefore ...
+*/
 			__forceinline void _stdcall execute() {
+
+#define PRINTER dbj::io::printex
+
+				PRINTER("\n\nSTARTING tests----------------------------------------------------\n\n");
 				for (auto tunit : TUV() )
-					unit_execute(tunit);
+				{
+					try {
+						PRINTER("\n\nTEST----------------------------------------------------", tunit, "\n\n");
+						unit_execute(tunit);
+						PRINTER("\n\nTEST OK----------------------------------------------", tunit, "\n\n");
+					}
+					catch (dbj::testing::Exception & x) {
+					print("\n\nException thrown from the testing unit\n\n%\n\n", x.what());
+				}
+				}
+
+				PRINTER("\n\nFINSIHED tests----------------------------------------------------\n\n");
+#undef PRINTER 
 			}
 #else // DBJ_TESTING_EXISTS is false
 		auto add = [](void (*)() ) { return true; };
 		__forceinline void _stdcall execute() { }
+
+#define DBJ_TEST_UNIT(code)
 
 #endif // 
 	} // testing

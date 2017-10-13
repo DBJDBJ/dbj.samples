@@ -33,28 +33,47 @@ using dbj::io::print;
 #include <memory>
 #include <string>
 #include <tuple>
-using namespace std;
 
 namespace dbj {
 
 	namespace util {
+		using namespace std;
+
+		// http://en.cppreference.com/w/cpp/experimental/to_array
+		namespace {
+			template <class T, size_t N, size_t... I>
+			/*constexpr*/ inline array<remove_cv_t<T>, N>
+				to_array_impl(T(&a)[N], index_sequence<I...>)
+			{
+				return { { a[I]... } };
+			}
+		}
+
+		/*
+		Transform "C array" into std::array
+		*/
+		template <class T, std::size_t N>
+		constexpr array<remove_cv_t<T>, N> to_array(T(&a)[N])
+		{
+			return to_array_impl(a, make_index_sequence<N>{});
+		}
 
 
 		namespace xprmntl {
 
 			namespace detail {
-				template <class T, class Tuple, std::size_t... I>
-				constexpr T make_from_tuple_impl(Tuple&& t, std::index_sequence<I...>)
+				template <class T, class Tuple, size_t... I>
+				constexpr T make_from_tuple_impl(Tuple&& t, index_sequence<I...>)
 				{
-					return T(std::get<I>(std::forward<Tuple>(t))...);
+					return T(get<I>(forward<Tuple>(t))...);
 				}
 			} // namespace detail
 
 			template <class T, class Tuple>
-			constexpr T make_from_tuple(Tuple&& t)
+			constexpr T make_from_tuple(Tuple&& t, T * = 0)
 			{
-				return detail::make_from_tuple_impl<T>(std::forward<Tuple>(t),
-					std::make_index_sequence<std::tuple_size_v<std::decay_t<Tuple>>>{});
+				return detail::make_from_tuple_impl<T>(forward<Tuple>(t),
+					make_index_sequence<tuple_size_v<decay_t<Tuple>>>{});
 			}
 
 		} // namespace 
@@ -69,20 +88,18 @@ namespace dbj {
 			char dummy[sizeof...(Targs)] = { (callback(args), 0)... };
 		}
 
-		inline void test(){
-#if 0			
+#if DBJ_TESTING_EXISTS
+		auto funit = []() {
 			auto fun = [](auto arg) -> void { cout << (arg);  };
-			dbj::util::repeater(fun, "XYZ", true, 1, 0.2f);
-
-			auto tupler = []() { return make_tuple(1,2,3)  ; };
-			auto[a, b, c] = tupler();
-
-			typedef vector<int> intvec;
-			intvec whatever{  make_from_tuple<int>(tupler()) };
-
+			repeater(fun, "XYZ", true, 1, 0.2f);
+				auto tupler = []() { return make_tuple(1, 2, 3); };
+				// auto[ a, b, c] = tupler();
+			auto whatever = make_from_tuple< decltype(tupler()) >(tupler()) ;
 			printex(whatever);
+		};
+
+		DBJ_TEST_UNIT(funit);
 #endif
-		}
 	} // util
 } // dbj
 #define DBJVERSION __DATE__ __TIME__
