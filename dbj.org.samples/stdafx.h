@@ -41,15 +41,12 @@ using dbj::io::printex;
 #include <string>
 #include <array>
 #include <vector>
-/* 
-    this is not 'lame'
-	this makes you understand std:: is part of the language
-*/
-using namespace std;
-
+//
 #include "dbj_testing.h"
 #include "dbj_traits.h"
 #include "policy_classes.h"
 #include "no_inheritance.h"
 #include "dbj_util.h"
 #include "dbj_tuple_unpack.h"
+#include "dbj_tokenizer.h"
+#include "dbj_experimental.h"
