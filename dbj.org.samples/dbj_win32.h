@@ -26,16 +26,42 @@ limitations under the License.
 
 namespace dbj {
 	namespace win32 {
-
+#pragma region "dbj win32 strings"
 		using CHAR_T = wchar_t;
 		using STRING = std::basic_string<CHAR_T>;
 		using long_string_pointer = LPWSTR;
 
-		template< size_t N>
-		inline STRING widener( const char (& charar ) [N]) 
+		/* Find the length of S, but scan at most MAXLEN characters.  If no '\0'
+		terminator is found within the first MAXLEN characters, return MAXLEN.
+		*/
+#ifndef __cplusplus
+		/*
+		Inspired by: https://opensource.apple.com/source/bash/bash-80/bash/lib/sh/strnlen.c
+		*/
+		DBJ_INLINE size_t strnlen(const CHAR_T *s, size_t maxlen)
 		{
-			return STRING(std::begin(charar), std::end(charar));
+			const CHAR_T *e = {};
+			size_t n = {};
+
+			for (e = s, n = 0; *e && n < maxlen; e++, n++)
+				;
+			return n;
 		}
+#else
+		/* modern C++ version*/
+		template< size_t N>
+		DBJ_INLINE size_t strnlen(const CHAR_T(&s)[N], size_t maxlen)
+		{
+			return min(N, maxlen);
+		}
+#endif
+
+		template< size_t N>
+		inline std::basic_string<wchar_t> widener( const char (& charar ) [N])
+		{
+			return std::basic_string<wchar_t>(std::begin(charar), std::end(charar));
+		}
+#pragma endregion "dbj win32 strings"
 
 			//Returns the last Win32 error, in string format. Returns an empty string if there is no error.
 			DBJ_INLINE auto getLastErrorMessage(
@@ -69,21 +95,6 @@ namespace dbj {
 			{
 				return getLastErrorMessage(widener(prompt), errorMessageID);
 			}
-
-			/* Find the length of S, but scan at most MAXLEN characters.  If no '\0'
-			terminator is found within the first MAXLEN characters, return MAXLEN.
-			Inspired by: https://opensource.apple.com/source/bash/bash-80/bash/lib/sh/strnlen.c
-			*/
-			DBJ_INLINE size_t strnlen(const CHAR_T *s, size_t maxlen)
-			{
-				const CHAR_T *e = {};
-				size_t n = {};
-
-				for (e = s, n = 0; *e && n < maxlen; e++, n++)
-					;
-				return n;
-			}
-
 
 			namespace sysinfo {
 
