@@ -93,6 +93,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MinimalRebuild>false</MinimalRebuild>
+      <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,7 +155,6 @@
     <ClInclude Include="dbj_util.h" />
     <ClInclude Include="dbj_testing.h" />
     <ClInclude Include="dbj_traits.h" />
-    <ClInclude Include="dbj_tuple_unpack.h" />
     <ClInclude Include="dbj_experimental.h" />
     <ClInclude Include="dbj_win32.h" />
     <ClInclude Include="no_inheritance.h" />

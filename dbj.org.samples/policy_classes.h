@@ -18,24 +18,11 @@ limitations under the License.
 __interface msvc keyword
 explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 */
-#ifndef _MSC_VER
-#error This code requires Visual C++ 
-#endif // !_MSC_VER
-#if _MSC_VER < 1911
-#error This code requires Visual C++ 14.1 or better
-#endif
-
-#define implements public
-
-#include <dbjio.h>
-using dbj::io::print;
-
-#include <memory>
-#include <string>
-using namespace std;
 
 namespace dbj {
 	namespace philology {
+		using std::string;
+		using dbj::io::print;
 		/*
 		 interfaces to writing and language policies
 		*/
@@ -101,54 +88,7 @@ public:
 	}
 };
         
-inline void print_line( bool new_line = true, const size_t len_ = 80, const char chr_ = '-')  {
-	const string line_( len_, chr_ );
-		print("\n%",line_.data());
-    }
 
-auto dumsy = dbj::testing::add(
-	[]() -> void {
-
-			auto measure = []( auto object, const char * msg = "" ) -> void {
-				print_line();
-#if 0
-				print( "\n%\nType name:\t%"
-					  "\nSpace requirements in bytes"
-					  "\nType:\t\t%"
-					  "\nInstance:\t%"
-					  "\nAllocation:\t%",
-					msg,
-					typeid(object).name(),
-					sizeof(decltype(object)),
-					sizeof(object),
-					alignof(decltype(object))
-				);
-				// printext bellow is easier to read
-#endif
-				printex("\n", msg,"\nType name:\t", typeid(object).name(),
-					"\nSpace requirements in bytes",
-					"\nType:\t\t" , sizeof(decltype(object)),
-					"\nInstance:\t", sizeof(object),
-					"\nAllocation:\t",	alignof(decltype(object))
-				);
-
-			};
-
-		HelloWorld<> hello{};
-		HelloWorld2<> hello2{};
-
-		print("\nBEFORE RUN\n");
-			measure(hello);
-			measure(hello2);
-			print_line();
-			hello.run("\nHelloWorld -- Default policies");
-			hello2.run("\nHelloWorld2 -- No inheritance");
-			print_line();
-			print("\nAFTER RUN\n");
-			measure(hello);
-			measure(hello2);
-		}
-);
 
 	} // namespace philology 
 } //namespace dbj 

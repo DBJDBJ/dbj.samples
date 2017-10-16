@@ -39,17 +39,17 @@ inline std::reference_wrapper<T> Referee()
 	static T value = {};
 	return std::ref(value);
 }
-  auto dummy = dbj::testing::add(
-			[] () -> void {
-				  class X {};
-			auto THX = Referee<X>() ; // thx();
 
-			printex("\n\n", __func__,
-				"\nReferee<X> typeid:\t\t", typeid(THX).name()
+		auto dummy = dbj::testing::add(
+				"Testing dbj traits" , []() -> void {
+				class X {};
+				auto THX = Referee<X>(); // thx();
+
+				dbj::io::printex("\n\n", __func__,
+					"\nReferee<X> typeid:\t\t", typeid(THX).name()
 				);
 			}
-	);
-
+		);
 	} // traits
 } // dbj
 

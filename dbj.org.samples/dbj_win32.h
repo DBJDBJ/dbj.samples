@@ -1,26 +1,11 @@
 #pragma once
-/*
-Copyright 2017 by dbj@dbj.org
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http ://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 
 #ifndef UNICODE
 #error __FILE__ requires UNICODE builds
 #endif
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-#define STRICT
+// #define STRICT
 #include <windows.h>
 // #include <tchar.h>
 
@@ -133,15 +118,14 @@ namespace dbj {
 #if DBJ_TESTING_EXISTS
 			namespace {
 				using namespace sysinfo;
-				auto tunit = []() {
-					printex(
+				DBJ_TEST_CASE("dbj win32 tests"){
+					dbj::io::printex(
 						"\nComputer name:\t\t", computer_name(),
 						"\nUser name:\t\t", user_name(),
 						"\nSystem directory:\t\t", system_directory(),
 						"\nWindows directory:\t\t", windows_directory()
 					);
 				};
-				DBJ_TEST_UNIT(tunit);
 			}
 #endif // DBJ_TESTING_EXISTS
 	} // win32
@@ -153,3 +137,18 @@ namespace dbj {
   // #pragma message("-------------------------------------------------------------")
 #pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
 #undef DBJVERSION
+  /*
+  Copyright 2017 by dbj@dbj.org
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http ://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  */
