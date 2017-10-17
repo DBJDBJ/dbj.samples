@@ -100,10 +100,10 @@ namespace dbj {
 				}
 			}
 
-			
 			struct adder {
 				const bool operator ()(const std::string & msg_, testunittype tunit_ ) const {
-					/* do not insert twice the same test unit */
+					/* we could have called append straight from client code */
+					/* technicaly this struct is not necessary but it is here for chage resilience of this design */
 					append(tunit_, msg_ );
 					return true;
 				}
@@ -128,7 +128,7 @@ namespace dbj {
 			#endif
 
 			instead of in line lambda one can add function name or lambda name
-			anonymous namespace is optional but good practice
+			and anonymous namespace is optional but good practice
 
 			And! Here are the mandatory macros for certified pain admirers too
 			*/
@@ -150,9 +150,9 @@ namespace dbj {
 		for (auto tunit : tu_map())
 		{
 			try {
-				printex("\n\tTEST BEGIN [", tunit.second, "]");
+				printex("\n\tTEST BEGIN [", tunit.second, "]\n");
 					unit_execute(tunit.first);
-				printex("\n\tTEST END   [", tunit.second, "]");
+				printex("\n\tTEST END   [", tunit.second, "]\n");
 			}	catch (dbj::testing::Exception & x) {
 					printex("\n\t\tException: [", x.what(), "] thrown from the testing unit: ");
 			}

@@ -17,8 +17,8 @@ limitations under the License.
 */
 
 #include <dbj++.h> 
-//using dbj::io::print;
-//using dbj::io::printex;
+//dbj::io::print;
+//dbj::io::printex;
 
 //
 #include "dbj_testing.h"
