@@ -11,6 +11,25 @@ namespace {
 	using dbj::io::print;
 	using dbj::io::printex;
 
+	DBJ_TEST_CASE("dbj crt") {
+		printf("\n(c) %s by dbj.org\t\tcompiler is GCC [%ud]\n", __YEAR__, __VERSION__);
+
+		char prompt[] = "0123456789";
+		char * promptPTR = &prompt[0];
+
+		// char arrays are using dbj.org versions     
+		printf("\nfor char array [%s]\tstrlen(): [%zu]\t countof(): %zu", prompt, dbj::strlen(prompt), dbj::countof(prompt));
+		printf("\nfor char array [%s]\tstrlen(): [%zu]\t countof(): %zu", prompt, dbj::strnlen(prompt, BUFSIZ), dbj::countof(prompt));
+
+		// using UCRT strlen for char *
+		printf("\nchar pointer strlen  of [%s] is: %zu", prompt, ::strlen(promptPTR));
+		// using UCRT strnlen for char *
+		// note: std has no  strnlen ... yet
+		printf("\nchar pointer strnlen of [%s] is: %zu", prompt, ::strnlen(promptPTR, BUFSIZ));
+
+	}
+
+
 	struct X final { };
 
 	DBJ_TEST_CASE("dbj traits") {
