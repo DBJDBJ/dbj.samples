@@ -11,21 +11,19 @@ namespace {
 	using dbj::io::print;
 	using dbj::io::printex;
 
+	struct X final { };
 
 	DBJ_TEST_CASE("dbj traits") {
-		class X {};
-		auto THX = dbj::traits::Referee<X>(); // thx();
-
-		printex("\n\n", __func__,
-			"\nReferee<X> typeid:\t\t", typeid(THX).name()
-		);
+		using xref = dbj::traits::Referee<X>;
+		xref thx(X());
+		printex("\n\n", __func__, "\nTHX:\t\t", typeid(thx).name());
 	}
 
 	DBJ_TEST_CASE("dbj inheritance") {
 
 		auto print_line = [](bool new_line = true, const size_t len_ = 80, const char chr_ = '-') {
 			const std::string line_(len_, chr_);
-			print("\n%", line_.data());
+			printex("\n", line_.data());
 		};
 
 		auto measure = [&print_line](auto object, const char * msg = "") -> void {

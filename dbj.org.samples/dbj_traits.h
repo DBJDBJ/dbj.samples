@@ -22,13 +22,13 @@ struct MemberPointer_traits<U T::*> {
 /*
 Referee<T> requires T to be an object type or a function type.
 */
-template<typename T, typename std::enable_if<std::is_class<T>::value /*|| std::is_function<T>::value */>::type * = 0 >
-struct Referee;
+template<typename T, class Enable = void >
+struct Referee {};
 
-template<typename  T > Referee<T> make(const T & o = T() ;
+template<typename  T >	Referee<T> make(const T &);
 
-template<typename T, typename std::enable_if<std::is_class<T>::value /*|| std::is_function<T>::value */>::type * = 0 >
-struct Referee
+template<typename T>
+struct Referee<T, typename std::enable_if<std::is_class<T>::value>::type >
 {
 	using self_type = Referee;
 	using reftype = std::reference_wrapper<T>;
@@ -36,30 +36,22 @@ struct Referee
 	const T dflt{};
 	reftype reference = std::ref(dflt);
 
-	template<typename  T >
-	friend Referee<T> make(const T & o = T() { return Referee<T>(o); }
-
+	Referee(const T & o) : reference(std::ref(o)) {}
 protected:
-	Referee( const T & o ) : reference(std::ref(o)) {}
+	// friend Referee make(const T & o = T{}) { return Referee(o); }
 	Referee() {}
 };
 
-struct lama final {
-	const char * name = "Alpaka" ;
-};
+
+struct lama final {	const char * name = "Alpaka" ;};
 
 DBJ_TEST_CASE("Testing dbj traits" ) {
-
 	using lamaref = Referee<lama>;
-
-	auto truism = make(lamaref());
-
-	// auto truism = lamaref::make<lama>(lama());
-
-		dbj::io::printex("\n\n", __func__,
-			"\nReferee<bool> typeid:\t\t", typeid(truism).name());
+		lamaref lref(lama());
+		dbj::io::printex("\n\n", __func__, "\nReferee<bool> typeid:\t\t", typeid(lamaref).name());
 	}
-	} // traits
+
+} // traits
 } // dbj
 
 #define DBJVERSION __DATE__ __TIME__

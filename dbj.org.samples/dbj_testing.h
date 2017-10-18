@@ -1,7 +1,50 @@
 
 #pragma once
+/*
+ (c) dbj.org 
 
-// #include <vector>
+ An C++17 micro standalone testing framework
+
+ if DBJ_TESTING_EXISTS is undefined test are not compiled and not executed.
+
+ // also. this is C++17 feature
+ if constexpr(dbj::testing::RUNING) {
+		// testing code will be compiled into existence
+		// or not
+ }
+ 
+ How to add test unit, with no macros:
+
+ #if DBJ_TESTING_EXISTS
+ namespace {
+ static auto dummy = dbj::testing::add(
+ " Critical Test" ,
+ [](){ std::cout << "Test" ;}
+ ) ;
+ }
+ #endif
+
+ instead of in line lambda one can add function name or lambda name
+ and anonymous namespace is optional but good practice
+
+ And! Here is the mandatory macro for certified pain lovers:
+
+ DBJ_TEST_CASE( "Critical Test" ) 
+ {
+		std::cout << "Test" ;
+ }
+
+ All tests are collected as declared and then executed from main() like so:
+ 
+ int main(int argc, char* argv[])
+ {
+		dbj::testing::execute();
+	return 0;
+ }
+
+ No exceptions are thrown outside. They are reported to console.
+
+ */
 #include <map>
 
 namespace dbj {
@@ -11,10 +54,6 @@ namespace dbj {
 #define DBJ_TESTING_EXISTS (1==1)
 #endif // !DBJ_TESTING_EXISTS
 
-		/*	C++17		if constexpr(dbj::testing::RUNING) {
-						// testing code will be compiled into existence
-						}
-		*/
 #if DBJ_TESTING_EXISTS
 		constexpr bool RUNING = true;
 #else
@@ -115,23 +154,6 @@ namespace dbj {
 			};
 		}
 			adder & add = adder::instance();
-			/*
-			How to add test unit, with no macros
-
-			#if DBJ_TESTING_EXISTS
-			namespace {
-				static auto dummy = dbj::testing::add(
-						" Critical Test" ,
-						[](){ std::cout << "Test" ;}
-				) ;
-			}
-			#endif
-
-			instead of in line lambda one can add function name or lambda name
-			and anonymous namespace is optional but good practice
-
-			And! Here are the mandatory macros for certified pain admirers too
-			*/
 
 #define DBJ_STR(x) #x
 #define DBJ_CONCAT_IMPL( x, y ) x##y
