@@ -20,35 +20,26 @@ struct MemberPointer_traits<U T::*> {
 	using member_type = U;
 };
 /*
-Referee<T> requires T to be an object type or a function type.
+Referee<T> requires T to be of an class type
 */
-template<typename T, class Enable = void >
-struct Referee {};
-
-template<typename  T >	Referee<T> make(const T &);
-
-template<typename T>
-struct Referee<T, typename std::enable_if<std::is_class<T>::value>::type >
+template<typename T, typename std::enable_if<std::is_class<T>::value>::type * = 0 >
+struct Referee
 {
+	const T  & value_default{};
 	using self_type = Referee;
-	using reftype = std::reference_wrapper<T>;
-	using T_type = T;
-	const T dflt{};
-	reftype reference = std::ref(dflt);
-
-	Referee(const T & o) : reference(std::ref(o)) {}
-protected:
-	// friend Referee make(const T & o = T{}) { return Referee(o); }
-	Referee() {}
+	using value_reftype = std::reference_wrapper< std::remove_cv_t<T> >;
+	using value_type = T;
+	value_reftype reference = std::cref(value_default);
 };
 
 
 struct lama final {	const char * name = "Alpaka" ;};
 
+//#define DBJ_NV( symbol) "[", STR(symbol), "] :-> [" , symbol , "]"
+
 DBJ_TEST_CASE("Testing dbj traits" ) {
 	using lamaref = Referee<lama>;
-		lamaref lref(lama());
-		dbj::io::printex("\n\n", __func__, "\nReferee<bool> typeid:\t\t", typeid(lamaref).name());
+		dbj::io::printex("\n", __func__, "\t", DBJ_NV(typeid(lamaref).name()));
 	}
 
 } // traits

@@ -16,12 +16,12 @@ limitations under the License.
 
 */
 
+#define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
 //dbj::io::print;
 //dbj::io::printex;
 
 //
-#include "dbj_testing.h"
 #include "dbj_traits.h"
 #include "policy_classes.h"
 #include "no_inheritance.h"

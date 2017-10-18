@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 	return true;
 }
 
-#if DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_EXISTS
 namespace {
 	using dbj::io::print;
 	using dbj::io::printex;
@@ -15,8 +15,7 @@ namespace {
 
 	DBJ_TEST_CASE("dbj traits") {
 		using xref = dbj::traits::Referee<X>;
-		xref thx(X());
-		printex("\n\n", __func__, "\nTHX:\t\t", typeid(thx).name());
+		printex("\nFrom inside [", __func__, "]\t", DBJ_NV(typeid(xref).name()));
 	}
 
 	DBJ_TEST_CASE("dbj inheritance") {

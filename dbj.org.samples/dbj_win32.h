@@ -115,7 +115,7 @@ namespace dbj {
 					return STRING(infoBuf, strnlen(infoBuf, INFO_BUFFER_SIZE - 1));
 				}
 			} // sysinfo
-#if DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_EXISTS
 			namespace {
 				using namespace sysinfo;
 				DBJ_TEST_CASE("dbj win32 tests"){
