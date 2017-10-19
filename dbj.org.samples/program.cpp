@@ -11,25 +11,50 @@ namespace {
 	using dbj::io::print;
 	using dbj::io::printex;
 
-	DBJ_TEST_CASE("dbj crt") {
-		printf("\n(c) %s by dbj.org\t\tcompiler is GCC [%ud]\n", __YEAR__, __VERSION__);
+	/*
+	dbj crt caters for char, wchar_t, char16_t, char32_t
+	for details please see https://docs.microsoft.com/en-us/cpp/cpp/char-wchar-t-char16-t-char32-t
+	*/
+	template< typename T, size_t N>
+	DBJ_INLINE void strlen_strnlen_test( 
+		const T (&prompt)[N]) 
+	{
+		printex("\n\nTesting array of type ", typeid(T).name() , " and of length ", N, "\t" );
+		printex("\n\t", DBJ_NV(dbj::countof(prompt)));
+		// char type arrays are using dbj.org "zero time" versions     
+		printex("\n\t" , DBJ_NV(dbj::strlen(prompt)));
+		printex("\n\t", DBJ_NV(dbj::strnlen(prompt, BUFSIZ)));
 
-		char prompt[] = "0123456789";
-		char * promptPTR = &prompt[0];
+		// testing for the T * support 
+		auto pointer_tester = [](auto cptr ) {
+			// cptr becomes pointer due to the standard decay of C++ array to pointer
+			using pointer_to_array = decltype(cptr);
 
-		// char arrays are using dbj.org versions     
-		printf("\nfor char array [%s]\tstrlen(): [%zu]\t countof(): %zu", prompt, dbj::strlen(prompt), dbj::countof(prompt));
-		printf("\nfor char array [%s]\tstrlen(): [%zu]\t countof(): %zu", prompt, dbj::strnlen(prompt, BUFSIZ), dbj::countof(prompt));
-
-		// using UCRT strlen for char *
-		printf("\nchar pointer strlen  of [%s] is: %zu", prompt, ::strlen(promptPTR));
-		// using UCRT strnlen for char *
-		// note: std has no  strnlen ... yet
-		printf("\nchar pointer strnlen of [%s] is: %zu", prompt, ::strnlen(promptPTR, BUFSIZ));
-
+			printex("\n\nTesting the support for the ", typeid(pointer_to_array).name(), " pointer to the same array\n");
+			// using UCRT strlen
+			printex("\n\t", DBJ_NV(dbj::strlen(cptr)));
+			// using UCRT strnlen note: std has no strnlen ...
+			printex("\n\t", DBJ_NV(dbj::strnlen(cptr, BUFSIZ)));
+		};
+		
+			pointer_tester(prompt);
 	}
 
+	DBJ_TEST_CASE("dbj crt") {
+		print("\n(c) % by dbj.org, MSVC version: %", __YEAR__ , __VERSION__);
+		
+			char	 promptA[]  =  "0123456789";
+			wchar_t  promptW[]  = L"0123456789";
+			char16_t prompt16[] = u"0123456789";
+			char32_t prompt32[] = U"0123456789";
 
+			strlen_strnlen_test(promptA);
+			strlen_strnlen_test(promptW);
+			strlen_strnlen_test(prompt16);
+			strlen_strnlen_test(prompt32);
+	}
+
+#if 0
 	struct X final { };
 
 	DBJ_TEST_CASE("dbj traits") {
@@ -125,6 +150,7 @@ namespace {
 		}
 		print("\n\n");
 	}
+#endif // 0
 }
 #endif
 // EOF
