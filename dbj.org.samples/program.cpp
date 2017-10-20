@@ -7,6 +7,44 @@ int main(int argc, char* argv[])
 }
 
 #ifdef DBJ_TESTING_EXISTS
+/* dbj type traits and enable if helpers */
+namespace {
+	using dbj::io::printex;
+
+	template<typename T > 
+	struct TypeValue {
+		using type = T;
+		T   value ;
+		const char * name() const { return typeid(T).name(); }
+		const char * my_name() const { return typeid(TypeValue).name(); }
+
+		TypeValue (T v ) : value(v) { }
+
+		friend DBJ_INLINE std::ostream&
+			operator<<(std::ostream& out, const TypeValue & tv_) {
+			return out << tv_.my_name() << " value type:" << tv_.name() << ", value: " << tv_.value;
+		}
+	};
+
+
+
+	template<typename T, typename dbj::require_integral<T> = 0>
+	DBJ_INLINE auto Object(T&& t) { return TypeValue<T>{t}; }
+
+	template<typename T, typename dbj::require_floating<T> = 0>
+	DBJ_INLINE auto Object(T&& t) { return TypeValue<T>{ t }; }   
+
+	/*usage*/
+	DBJ_TEST_CASE(dbj::nicer_filename(__FILE__)) {
+		printex("\n", DBJ_NV(dbj::is_floating<float>()));
+		printex("\n", DBJ_NV(dbj::is_integral<int>()));
+		printex("\n", DBJ_NV(dbj::is_object<int>()));
+
+		printex("\n", DBJ_NV(Object(42)));
+		printex("\n", DBJ_NV(Object(42.0f)));
+	}
+} // namespace
+
 namespace {
 	using dbj::io::print;
 	using dbj::io::printex;

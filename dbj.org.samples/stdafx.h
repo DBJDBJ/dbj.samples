@@ -15,12 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
+#include <strstream>
 
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
-//dbj::io::print;
-//dbj::io::printex;
-
 //
 #include "dbj_traits.h"
 #include "policy_classes.h"
@@ -30,3 +28,4 @@ limitations under the License.
 #include "dbj_experimental.h"
 #include "dbj_win32.h"
 #include "dbj_trace.h"
+#include "do_we_want_cpp.h"

@@ -156,6 +156,7 @@
     <ClInclude Include="dbj_traits.h" />
     <ClInclude Include="dbj_experimental.h" />
     <ClInclude Include="dbj_win32.h" />
+    <ClInclude Include="do_we_want_cpp.h" />
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />

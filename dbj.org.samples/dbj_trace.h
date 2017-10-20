@@ -1,25 +1,9 @@
 #pragma once
 
-// #include "stdafx.h"
+#include "dbj_util.h"
 
 namespace dbj {
 	namespace dbg {
-
-		/*
-		Tame the full path filenames  in __FILE__
-		https://stackoverflow.com/questions/8487986/file-macro-shows-full-path/8488201#8488201
-		#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-		*/
-		DBJ_INLINE constexpr auto nicer_filename(const char * filename) {
-			return (strrchr(filename, '\\') ? strrchr(filename, '\\') + 1 : filename);
-		}
-
-		template <typename T>
-		inline
-			constexpr
-			auto sizeof_array(const T& iarray) {
-			return (sizeof(iarray) / sizeof(iarray[0]));
-		}
 
 #ifdef BUFSIZ
 		constexpr static int TRACEMAXSTRING = BUFSIZ * 2;
@@ -59,7 +43,7 @@ namespace dbj {
 
 #define DBJVERSION __DATE__ __TIME__
 // #pragma message("-------------------------------------------------------------")
-#pragma message( "============> Compiled: " __FILE__ ", Version: " DBJVERSION)
+#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
 // #pragma message("-------------------------------------------------------------")
 #pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
 #undef DBJVERSION

@@ -125,7 +125,7 @@ private:
 } // dbj
 #define DBJVERSION __DATE__ __TIME__
   // #pragma message("-------------------------------------------------------------")
-#pragma message( "============> Compiled: " __FILE__ ", Version: " DBJVERSION)
+#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
   // #pragma message("-------------------------------------------------------------")
 #pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
 #undef DBJVERSION

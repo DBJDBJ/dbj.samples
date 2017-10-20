@@ -1,28 +1,15 @@
 #pragma once
+// license at eof
+/* std::enable_if<> tamed with template aliases
+   insipred with https://codereview.stackexchange.com/questions/71946/use-of-macros-to-aid-visual-parsing-of-sfinae-template-metaprogramming
+   NOTE: C++17 onwards is required
+*/
+
+#include <type_traits>
+#include <dbjio.h>
+#include <dbj_testing.h>
 
 namespace dbj {
-
-	namespace util {
-		using namespace std;
-
-		// http://en.cppreference.com/w/cpp/experimental/to_array
-		namespace {
-			template <class T, size_t N, size_t... I>
-			/*constexpr*/ inline array<remove_cv_t<T>, N>
-				to_array_impl(T(&a)[N], index_sequence<I...>)
-			{
-				return { { a[I]... } };
-			}
-		}
-
-		/*
-		Transform "C array" into std::array
-		*/
-		template <class T, std::size_t N>
-		constexpr array<remove_cv_t<T>, N> to_array(T(&a)[N])
-		{
-			return to_array_impl(a, make_index_sequence<N>{});
-		}
 
 
 		namespace xprmntl {
@@ -44,10 +31,11 @@ namespace dbj {
 
 		} // namespace 
 
-	
+namespace util {	
+
 		template<typename F, typename... Targs>
 		inline
-			void repeater(F callback, Targs... args)
+		void applicator(F callback, Targs... args)
 		{
 			// since initializer lists guarantee sequencing, this can be used to
 			// call a function on each element of a pack, in order:
@@ -56,12 +44,12 @@ namespace dbj {
 
 	} // util
 } // dbj
+
 #define DBJVERSION __DATE__ __TIME__
-// #pragma message("-------------------------------------------------------------")
-#pragma message( "============> Compiled: " __FILE__ ", Version: " DBJVERSION)
-// #pragma message("-------------------------------------------------------------")
-#pragma comment( user, "(c) " DBJVERSION " dbj@dbj.org" ) 
+#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
+#pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
 #undef DBJVERSION
+
 /*
 Copyright 2017 by dbj@dbj.org
 
