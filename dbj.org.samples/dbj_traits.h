@@ -6,9 +6,9 @@ namespace dbj {
 	/*
 	templates are zealous eaters of types
 	thus overloading and templates do not mix easily
-	this iso C++ comiteer invenetedstd::enable_if<>
+	this iso C++ comitee invenetedstd::enable_if<>
 	which in turn makes you either "be somewhere else"
-	or scramle for false cover of macros
+	or scramble for false cover of macros
 	here we do not use macros. we use modern C++ to deliver
 	helpers when using templates woth or without overloading
 
@@ -36,63 +36,20 @@ namespace dbj {
 
 	/* bellow are dbj::require_ templates we use through EIF<> */
 	template< typename T>
-	using require_integral = EIF< std::is_integral_v< DT<T>> >;
+	using require_integral = EIF< std::is_integral_v< DT<T> > >;
 
 	template< typename T>
 	using require_floating = EIF< std::is_floating_point< DT<T> >::value >;
 
 	template< typename T>
-	using require_object = EIF< std::is_object_v< DT<T>> >;
+	using require_object = EIF< std::is_object_v< DT<T> > >;
 
 }
 #pragma endregion enable_if helpers
-namespace dbj {
-	namespace traits {
 
-		template<class... T> struct type_list { std::tuple<T...> args = std::make_tuple<T...>(); };
-
-		template<typename T> struct tname { const char * name = typeid(T).name; };
-
-/* usage:
-    using mp_trait = MemberPointer_traits<decltype(&T::begin)>
-    mp_trait::type if exists
-	is the type of the pointer to the method T::begin
-*/
-template<typename>
-struct MemberPointer_traits {};
-
-template<class T, class U>
-struct MemberPointer_traits<U T::*> {
-	using member_type = U;
-};
-/*
-Referee<T> requires T to be of an class type
-*/
-template<typename T, typename std::enable_if<std::is_class<T>::value>::type * = 0 >
-struct Referee
-{
-	const T  & value_default{};
-	using self_type = Referee;
-	using value_reftype = std::reference_wrapper< std::remove_cv_t<T> >;
-	using value_type = T;
-	value_reftype reference = std::cref(value_default);
-};
-
-
-struct lama final {	const char * name = "Alpaka" ;};
-
-//#define DBJ_NV( symbol) "[", STR(symbol), "] :-> [" , symbol , "]"
-
-DBJ_TEST_CASE("Testing dbj traits" ) {
-	using lamaref = Referee<lama>;
-		dbj::io::printex("\n", __func__, "\t", DBJ_NV(typeid(lamaref).name()));
-	}
-
-} // traits
-} // dbj
 
 #define DBJVERSION __DATE__ __TIME__
-#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
+#pragma message( "-----> Compiled: " __FILE__ ", Version: " DBJVERSION)
 #pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
 #undef DBJVERSION
 /*

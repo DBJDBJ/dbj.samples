@@ -1,4 +1,11 @@
 #include "stdafx.h"
+
+
+#if 0 == __has_include(<functional>)
+#include <functional>
+#endif
+
+
 #if 0
 /*
   VS2017 Community edition (latest as of 2017-10-20), C++17 build
@@ -50,8 +57,7 @@ int main(int argc, char* argv[])
 }
 
 #ifdef DBJ_TESTING_EXISTS
-/* dbj type traits and enable if helpers */
-namespace {
+/* dbj type traits and enable if helpers */ namespace {
 	using dbj::io::printex;
 
 	template<typename T > 
@@ -68,8 +74,6 @@ namespace {
 			return out << tv_.my_name() << " value type:" << tv_.name() << ", value: " << tv_.value;
 		}
 	};
-
-
 
 	template<typename T, typename dbj::require_integral<T> = 0>
 	DBJ_INLINE auto Object(T&& t) { return TypeValue<T>{t}; }
@@ -88,7 +92,7 @@ namespace {
 	}
 } // namespace
 
-namespace {
+/* dbj stlen and strnlen */ namespace  {
 	using dbj::io::print;
 	using dbj::io::printex;
 
@@ -124,15 +128,21 @@ namespace {
 	DBJ_TEST_CASE("dbj crt") {
 		print("\n(c) % by dbj.org, MSVC version: %", YEAR , __VERSION__);
 		
-			char	 promptA[]  =  "0123456789";
-			wchar_t  promptW[]  = L"0123456789";
-			char16_t prompt16[] = u"0123456789";
-			char32_t prompt32[] = U"0123456789";
+char	 promptA[]  =  "0123456789";
+wchar_t  promptW[]  = L"0123456789";
+char16_t prompt16[] = u"0123456789";
+char32_t prompt32[] = U"0123456789";
 
-			strlen_strnlen_test(promptA);
-			strlen_strnlen_test(promptW);
-			strlen_strnlen_test(prompt16);
-			strlen_strnlen_test(prompt32);
+strlen_strnlen_test(promptA);
+strlen_strnlen_test(promptW);
+strlen_strnlen_test(prompt16);
+strlen_strnlen_test(prompt32);
+
+assert( dbj::strnlen(promptA,  BUFSIZ) == 10 );
+assert( dbj::strnlen(promptW,  BUFSIZ) == 10 );
+assert( dbj::strnlen(prompt16, BUFSIZ) == 10 );
+assert( dbj::strnlen(prompt32, BUFSIZ) == 10 );
+
 	}
 
 #if 0
@@ -232,6 +242,108 @@ namespace {
 		print("\n\n");
 	}
 #endif // 0
+}
+
+/* dbj experimental traits */ namespace {
+
+	struct Struct final {
+		void method() {};
+	};
+
+	/*
+	type has signature and name
+
+	this: void (Struct::*)() is a type signatue of Struct::method()
+	or any method on Struct that returns void and has no arguments
+
+	type is given name by using typedef or (in modern C++) using declaration
+
+	typedef void (Struct::*methodP)(); 
+
+	methodP is a type name of the type signature  void (Struct::*)()
+	which is better looking from C++ 11 with "using" declaration
+
+	using  methodP = void (Struct::*)(); // methodP is a type
+	*/
+	using  methodP = void (Struct::*)(); // methodP is a type
+	using  fakeMP  = void (std::string::*)();
+
+	/*
+	dbj MemberPointer_traits<> requires a single template parameter
+	which is a type of the method of a class or struct
+	it can be given just by its signature of by its name
+	*/
+
+	/*
+	  this function will exist only if give, at compile time, an type signatue or name 
+	  of any class or struct
+	  thus it will work for any class/struct and any method 
+	  the only requirement is: T is a method on some class or struct
+	*/
+	template < typename T >
+	constexpr bool is_method_invocable() {
+		return std::is_invocable<T>::value;
+	}
+
+	auto tname = [](const auto & T) -> const char * { return typeid(decltype(T)).name(); };
+
+	auto is_member = [](auto member) {
+		return std::is_member_function_pointer<decltype(member)>::value;
+	};
+#if 0
+	template <typename T>
+	class has_begin
+	{
+		//typedef char one;
+		//typedef long two;
+		/*sizeof(test<T>(0)) == sizeof(char) if C::begin exist */
+		//template <typename C> static one test(decltype(&C::begin));
+		//template <typename C> static two test(...);
+
+		//template <typename C, typename T                = void > struct tester { bool value = false; };
+		//template <typename C, typename decltype(&C::begin) = 0 > struct tester { bool value = true; };
+	public:
+		
+		using MPT = typename dbj::experimental_traits::MemberPointer_traits<T>::type;
+
+		bool operator () () const {
+			if constexpr( sizeof( T::begin ) ) {
+				bool value = true;
+			}
+			else {
+				bool value = false;
+			}
+		}
+	};
+
+	// https://stackoverflow.com/questions/42812829/why-doesnt-stdis-invocable-accept-a-non-type-template-parameter
+	template< typename F, typename ...Args>
+	auto callF(F function, Args...args) 
+		-> typename std::enable_if<std::is_invocable_v<F, Args... > >  
+	{
+		std::invoke(function, std::forward<Args>(args)...);
+	}
+#endif
+	DBJ_TEST_CASE("dbj experimental traits") {
+
+		// printex("\n", DBJ_NV( tname<has_begin<methodP>::MPT>()), "\n");
+		// printex("\n", DBJ_NV( tname<has_begin<fakeMP>::MPT>()), "\n");
+
+		auto mp = dbj::functional::mem_fn(&Struct::method);
+
+		auto mp2 = is_member(&Struct::method);
+#if 0
+		dbj::io::printex("\nMemeberPoint is not checking IF method does exist on a given class.\n",
+			DBJ_NV(
+				typeid(
+					dbj::experimental_traits::MemberPointer_traits<void (std::string::*)()>::type
+				).name()
+			));
+#endif
+		auto mp3 = std::is_invocable< decltype(is_member), decltype(&tname) >::value ;
+
+		
+	}
 }
 #endif
 // EOF
