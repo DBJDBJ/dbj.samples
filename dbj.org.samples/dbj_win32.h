@@ -5,51 +5,27 @@
 #endif
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-// #define STRICT
+#define STRICT
+#if 0 == __has_include(<windows.h>)
 #include <windows.h>
+#endif
 // #include <tchar.h>
 
 namespace dbj {
 	namespace win32 {
 #pragma region "dbj win32 strings"
 		using CHAR_T = wchar_t;
-		using STRING = std::basic_string<CHAR_T>;
-		using long_string_pointer = LPWSTR;
+		using STRING = std::wstring ;
+		using long_string_pointer = CHAR_T *; // LPWSTR;
 
 		/* Find the length of S, but scan at most MAXLEN characters.  If no '\0'
 		terminator is found within the first MAXLEN characters, return MAXLEN.
 		*/
-#ifndef __cplusplus
-		/*
-		Inspired by: https://opensource.apple.com/source/bash/bash-80/bash/lib/sh/strnlen.c
-		*/
-		DBJ_INLINE size_t strnlen(const CHAR_T *s, size_t maxlen)
-		{
-			const CHAR_T *e = {};
-			size_t n = {};
 
-			for (e = s, n = 0; *e && n < maxlen; e++, n++)
-				;
-			return n;
-		}
-#else
-		/* modern C++ version*/
-		template< size_t N>
-		DBJ_INLINE size_t strnlen(const CHAR_T(&s)[N], size_t maxlen)
-		{
-			return min(N, maxlen);
-		}
-#endif
-
-		template< size_t N>
-		inline std::basic_string<wchar_t> widener( const char (& charar ) [N])
-		{
-			return std::basic_string<wchar_t>(std::begin(charar), std::end(charar));
-		}
 #pragma endregion "dbj win32 strings"
 
 			//Returns the last Win32 error, in string format. Returns an empty string if there is no error.
-			DBJ_INLINE auto getLastErrorMessage(
+		__forceinline auto getLastErrorMessage(
 				const STRING & prompt = STRING{}, DWORD errorMessageID = ::GetLastError()
 			)
 			{
@@ -73,70 +49,73 @@ namespace dbj {
 				return message;
 			}
 
-			template <size_t N>
-			DBJ_INLINE auto getLastErrorMessage(
-				const char (& prompt)[N] , DWORD errorMessageID = ::GetLastError()
-			)
+			__forceinline auto getLastErrorMessage(
+				const char * prompt , DWORD errorMessageID = ::GetLastError())
 			{
-				return getLastErrorMessage(widener(prompt), errorMessageID);
+				return getLastErrorMessage(dbj::wide(prompt), errorMessageID);
 			}
 
 			namespace sysinfo {
-
-				constexpr auto INFO_BUFFER_SIZE = 32767;
-				static CHAR_T  infoBuf[INFO_BUFFER_SIZE] = {};
-				static DWORD  bufCharCount = INFO_BUFFER_SIZE;
+				using std::string;
+					    DWORD	INFO_BUFFER_SIZE = 1024;
+				static wstring  infoBuf( INFO_BUFFER_SIZE, (char)0 );
+				//
+				template<class F, class... Pack>
+				constexpr __forceinline auto 
+					call
+				(F&& fun, Pack&&... args) {
+					infoBuf.clear();
+					if ( 0 == std::invoke(fun, (args)...))
+						throw getLastErrorMessage(typeid(F).name());
+					return (infoBuf);
+				}
 				// 
-				DBJ_INLINE auto computer_name() {
-					bufCharCount = INFO_BUFFER_SIZE;
-					if (!GetComputerName(infoBuf, &bufCharCount))
-						throw getLastErrorMessage(__func__);
-					return STRING(infoBuf, bufCharCount);
+				__forceinline STRING computer_name() {
+					static STRING computer_name_ =
+						call(GetComputerName, infoBuf.data(), &INFO_BUFFER_SIZE);
+					return computer_name_;
 				}
 
-				DBJ_INLINE auto user_name() {
-					bufCharCount = INFO_BUFFER_SIZE;
-					if (!GetUserName(infoBuf, &bufCharCount))
-						throw getLastErrorMessage(__func__);
-					return STRING(infoBuf, bufCharCount);
+				__forceinline STRING user_name() {
+					static STRING user_name_ =
+						call(GetUserName, infoBuf.data(), &INFO_BUFFER_SIZE);
+					return user_name_;
 				}
 
-				DBJ_INLINE auto system_directory() {
-					bufCharCount = INFO_BUFFER_SIZE;
-					if (!GetSystemDirectory(infoBuf, INFO_BUFFER_SIZE))
-						throw getLastErrorMessage(__func__);
-					return STRING(infoBuf, strnlen(infoBuf, INFO_BUFFER_SIZE - 1));
+				__forceinline STRING system_directory() {
+					static STRING system_directory_ =
+						call(GetSystemDirectory, infoBuf.data(), INFO_BUFFER_SIZE);
+					return system_directory_;
 				}
 
-				DBJ_INLINE auto windows_directory() {
-					bufCharCount = INFO_BUFFER_SIZE;
-					if (!GetWindowsDirectory(infoBuf, INFO_BUFFER_SIZE))
-						throw getLastErrorMessage(__func__);
-					return STRING(infoBuf, strnlen(infoBuf, INFO_BUFFER_SIZE - 1));
+				__forceinline STRING windows_directory() {
+					static STRING windows_directory_ =
+						call(GetWindowsDirectory, infoBuf.data(), INFO_BUFFER_SIZE);
+					return windows_directory_;
 				}
 			} // sysinfo
 #ifdef DBJ_TESTING_EXISTS
 			namespace {
 				using namespace sysinfo;
-				DBJ_TEST_CASE("dbj win32 tests"){
-					dbj::io::printex(
-						"\nComputer name:\t\t", computer_name(),
-						"\nUser name:\t\t", user_name(),
-						"\nSystem directory:\t\t", system_directory(),
-						"\nWindows directory:\t\t", windows_directory()
-					);
+				DBJ_TEST_CASE(dbj::nicer_filename(__FILE__)){
+					try {
+						dbj::io::printex(
+							"\n\t\t", DBJ_NV(computer_name()),
+							"\n\t\t", DBJ_NV(user_name()),
+							"\n\t\t", DBJ_NV(system_directory()),
+							"\n\t\t", DBJ_NV(windows_directory())
+						);
+					}
+					catch (...) {
+						dbj::io::printex("\nUknown Exception?");
+					}
 				};
 			}
 #endif // DBJ_TESTING_EXISTS
 	} // win32
 } // dbj
 
-#define DBJVERSION __DATE__ __TIME__
-  // #pragma message("-------------------------------------------------------------")
-#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
-  // #pragma message("-------------------------------------------------------------")
-#pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
-#undef DBJVERSION
+#pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
   /*
   Copyright 2017 by dbj@dbj.org
 

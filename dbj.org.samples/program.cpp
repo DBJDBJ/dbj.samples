@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
 	}
 
 	DBJ_TEST_CASE("dbj crt") {
-		print("\n(c) % by dbj.org, MSVC version: %", YEAR , __VERSION__);
+		print("\n(c) % by dbj.org, MSVC version: %", YEAR ,  _MSC_FULL_VER );
 		
 char	 promptA[]  =  "0123456789";
 wchar_t  promptW[]  = L"0123456789";
@@ -280,11 +280,12 @@ assert( dbj::strnlen(prompt32, BUFSIZ) == 10 );
 	  thus it will work for any class/struct and any method 
 	  the only requirement is: T is a method on some class or struct
 	*/
-	template < typename T >
+	/*
+	template <typename M T::* >
 	constexpr bool is_method_invocable() {
-		return std::is_invocable<T>::value;
+		return std::is_invocable<M T::*>::value;
 	}
-
+	*/
 	auto tname = [](const auto & T) -> const char * { return typeid(decltype(T)).name(); };
 
 	auto is_member = [](auto member) {
@@ -341,6 +342,9 @@ assert( dbj::strnlen(prompt32, BUFSIZ) == 10 );
 			));
 #endif
 		auto mp3 = std::is_invocable< decltype(is_member), decltype(&tname) >::value ;
+
+
+		// auto mp4 = mp(void);
 
 		
 	}

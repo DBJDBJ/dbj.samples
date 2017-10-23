@@ -111,6 +111,9 @@ namespace documents {
 
 	}
 } // dbj
+  /* standard suffix for every other header here */
+#pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
+
   /*
   Copyright 2017 by dbj@dbj.org
 

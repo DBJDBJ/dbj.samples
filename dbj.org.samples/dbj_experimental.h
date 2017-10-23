@@ -263,10 +263,8 @@ namespace dbj {
 
 	} // traits
 } // dbj
-#define DBJVERSION __DATE__ __TIME__
-#pragma message( "--------------------> Compiled: " __FILE__ ", Version: " DBJVERSION)
-#pragma comment( user, "(c) 2017 by dbj@dbj.org | Version: " DBJVERSION ) 
-#undef DBJVERSION
+  /* standard suffix for every other header here */
+#pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
   /*
   Copyright 2017 by dbj@dbj.org
 
