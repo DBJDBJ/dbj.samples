@@ -4,12 +4,11 @@
 #error __FILE__ requires UNICODE builds
 #endif
 
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
+#ifndef _INC_WINDOWS
+#define WIN32_LEAN_AND_MEAN
 #define STRICT
-#if 0 == __has_include(<windows.h>)
 #include <windows.h>
 #endif
-// #include <tchar.h>
 
 namespace dbj {
 	namespace win32 {
@@ -17,11 +16,6 @@ namespace dbj {
 		using CHAR_T = wchar_t;
 		using STRING = std::wstring ;
 		using long_string_pointer = CHAR_T *; // LPWSTR;
-
-		/* Find the length of S, but scan at most MAXLEN characters.  If no '\0'
-		terminator is found within the first MAXLEN characters, return MAXLEN.
-		*/
-
 #pragma endregion "dbj win32 strings"
 
 			//Returns the last Win32 error, in string format. Returns an empty string if there is no error.
