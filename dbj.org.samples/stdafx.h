@@ -28,3 +28,6 @@ limitations under the License.
 #include "dbj_experimental.h"
 #include "dbj_win32.h"
 #include "dbj_trace.h"
+#if DBJ_MICRO_PRINTF
+#include "dbj_micro_printf.h"
+#endif

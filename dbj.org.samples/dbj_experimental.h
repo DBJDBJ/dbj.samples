@@ -1,5 +1,57 @@
 #pragma once
+#include <iostream>
 
+#ifndef _MSC_VER
+namespace dbj {
+	//from http://en.cppreference.com/w/cpp/language/fold
+	template<typename ...Args> void printer(Args&&... args) {
+		(std::cout << ... << args) << '\n';
+	}
+
+	DBJ_TEST_CASE("dbj::printer()") {
+
+		printer(1, 2, 3);
+		// printer("A ", 1.0f, "\t", true, L" WIDE" );
+	}
+}
+#endif
+
+#ifdef __cpp_fold_expressions
+namespace dbj::variadic::ops {
+	// foldExpression.cpp
+
+	template<typename... Args>
+	bool all(Args... args) { return (... && args); }
+
+	template<typename... Args>
+	bool any(Args... args) { return (... || args); }
+
+	template<typename... Args>
+	bool none(Args... args) { return not(... || args); }
+
+	DBJ_TEST_CASE("dbj::variadic::ops") {
+
+#define str(x) #x
+#define dbj(a) std::cout << "\n" << str(a) << " --> " <<  (a)
+
+		std::cout << std::boolalpha;
+		dbj(all(true));
+		dbj(any(true));
+		dbj(none(true));
+
+		dbj(all(true, 0, true, true));
+		dbj(any(true, true, true, false));
+		dbj(none(true, true, true, false));
+
+		dbj(all(false, false, false, false))  << all(false, false, false, false  ) ;
+		dbj(any(false, false, false, false))  << any(false, false, false, false  ) ;
+		dbj(none(false, false, false, false))  << none(false, false, false, false) ;
+
+#undef str
+#undef dbj
+	}
+}
+#endif
 namespace dbj::functional {
 	// inspired with MSVC std lib
 	// _Weak_types
