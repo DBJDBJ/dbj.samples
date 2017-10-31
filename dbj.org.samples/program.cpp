@@ -1,11 +1,4 @@
 #include "stdafx.h"
-
-
-#if __has_include(<functional>)
-#include <functional>
-#endif
-
-
 #if 0
 /*
   VS2017 Community edition (latest as of 2017-10-20), C++17 build
