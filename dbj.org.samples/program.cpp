@@ -56,3 +56,12 @@ int main(int argc, char* argv[])
 	return true;
 }
 
+/*
+try this
+
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define LOCATION __FILE__ "(" TOSTRING(__LINE__) ") : "
+
+from: https://stackoverflow.com/questions/30438911/how-to-get-a-visual-studio-macro-value-into-a-pre-processor-directive
+*/

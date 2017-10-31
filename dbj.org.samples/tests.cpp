@@ -5,6 +5,7 @@
 #include <test\dbj_console_test.h>
 #include <test\dbj_various_tests.h>
 #include <test\dbj_crt_testing.h>
+#include <test\dbj_defval_testing.h>
 
 #ifdef DBJ_TESTING_EXISTS
 /* dbj type traits and enable if helpers */ namespace {
