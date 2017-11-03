@@ -6,7 +6,7 @@
 */
 
 #include <type_traits>
-#include <dbjio.h>
+#include <dbj_io.h>
 #include <dbj_testing.h>
 
 namespace dbj {
