@@ -4,35 +4,34 @@
 #pragma region enable_if helpers
 namespace dbj {
 	/*
-	templates are zealous eaters of types
+	Templates are zealous eaters of types
 	thus overloading and templates do not mix easily
-	this iso C++ comitee invenetedstd::enable_if<>
-	which in turn makes you either "be somewhere else"
+	iso C++ comitee inveneted std::enable_if<>
+	Which in turn makes you either "be somewhere else"
 	or scramble for false cover of macros
-	here we do not use macros. we use modern C++ to deliver
+	Here we do not use macros. we use modern C++ to deliver
 	helpers when using templates woth or without overloading
-
-	EIF stands for enable if
-	DT  stands for Decay Type
 	*/
 	namespace {
-		// we usualy decay the types here before using them
-		// see http://en.cppreference.com/w/cpp/types/decay
+		/*DT  stands for Decay Type
+		we usualy decay the types here before using them
+		see http://en.cppreference.com/w/cpp/types/decay
+		*/
 		template< typename T>
 		using DT = std::decay_t<T>; // since C++14
-
+		/*EIF stands for enable if*/
 		template< bool pred >
 		using EIF = typename std::enable_if_t< pred, int >;
 	}
-	/* first we define dbj::is_ function for every std::is_ */
+	/* we define constexpr dbj::is_ function for every std::is_ */
 	template< typename T>
-	static constexpr bool is_object() { return std::is_object_v< DT<T>>; }
+	 constexpr bool is_object() { return std::is_object_v< DT<T>>; }
 
 	template< typename T>
-	static constexpr bool is_integral() { return std::is_integral_v< DT<T>>; }
+	 constexpr bool is_integral() { return std::is_integral_v< DT<T>>; }
 
 	template< typename T>
-	static constexpr bool is_floating() { return std::is_floating_point< DT<T> >::value; }
+	 constexpr bool is_floating() { return std::is_floating_point< DT<T> >::value; }
 
 	/* bellow are dbj::require_ templates we use through EIF<> */
 	template< typename T>

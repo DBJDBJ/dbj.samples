@@ -154,6 +154,7 @@
     <ClInclude Include="dbj_micro_printf.h" />
     <ClInclude Include="dbj_tokenizer.h" />
     <ClInclude Include="dbj_trace.h" />
+    <ClInclude Include="dbj_traits_test.h" />
     <ClInclude Include="dbj_util.h" />
     <ClInclude Include="dbj_traits.h" />
     <ClInclude Include="dbj_experimental.h" />

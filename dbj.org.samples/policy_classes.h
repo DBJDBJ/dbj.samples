@@ -8,7 +8,7 @@ explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 namespace dbj {
 	namespace philology {
 		using std::string;
-		using dbj::io::print;
+		using dbj::win::con::print;
 		/*
 		 interfaces to writing and language policies
 		*/
