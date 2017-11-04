@@ -82,7 +82,7 @@ DBJ_TEST_CASE("dbj documents") {
 
 DBJ_TEST_CASE("dbj tokenizer_test") {
 
-	using dbj::io::print;
+	using dbj::print;
 	const char * sentence = "abra % ka % dabra";
 	dbj::fm::tokenizer tok(sentence, "%");
 	print("Input sentence: [%]", sentence);

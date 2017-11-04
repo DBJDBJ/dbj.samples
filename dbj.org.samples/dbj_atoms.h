@@ -16,7 +16,7 @@ namespace dbj::nuclear {
 
 		template<typename T>
 		auto  nested_init_list_args ( const std::initializer_list< std::initializer_list< T >> & arg ) {
-			dbj::io::printex("\n",__func__, "\t", DBJ_NV(typeid(arg).name()));
+			dbj::printex("\n",__func__, "\t", DBJ_NV(typeid(arg).name()));
 		};
 
 		struct Counters { int a; int b; };      // user-defined trivially-copyable type
