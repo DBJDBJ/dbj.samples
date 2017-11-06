@@ -310,7 +310,7 @@ namespace dbj {
 
 		DBJ_TEST_CASE("Testing dbj experimental_traits") {
 			using lamaref = Referee<lama>;
-			dbj::printex("\n", __func__, "\t", DBJ_NV(typeid(lamaref).name()));
+			dbj::print("\n", __func__, "\t", DBJ_NV(typeid(lamaref).name()));
 		}
 
 	} // traits

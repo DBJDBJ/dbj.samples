@@ -18,12 +18,12 @@ DBJ_TEST_CASE("dbj inheritance") {
 
 	auto print_line = [](bool new_line = true, const size_t len_ = 80, const char chr_ = '-') {
 		const std::string line_(len_, chr_);
-		printex("\n", line_.data());
+		dbj::print("\n", line_.data());
 	};
 
 	auto measure = [&print_line](auto object, const char * msg = "") -> void {
 		print_line();
-		printex("\n", msg, "\nType name:\t", typeid(object).name(),
+		dbj::print("\n", msg, "\nType name:\t", typeid(object).name(),
 			"\nSpace requirements in bytes",
 			"\nType:\t\t", sizeof(decltype(object)),
 			"\nInstance:\t", sizeof(object),
@@ -34,14 +34,14 @@ DBJ_TEST_CASE("dbj inheritance") {
 	dbj::philology::HelloWorld<> hello{};
 	dbj::philology::HelloWorld2<> hello2{};
 
-	print("\nBEFORE RUN\n");
+	dbj::print("\nBEFORE RUN\n");
 	measure(hello);
 	measure(hello2);
 	print_line();
 	hello.run("\nHelloWorld -- Default policies");
 	hello2.run("\nHelloWorld2 -- No inheritance");
 	print_line();
-	print("\nAFTER RUN\n");
+	dbj::print("\nAFTER RUN\n");
 	measure(hello);
 	measure(hello2);
 };
@@ -82,14 +82,13 @@ DBJ_TEST_CASE("dbj documents") {
 
 DBJ_TEST_CASE("dbj tokenizer_test") {
 
-	using dbj::print;
 	const char * sentence = "abra % ka % dabra";
 	dbj::fm::tokenizer tok(sentence, "%");
-	print("Input sentence: [%]", sentence);
+	dbj::print("Input sentence: ", sentence);
 	for (auto w : tok) {
-		print("\ntok[%] = [%]", w, tok[w]);
+		dbj::print("\ntok[",w,"] = [",tok[w],"]");
 	}
-	print("\n\n");
+	dbj::print("\n");
 }
 }
 #pragma endregion

@@ -2,7 +2,7 @@
 #ifdef DBJ_TESTING_EXISTS
 /* dbj type traits and enable if helpers */ 
 namespace {
-	using namespace dbj::win::con ;
+	// using namespace dbj::win::con ;
 
 	template<typename T, typename dbj::require_integral<T> = 0>
 	DBJ_INLINE auto Object(T&& t) { return std::variant<T>(t); }
@@ -12,14 +12,14 @@ namespace {
 
 	/*usage*/
 	DBJ_TEST_CASE(dbj::nicer_filename(__FILE__)) {
-		printex(
+		dbj::print(
 			"\n", DBJ_NV(dbj::is_floating<float>())
 		);
-		printex("\n", DBJ_NV(dbj::is_integral<int>()));
-		printex("\n", DBJ_NV(dbj::is_object<int>()));
+		dbj::print("\n", DBJ_NV(dbj::is_integral<int>()));
+		dbj::print("\n", DBJ_NV(dbj::is_object<int>()));
 
-		printex("\n", DBJ_NV(Object(42)));
-		printex("\n", DBJ_NV(Object(42.0f)));
+		dbj::print("\n", DBJ_NV(Object(42)));
+		dbj::print("\n", DBJ_NV(Object(42.0f)));
 	}
 } // namespace
 #endif // DBJ_TESTING_EXISTS
