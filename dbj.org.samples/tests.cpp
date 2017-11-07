@@ -49,25 +49,26 @@ DBJ_TEST_CASE("dbj inheritance") {
 
 DBJ_TEST_CASE("dbj util")
 {
-	auto f = []() -> std::tuple<int, int> // this function returns multiple values
+	// this function returns multiple values
+	auto f = []() -> std::tuple<int, int> 
 	{
-		int x = 5;
-		return std::make_tuple(x, 7); // return {x,7}; in C++17
+		return std::make_tuple(5, 7); 
+		// returns {5,7}; in C++17
 	};
 
+#define DBJ_IL(T,...)  std::forward<std::initializer_list<T>>(std::initializer_list<T>({__VA_ARGS__}))
 	// heterogenous tuple construction
 	int n = 1;
 	auto t = std::make_tuple(10, "Test", 3.14, std::ref(n), n);
-	n = 7;
-	auto[v1, v2, v3, v4, v5] = t;
-	std::cout << "The value of t is " << "("
-		<< v1 << ", " << v2 << ", "
-		<< v3 << ", " << v4 << ", "
-		<< v5 << ")\n";
+	// C++17 tuple unpacking , provided we know the tuple size
+	// auto[v1, v2, v3, v4, v5] = t;
+	// basically forget about init lists passing
+	// dbj::print( DBJ_IL(int, 1 , 2 , 3 , 4 , 5 ) );
+
+	dbj::print("\n",t,"\n");
 
 	// function returning multiple values
-	auto[a, b] = f();
-	std::cout << a << " " << b << "\n";
+	dbj::print( "\nfunction returns multiple values " , f());
 }
 
 DBJ_TEST_CASE("dbj documents") {
