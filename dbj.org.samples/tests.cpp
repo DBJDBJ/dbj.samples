@@ -14,6 +14,28 @@
 #pragma region "More tests"
 namespace {
 
+	DBJ_TEST_CASE("lambda lists") {
+		auto list = [&](auto ...xs) {
+			return [=](auto access) { return access(xs...); };
+		};
+
+		auto head = [&](auto xs) {
+			return xs([=](auto first, auto ...rest) { return first; });
+		};
+
+		auto tail = [&](auto xs) {
+			return xs([=](auto first, auto ...rest) { return list(rest...); });
+		};
+
+		auto length = [&](auto xs) {
+			return xs([=](auto ...z) { return sizeof...(z); });
+		};
+
+		// usage
+
+		dbj::print( DBJ_NV( length(list(1, '2', "3")) ));
+	}
+
 DBJ_TEST_CASE("dbj inheritance") {
 
 	auto print_line = [](bool new_line = true, const size_t len_ = 80, const char chr_ = '-') {
@@ -56,15 +78,20 @@ DBJ_TEST_CASE("dbj util")
 		// returns {5,7}; in C++17
 	};
 
-#define DBJ_IL(T,...)  std::forward<std::initializer_list<T>>(std::initializer_list<T>({__VA_ARGS__}))
+#define DBJ_IL(T,...)  /*std::forward<std::initializer_list<T>>*/(std::initializer_list<T>{__VA_ARGS__})
+	// basically forget about init lists passing
+	// https://stackoverflow.com/questions/20059061/having-trouble-passing-multiple-initializer-lists-to-variadic-function-template/47159747#47159747
+	// yes I know macro + variadic = horific
+	// but in here it seems as a sort of a solution
+	// but no can do for msvc
+	// dbj::print(std::initializer_list<int>{ 1, 2, 3, 4, 5 });
+
 	// heterogenous tuple construction
 	int n = 1;
 	auto t = std::make_tuple(10, "Test", 3.14, std::ref(n), n);
 	// C++17 tuple unpacking , provided we know the tuple size
 	// auto[v1, v2, v3, v4, v5] = t;
-	// basically forget about init lists passing
-	// dbj::print( DBJ_IL(int, 1 , 2 , 3 , 4 , 5 ) );
-
+    // passing tuples is not a problem
 	dbj::print("\n",t,"\n");
 
 	// function returning multiple values
@@ -91,10 +118,7 @@ DBJ_TEST_CASE("dbj tokenizer_test") {
 	}
 	dbj::print("\n");
 }
-}
 #pragma endregion
-
-namespace {
 
 	struct Struct final {
 		template<typename T>
