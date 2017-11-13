@@ -10,11 +10,56 @@
 
 #include "dbj_traits_test.h"
 
+#include "dbjtree\dbj_tree_tests.h"
+
 
 #pragma region "More tests"
 namespace {
+	// https://hackernoon.com/a-tour-of-c-17-if-constexpr-3ea62f62ff65
+	struct X {
+		X & xbegin() { return *this;  }
+		X & end()   { return *this;  }
+	};
 
-	DBJ_TEST_CASE("lambda lists") {
+	template<class T>
+	constexpr auto supportsAPI(T x) 
+		-> decltype( & T::end, & T::begin, std::true_type{})
+	{
+		return {};
+	}
+	constexpr auto supportsAPI(...) -> std::false_type {
+		return {};
+	}
+	namespace detail {
+
+		template<class T>
+		constexpr auto has_begin(T x) -> decltype(std::declval<T>().begin(), bool )
+		{
+			return true;
+		}
+
+		constexpr auto has_begin(...) -> bool {
+			return false;
+		}
+
+		template<class T>
+		void begin(T x) {
+			if constexpr(has_begin(T{})) {
+				// only gets compiled if the condition is true
+				x.begin();
+			}
+		}
+	}
+
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": lambda constexpr combinations")) {
+
+		// decltype(std::declval<X>().begin()) dumsy ;
+
+		auto itdoes = detail::has_begin(std::string{});
+		detail::begin(X());
+	}
+
+	DBJ_TEST_CASE( dbj::FILELINE(__FILE__, __LINE__, ": lambda lists") ) {
 		auto list = [&](auto ...xs) {
 			return [=](auto access) { return access(xs...); };
 		};
