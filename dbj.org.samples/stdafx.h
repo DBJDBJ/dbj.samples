@@ -15,8 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-#include <strstream>
 
+// #define DBJ_WIN
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
 //
@@ -32,3 +32,5 @@ limitations under the License.
 #if DBJ_MICRO_PRINTF
 #include "dbj_micro_printf.h"
 #endif
+
+

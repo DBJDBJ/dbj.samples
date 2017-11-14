@@ -42,36 +42,11 @@ int main(int argc, char* argv[])
 	return true;
 }
 #endif
-      //www.highprogrammer.com/alan/windev/visualstudio.html
-	  // Statements like:
-	  // #pragma message(Reminder "Fix this problem!")
-	  // Which will cause messages like:
-	  // C:\Source\Project\main.cpp(47): Reminder: Fix this problem!
-	  // to show up during compiles. Note that you can NOT use the
-	  // words "error" or "warning" in your reminders, since it will
-	  // make the IDE think it should abort execution. You can double
-	  // click on these messages and jump to the line in question.
-
-#define Stringize( L )     #L 
-#define MakeString( M, L ) M(L)
-#define Expander(x) (x)
-#define $Line MakeString( Stringize, __LINE__ )
-#define $Year MakeString( Stringize, ((__DATE__+7)) )
-#define Reminder __FILE__ "(" $Line ") :DBJ Reminder: "
 
 int main(int argc, char* argv[])
 {
-	#pragma message(Reminder "Use this macro!") 
+	dbj::print("dbj")("print")("is")("fluent");
+
 	dbj::testing::execute();
 	return true;
 }
-
-/*
-try this
-
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
-#define LOCATION __FILE__ "(" TOSTRING(__LINE__) ") : "
-
-from: https://stackoverflow.com/questions/30438911/how-to-get-a-visual-studio-macro-value-into-a-pre-processor-directive
-*/
