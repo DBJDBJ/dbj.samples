@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #ifdef DBJ_TESTING_EXISTS
 // dbj++ tests
@@ -12,9 +12,34 @@
 
 #include "dbjtree\dbj_tree_tests.h"
 
+#include <fcntl.h>
+#include <io.h>
 
 #pragma region "More tests"
 namespace {
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": famous dbj console ucrt crash")) 
+		{
+		// кошка 日本
+		constexpr wchar_t specimen[] =
+			{ L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd" };
+		dbj::print("\n", specimen, "\n");
+		/*
+		<fcntl.h>
+		_O_U16TEXT, _O_U8TEXT, or _O_WTEXT 
+		to enable Unicode mode
+		_O_TEXT to "translated mode" aka ANSI
+		_O_BINARY sets binary (untranslated) mode,
+		*/
+		int result = _setmode(_fileno(stdout), _O_U8TEXT);
+		if ( result == -1 )
+			perror("Cannot set mode to:" DBJ_STRINGIFY(_O_U8TEXT) );
+		// both should display: кошка 日本
+		// for any mode the second word is not displayed
+		wprintf(L"\nwprintf() result: %s\n",specimen);
+		// for any mode the following crashes the UCRT (aka Universal CRT)
+		// printf("\nprintf() result: %S\n",specimen);
+	}
+
 	// https://hackernoon.com/a-tour-of-c-17-if-constexpr-3ea62f62ff65
 	struct X {
 		X & xbegin() { return *this;  }
@@ -51,6 +76,7 @@ namespace {
 		}
 	}
 
+
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": lambda constexpr combinations")) {
 
 		// decltype(std::declval<X>().begin()) dumsy ;
@@ -59,27 +85,68 @@ namespace {
 		detail::begin(X());
 	}
 
+#pragma region LAMBDA LISP
+
 	DBJ_TEST_CASE( dbj::FILELINE(__FILE__, __LINE__, ": lambda lists") ) {
+		/* the key abstraction 
+		   returns lambda that will call the access lambda on varargs given to list lambda
+		 */
 		auto list = [&](auto ...xs) {
-			return [=](auto access) { return access(xs...); };
+			return [=](auto proc_lambda) { return proc_lambda(xs...); };
 		};
 
-		auto head = [&](auto xs) {
-			return xs([=](auto first, auto ...rest) { return first; });
+		/*
+		   to understand it all: 
+
+		   auto l123 = list(1,2,3) // returns --> [=](auto proc_lambda) { return proc_lambda(xs...); };
+
+		   head(l123) //  head() calls the lambda (see above) 
+		                     // thus head() calls into the returned lambda from list()
+							 // head calls lambda l123() 
+							 // with internal lambda as agument to l123() now that
+							 // (!critical detail!) proc lambda receives xs... that is saved on the 
+							 // argument stack of the list() call
+		*/
+		auto head = [&](auto list_lambda) {
+			return list_lambda(
+				[=](auto first, auto ...rest) { return first; }
+			);
 		};
 
-		auto tail = [&](auto xs) {
-			return xs([=](auto first, auto ...rest) { return list(rest...); });
+		// returns list() lambda
+		auto tail = [&](auto list_lambda) {
+			return list_lambda([=](auto first, auto ...rest) { return list(rest...); });
 		};
 
-		auto length = [&](auto xs) {
-			return xs([=](auto ...z) { return sizeof...(z); });
+		auto length = [&](auto list_lambda) {
+			return list_lambda([=](auto ...z) { return sizeof...(z); });
+		};
+
+		/* dbj added */
+		auto print = [](auto list_lambda) {
+			// we call here what list, head or tail, have returned
+			return list_lambda(
+				[=](auto ...args) { 
+				   dbj::print_sequence( args...);
+			    }
+			);
 		};
 
 		// usage
+		auto my_list = list(1, '2', "3", false, 13.0f);
+		auto my_head = head(my_list);
+		auto my_tail = tail(my_list);
 
-		dbj::print( DBJ_NV( length(list(1, '2', "3")) ));
+		dbj::print("\nlist: ");
+			print(my_list);
+		dbj::print("\nhead: ", my_head );
+		dbj::print("\ntail: ");
+			print(my_tail);
+
+		// dbj::print("\n", DBJ_NV( length(list()) ));
+
 	}
+#pragma region LAMBDA LISP
 
 DBJ_TEST_CASE("dbj inheritance") {
 
