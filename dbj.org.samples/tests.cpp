@@ -102,28 +102,49 @@ namespace {
 #pragma region LAMBDA LISP
 
 	DBJ_TEST_CASE( dbj::FILELINE(__FILE__, __LINE__, ": lambda lists") ) {
-		/* the key abstraction 
-		   returns lambda that will call the access lambda on varargs given to list lambda
-		 */
+		
+		/* 
+		the key abstraction  
+		*/
 		auto list = [&](auto ...xs) {
-			return [=](auto proc_lambda) { return proc_lambda(xs...); };
+			/*return lambda */
+			return [=](
+				/* single argument is lambda */
+				auto proc_lambda
+				) { 
+				    /* lambda given is called with variadic arguments of the list() */
+				    return proc_lambda(xs...); 
+			   };
 		};
 
 		/*
 		   to understand it all: 
 
-		   auto l123 = list(1,2,3) // returns --> [=](auto proc_lambda) { return proc_lambda(xs...); };
+		   auto l123 = list(1,2,3) // returns lambda --> [=](auto proc_lambda) { return proc_lambda(xs...); };
 
-		   head(l123) //  head() calls the lambda (see above) 
-		                     // thus head() calls into the returned lambda from list()
-							 // head calls lambda l123() 
-							 // with internal lambda as agument to l123() now that
-							 // (!critical detail!) proc lambda receives xs... that is saved on the 
-							 // argument stack of the list() call
-		*/
+		   head(l123) //  head() is given that lambda as argument
+		   inside head() calls into that lambda -- see it now above once more
+		   thus head() does -- l123() 
+		   agument to l123() is lambda defined in the call to it as argument
+		   (!critical detail here!) that lambda receives xs... that is saved on the 
+		   argument stack of the list() call previously -- see the list() above
+
+		   now try to follow all of this in the debuger
+		  */
 		auto head = [&](auto list_lambda) {
 			return list_lambda(
-				[=](auto first, auto ...rest) { return first; }
+				/*
+				this is given as proc_lambda() to the result lambda od the list()
+				arguments are the original variadic arguments  of the list()
+				*/
+				[=](auto first, auto ...rest) { 
+				/* 
+				we return list of one element so that users of head() and tail()
+				can use  then both in a symetrical manner
+				see the usage of print() for example
+				*/
+				return list(first); 
+			    }
 			);
 		};
 
@@ -137,25 +158,27 @@ namespace {
 		};
 
 		/* dbj added */
-		auto print = [](auto list_lambda) {
-			// we call here what list, head or tail, have returned
+		auto list_to_tuple = [&](auto list_lambda) {
+			// 
 			return list_lambda(
 				[=](auto ...args) { 
-				   dbj::print_sequence( args...);
+					return std::make_tuple(args...);
 			    }
 			);
 		};
 
 		// usage
-		auto my_list = list(1, '2', "3", false, 13.0f);
-		auto my_head = head(my_list);
-		auto my_tail = tail(my_list);
-
-		dbj::print("\nlist: ");
-			print(my_list);
-		dbj::print("\nhead: ", my_head );
-		dbj::print("\ntail: ");
-			print(my_tail);
+		auto my_list = list(1, '2', "3", false, 13.0f); // return lambda() internal to list()
+		auto my_head = head(my_list); // returns list of one element -- list(1)
+		auto my_tail = tail(my_list); // returns list('2', "3", false, 13.0f)
+		/*
+		 after playing with lambda lists we print what we need to print
+		 we use list_to_tuple() because dbj::print() knows how to print touples
+		 but not lambda lists
+		 */
+		dbj::print("\nlist: ", list_to_tuple(my_list ));
+		dbj::print("\nhead: ", list_to_tuple(my_head ));
+		dbj::print("\ntail: ", list_to_tuple(my_tail ));
 
 		// dbj::print("\n", DBJ_NV( length(list()) ));
 
@@ -164,14 +187,11 @@ namespace {
 
 DBJ_TEST_CASE("dbj inheritance") {
 
-	auto print_line = [](bool new_line = true, const size_t len_ = 80, const char chr_ = '-') {
-		const std::string line_(len_, chr_);
-		dbj::print("\n", line_.data());
-	};
+	constexpr dbj::c_line<80, '-'> Line80 ; // compile time
 
-	auto measure = [&print_line](auto object, const char * msg = "") -> void {
-		print_line();
-		dbj::print("\n", msg, "\nType name:\t", typeid(object).name(),
+	auto measure = [&Line80](auto object, const char * msg = "") -> void {
+		dbj::print( "\n", Line80 ,
+			"\n", msg, "\nType name:\t", typeid(object).name(),
 			"\nSpace requirements in bytes",
 			"\nType:\t\t", sizeof(decltype(object)),
 			"\nInstance:\t", sizeof(object),
@@ -185,10 +205,10 @@ DBJ_TEST_CASE("dbj inheritance") {
 	dbj::print("\nBEFORE RUN\n");
 	measure(hello);
 	measure(hello2);
-	print_line();
+	dbj::print("\n", Line80);
 	hello.run("\nHelloWorld -- Default policies");
 	hello2.run("\nHelloWorld2 -- No inheritance");
-	print_line();
+	dbj::print("\n", Line80);
 	dbj::print("\nAFTER RUN\n");
 	measure(hello);
 	measure(hello2);

@@ -21,7 +21,7 @@ namespace dbj {
 		// classes to be used
 		// as default policies		
 		struct WideWriterPolicy : implements IWriterPolicy {
-			void write(string msg) { print("%", msg); }
+			void write(string msg) { print(" ", msg); }
 		};
 		struct LanguagePolicyEnglish : implements ILanguagePolicy {
 			string translate(string msg) { return msg; }
