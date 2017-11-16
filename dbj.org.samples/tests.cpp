@@ -84,6 +84,20 @@ namespace {
 		auto itdoes = detail::has_begin(std::string{});
 		detail::begin(X());
 	}
+#pragma region constexpr strings
+	
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": constexpr strings")) {
+		// this all happens at compile time
+		constexpr dbj::str_const my_string = "Hello, world!";
+		static_assert(my_string.size() == 13, "");
+		static_assert(my_string[4] == 'o', "");
+		constexpr dbj::str_const my_other_string = my_string;
+		//  constexpr char x = world[5]; // Does not compile because index is out of range!
+		
+		constexpr dbj::c_line<80, '='> L80;
+	}
+#pragma endregion 
+
 
 #pragma region LAMBDA LISP
 

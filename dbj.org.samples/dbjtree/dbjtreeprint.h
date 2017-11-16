@@ -83,7 +83,7 @@ namespace dbj {
 			{
 				/* NOTE: 512 happpens to be the BUFSIZ */
 				wchar_t buffer[BUFSIZ*2] = {};
-				size_t buffer_size = dbj::sizeof_array(buffer);
+				size_t buffer_size = dbj::countof(buffer);
 				assert(-1 != dbj_snwprintf_s(buffer, buffer_size -1, buffer_size -1, format, (args) ...));
 				buff_.append(buffer);
 			}
