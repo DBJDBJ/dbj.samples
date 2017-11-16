@@ -14,21 +14,20 @@ namespace dbj {
 
 	(c) 2017 by dbj@dbj.org
 
-	T is data type stored		
-	It has to be deletable, swappable and streamable for output
+	DT is data type stored		
+	It has to be deletable, swappable and capable of display for output
 
 	tree imp operates with naked pointers
 	that makes it more obvious what is goin on
 	also the default constructor is not allowed
 	that makes no sense and will introduce an 'empty BinaryNode' singularity
 	*/
-	template< typename T >
+	template< typename DT >
 		class BinaryNode {
 		public:
 			typedef BinaryNode *	    NodePointer;
-			typedef T					DataType;
-			typedef T *					DataPointer;
-			typedef BinaryNode<T>		BinaryNodeType;
+			typedef DT 					data_type;
+			typedef BinaryNode<DT>		BinaryNodeType;
 			typedef std::unique_ptr<BinaryNode> Guardian;
 			/*
 			each BinaryNode processing function has to conform to this footprint
@@ -36,12 +35,12 @@ namespace dbj {
 			*/
 			typedef bool(*BinaryNodeVisitorType) (NodePointer);
 		private:
-			DataPointer					data_;
+			data_type					data_;
 			NodePointer					left_;
 			NodePointer					right_;
 
 			/* default ctor */
-			BinaryNode(): data_(nullptr), left_(nullptr), right_(nullptr){	}
+			BinaryNode() : data_{}, left_(nullptr), right_(nullptr){	}
 		public:
 			/*
 			Factory method.
@@ -50,12 +49,12 @@ namespace dbj {
 			TODO:users should make_node_pointer only once when "starting" a tree,
 			keeping the root node in std::unique_ptr
 			*/
-			static Guardian make_node(T && root_data) {
-				return std::make_unique<BinaryNode>(std::forward<T>(root_data));
+			static Guardian make_node(data_type && root_data) {
+				return std::make_unique<BinaryNode>(std::forward<data_type>(root_data));
 			}
 
-			static std::unique_ptr<DataPointer> make_data( const T & data_ ) {
-				return std::make_unique<T>(data_);
+			static data_type make_data( const data_type & data_ ) {
+				return data_type{ data_ };
 			}
 			
 	
@@ -67,8 +66,6 @@ namespace dbj {
 			*/
 			~BinaryNode() {
 				assert(this);
-				if (data_)
-					delete data_; data_ = nullptr;
 				if (left_)
 					delete left_; left_ = nullptr;
 				if (right_)
@@ -76,11 +73,11 @@ namespace dbj {
 			}
 
 			/* construct with data */
-			BinaryNode( T && ndata_ ) 
+			BinaryNode( data_type && ndata_ ) 
 				: left_  (),
 				  right_ ()
 			{
-				data_ = new  T(ndata_) ;
+				data_ = data_type{ ndata_ };
 			}
 
 			/* copying 
@@ -88,7 +85,6 @@ namespace dbj {
 			*/
 			BinaryNode(const BinaryNode & other_)
 			{
-				DBJ_ASSERT( !data_  );
 				DBJ_ASSERT( !left_  );
 				DBJ_ASSERT( !right_ );
 
@@ -102,7 +98,6 @@ namespace dbj {
 			 */
 			const BinaryNode &  operator = (const BinaryNode & other_) {
 				if (this == &other_) return;
-				if (data_)	delete data_;
 				if (left_)	delete left_;
 				if (right_) delete right_;
 					this->data_  = other_.data_  ;
@@ -148,25 +143,23 @@ namespace dbj {
 				return !(*this == other_);
 			}
 
-			const DataPointer  data()  const noexcept {  return this->data_;  }
-			const NodePointer  left () const noexcept {  return this->left_;  }
-			const NodePointer  right() const noexcept {  return this->right_; }
+			const data_type		data()  const noexcept {  return this->data_;  }
+			const NodePointer	left () const noexcept {  return this->left_;  }
+			const NodePointer	right() const noexcept {  return this->right_; }
 
-			/*
-			Variadic insert
-			*/
+			/*	Variadic insert	*/
 			template < typename ... Args >
 			const void insert(Args&&... args)
 			{
 				const size_t size = sizeof...(args);
-				T arglist[size] = { args... };
+				data_type arglist[size] = { args... };
 				for (auto & data_ : arglist) {
 					(void)inserter(this, data_ );
 				}
 			}
 
 			/* Streaming insert */
-			BinaryNode & operator << (const T & ndata) {
+			BinaryNode & operator << (const data_type & ndata) {
 				inserter(this,ndata);
 				return const_cast<BinaryNode &>(*this);
 			}
@@ -178,19 +171,19 @@ namespace dbj {
 			it uses operator '<=' on the data type used and stored
 			it also uses BinaryNode<T>::BinaryNode_creator() to make_node_pointer the BinaryNode
 			*/
-			NodePointer inserter(NodePointer root, T ndata) 
+			NodePointer inserter(NodePointer root, data_type ndata) 
 			{
 				if (!root) {
-					return root = new BinaryNode( std::forward<T>(ndata));
+					return root = new BinaryNode( std::forward<data_type>(ndata));
 				}
-					assert(root->data_);
+					// assert(root->data_);
 				/*
 				'store left if smaller or equal, store right if not'
 				insertion criteria is defined by using '<=' operator on data
 				this is e.g. 0, 1, 2, 3, 4 will repeatedly give the resulting
 				tree that will	have them all in just "mental picture right" Nodes
 				*/
-				if (	ndata <= *(root->data_) )
+				if ( ndata <= root->data_ )
 					root->left_ = inserter(root->left_, ndata) ;
 				else
 					root->right_ = 	inserter(root->right_, ndata );

@@ -9,7 +9,7 @@
 namespace dbj {
 	namespace conv {
 		template <typename T>
-		inline std::wstring	& to_wstring(T & t) {
+		inline std::wstring	to_wstring(const T & t) {
 			static std::wstring retval_; // prolong the life of returned value
 			std::wostringstream out ;
 			out << t;
@@ -18,7 +18,8 @@ namespace dbj {
 			return retval_;
 		}
 
-		inline std::wstring	& to_wstring(std::wstring & t) {
+		template<>
+		inline std::wstring	to_wstring<std::wstring>(const std::wstring & t) {
 			static std::wstring retval_; // prolong the life of returned value
 			retval_.clear();
 			retval_.append(t.data()); //copy
@@ -153,10 +154,9 @@ namespace dbj {
 				std::wstring  & print_(NODE* tree, const int outwid_)
 				{
 					if (tree) {
-						assert(tree->data());
-						// .. works only for strings
+						// assert(tree->data());
 						bufprint(
-							out_buf_, L"{%*s}\n", outwid_,  dbj::conv::to_wstring(*(tree->data()))
+							out_buf_, L"{%*s}\n", outwid_,  dbj::conv::to_wstring(tree->data())
 						);
 					}
 					if (tree->left()) {

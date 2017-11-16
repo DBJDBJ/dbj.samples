@@ -10,7 +10,7 @@ namespace {
 	/*
 	An example of what some are calling 'comfortable API'
 	*/
-	DBJ_TEST_CASE("simple binary tree test")
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": simple binary tree test"))
 	{
 		using std::wstring;
 		typedef typename dbj::tree::BinaryNode<wstring> BinaryNodeT;
@@ -25,7 +25,7 @@ namespace {
 	/*
 	Test on an example tree of BinaryNode<wstring>
 	*/
-	DBJ_TEST_CASE("binary tree visitors test")
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": binary tree visitors test"))
 	{
 		using std::wstring;
 		constexpr wchar_t nl{ L'\n' };
@@ -35,17 +35,13 @@ namespace {
 		it can be any lambda, function or functor that receives pointer
 		to BinaryNode<> instance and returns bool.
 		false	retval from the processor will stop the processing.
+
+		this visitor prints the node data
 		*/
 		auto printer = [](auto x) {
 			DBJ_ASSERT(x);
-			DBJ_ASSERT(x->data());
-			std::wstring buf;
-			 dbj::treeprint::bufprint(
-				buf, L"[%*s]", 9,  dbj::conv::to_wstring(*(x->data()))
-			);
-			dbj::print("\n", buf);
+			dbj::print("\n", dbj::conv::to_wstring(x->data()));
 			return true;
-
 		};
 
 
