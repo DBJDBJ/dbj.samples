@@ -26,7 +26,40 @@ namespace dbj {
 			return retval_;
 		}
 	}
-}
+
+	namespace {
+		/*
+		we have nicked the following form corecrt_wstdio.h
+		*/
+		template< size_t N>
+		inline int dbj_snwprintf_s
+		(
+			wchar_t(&_Buffer)[N],
+			size_t         const _BufferCount,
+			size_t         const _MaxCount,
+			wchar_t const* const _Format,
+			...)
+		{
+			int _Result;
+			::va_list _ArgList;
+			__crt_va_start(_ArgList, _Format);
+			_Result = _vsnwprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
+			__crt_va_end(_ArgList);
+			return _Result;
+		}
+	}
+
+	template <typename ... Args>
+	inline std::wstring bufprint(wchar_t const * const format, Args ... args) noexcept
+	{
+		/* NOTE: 512 happpens to be the BUFSIZ */
+		wchar_t buffer[BUFSIZ * 2] = { L'0'};
+		size_t buffer_size = dbj::countof(buffer);
+		assert(-1 != dbj_snwprintf_s(buffer, buffer_size - 1, buffer_size - 1, format, (args) ...));
+
+		return std::wstring{ buffer };
+	}
+} // dbj
 
 namespace dbj {
 	namespace treeprint {
@@ -37,57 +70,7 @@ namespace dbj {
 			constexpr int V{ 0 }; 
 			constexpr int H{ 1 }; 
 			constexpr int K{ 2 };
-			/*
-			we have nicked the following form corecrt_wstdio.h
 
-			_Success_(return >= 0)
-			_Check_return_opt_
-			_CRT_STDIO_INLINE int __CRTDECL _snwprintf_s(
-			_Out_writes_opt_(_BufferCount) _Always_(_Post_z_) wchar_t*       const _Buffer,
-			_In_                                              size_t         const _BufferCount,
-			_In_                                              size_t         const _MaxCount,
-			_In_z_ _Printf_format_string_                     wchar_t const* const _Format,
-			...)
-			#if defined _NO_CRT_STDIO_INLINE
-			;
-			#else
-			{
-			int _Result;
-			va_list _ArgList;
-			__crt_va_start(_ArgList, _Format);
-			_Result = _vsnwprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
-			__crt_va_end(_ArgList);
-			return _Result;
-			}
-
-			*/
-
-			template< size_t N>
-				inline int dbj_snwprintf_s
-				(
-				wchar_t        (&_Buffer)[N],
-				size_t         const _BufferCount,
-				size_t         const _MaxCount,
-				wchar_t const* const _Format, 
-					...)
-			{
-				int _Result;
-				::va_list _ArgList;
-				__crt_va_start(_ArgList, _Format);
-				_Result = _vsnwprintf_s_l(_Buffer, _BufferCount, _MaxCount, _Format, NULL, _ArgList);
-				__crt_va_end(_ArgList);
-				return _Result;
-			}
-
-			template <typename ... Args>
-			inline void bufprint( std::wstring & buff_ , wchar_t const * const format, Args ... args) noexcept
-			{
-				/* NOTE: 512 happpens to be the BUFSIZ */
-				wchar_t buffer[BUFSIZ*2] = {};
-				size_t buffer_size = dbj::countof(buffer);
-				assert(-1 != dbj_snwprintf_s(buffer, buffer_size -1, buffer_size -1, format, (args) ...));
-				buff_.append(buffer);
-			}
 
 			/*
 			Print the binary tree made of NODE's
@@ -140,11 +123,11 @@ namespace dbj {
 				{
 					print_(tree, outwid_);
 					out_buf_.append(L"\n");
-					return std::wstring{ out_buf_.data() }; // return the copy
+					return out_buf_ ; // return the copy
 				}
 				/* save it for return and then flush the local output buffer */
 				auto flush() {
-					auto retval{ this->out_buf_.data() }; // return the copy
+					auto retval{ this->out_buf_.data() }; // the copy
 					out_buf_.clear();
 					return retval;
 				}
@@ -155,13 +138,13 @@ namespace dbj {
 				{
 					if (tree) {
 						// assert(tree->data());
-						bufprint(
-							out_buf_, L"{%*s}\n", outwid_,  dbj::conv::to_wstring(tree->data())
-						);
+						// out_buf_ += bufprint(L"{%s}\n", dbj::conv::to_wstring(tree->data())	);
+						out_buf_ += dbj::conv::to_wstring(tree->data());
+						out_buf_ += L"\n";
 					}
 					if (tree->left()) {
-						bufprint(out_buf_, L"%s%c\n", depth, singles[V]);
-						bufprint(out_buf_, L"%s%c%c%c", depth, singles[K], singles[H], singles[H]);
+						out_buf_ += bufprint(L"%s%c\n", depth, singles[V]);
+						out_buf_ += bufprint(L"%s%c%c%c", depth, singles[K], singles[H], singles[H]);
 						Push(singles[V]);
 						print_(tree->left(), outwid_); // recurse left
 						Pop();
@@ -169,8 +152,8 @@ namespace dbj {
 					if (tree->right()) {
 						// this->out_buf_ << depth << singles[V] << L"\n";
 						// this->out_buf_ << depth << singles[K] << singles[H] << singles[H];
-						bufprint(out_buf_, L"%s%c\n", depth, singles[V]);
-						bufprint(out_buf_, L"%s%c%c%c", depth, singles[K], singles[H], singles[H]);
+						out_buf_ += bufprint( L"%s%c\n", depth, singles[V]);
+						out_buf_ += bufprint( L"%s%c%c%c", depth, singles[K], singles[H], singles[H]);
 						Push(SS);
 						print_(tree->right(), outwid_);
 						Pop();
@@ -183,10 +166,10 @@ namespace dbj {
 		} // namespace
 
 		template <typename TREE>
-		inline void binary_tree_to_string ( std::wstring & out_, TREE * root_ , unsigned outwid = 0 )
+		inline std::wstring binary_tree_to_string ( TREE * root_ , unsigned outwid = 0 )
 		{
 			BinaryTreePrinter tpf{};
-			 out_.append( tpf(root_, outwid) );
+			return std::wstring( tpf(root_, outwid) );
 		}
 #if 0
 		void test2()

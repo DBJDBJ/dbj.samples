@@ -120,7 +120,7 @@ namespace dbj {
 			}
 
 			/*
-			the C++11 std::swap, requires the type T to be MoveConstructible and MoveAssignable
+			the std::swap, requires the type T to be MoveConstructible and MoveAssignable
 			note: always use this idiom to overload std::swap for a class/struct
 			*/
 			friend void swap(BinaryNode & left_, BinaryNode & other_) 

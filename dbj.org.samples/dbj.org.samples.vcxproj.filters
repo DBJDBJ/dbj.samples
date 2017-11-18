@@ -51,6 +51,12 @@
     <ClInclude Include="dbj_tree_tests.h">
       <Filter>dbjtree</Filter>
     </ClInclude>
+    <ClInclude Include="dbj_lambda_lists.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="valueptr\dbj_any_node.h">
+      <Filter>any_node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
@@ -61,6 +67,9 @@
     </Filter>
     <Filter Include="headers">
       <UniqueIdentifier>{8ec3c0b1-56b6-451f-a7c2-984be85ee7a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="any_node">
+      <UniqueIdentifier>{1362e0d0-d86d-45ac-8d82-eebe19bb81d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -18,9 +18,16 @@ namespace {
 		auto rooty = BinaryNodeT::make_node(L"ROOT");
 		(*rooty) << L"Minnie" << L"Moonnie" << L"Tiny" << L"Shiny" << L"Galaxy";
 		rooty->insert(L"And", L"Variadic", L"Insert", L"Also", L"Available");
-		std::wstring wos;
-		dbj::treeprint::binary_tree_to_string(wos, rooty.get());
-		dbj::print("\n", wos, "\n");
+		dbj::print("\n", dbj::treeprint::binary_tree_to_string(rooty.get()), "\n");
+
+		auto printer = [](auto x) {
+			DBJ_ASSERT(x);
+			dbj::print("\n", dbj::conv::to_wstring(x->data()));
+			return true;
+		};
+
+		dbj::print("\nProcess then visit left and right: ");
+		preorder(rooty.get(), printer);
 	}
 	/*
 	Test on an example tree of BinaryNode<wstring>
@@ -40,7 +47,7 @@ namespace {
 		*/
 		auto printer = [](auto x) {
 			DBJ_ASSERT(x);
-			dbj::print("\n", dbj::conv::to_wstring(x->data()));
+			dbj::print("\t", dbj::conv::to_wstring(x->data()));
 			return true;
 		};
 
@@ -52,17 +59,14 @@ namespace {
 
 		root->insert(10, 9, 8, 7, 6);
 
-		dbj::print("\nProcess then visit left and right: ");
+		dbj::print("\nProcess then visit left and right: \n");
 		preorder(root.get(), printer);
-		dbj::print("\nVisit left, Process then  visit right: ");
+		dbj::print("\nVisit left, Process then  visit right: \n");
 		inorder(root.get(), printer);
-		dbj::print("\nVisit left, visit right then Process: ");
+		dbj::print("\nVisit left, visit right then Process: \n");
 		postorder(root.get(), printer);
 
-		dbj::print("\n");
-		std::wstring wos;
-		dbj::treeprint::binary_tree_to_string(wos, root.get());
-		dbj::print(wos, "\n");
+		dbj::print("\n", dbj::treeprint::binary_tree_to_string(root.get()), "\n");
 	}
 
 } // testing anon space
