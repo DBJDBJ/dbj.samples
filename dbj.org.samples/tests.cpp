@@ -3,7 +3,7 @@
 #ifdef DBJ_TESTING_EXISTS
 
 #include "dbj_lambda_lists.h"
-#include "valueptr\value_ptr.h"
+#include "valueptr\dbj_any_node.h"
 
 // dbj++ tests
 #include <test\dbj_commander_test.h>

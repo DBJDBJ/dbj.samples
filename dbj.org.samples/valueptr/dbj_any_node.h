@@ -20,10 +20,10 @@ namespace dbj {
 
 		typedef typename std::any pointer_t;
 
-		string    uid{};
-		string	  name{};
-		pointer_t left{};
-		pointer_t right{};
+		std::string		uid{};
+		std::string		name{};
+		pointer_t		left{};
+		pointer_t		right{};
 
 		static AnyNode val(const pointer_t & tp_) {
 			try {
@@ -36,7 +36,7 @@ namespace dbj {
 		}
 
 		static  const bool empty(const pointer_t & tp_) {
-			return (tp_).has_value();
+			return ! (tp_).has_value();
 		}
 
 		/*
@@ -56,9 +56,9 @@ namespace dbj {
 		AnyNode() {};
 		*/
 		AnyNode(
-			string const& name,
-			const pointer_t & left_ = pointer_t{},
-			const pointer_t & right_ = pointer_t{}
+			const std::string   & name,
+			const pointer_t		& left_ = pointer_t{},
+			const pointer_t		& right_ = pointer_t{}
 		)
 			: name{ name },
 			left{ left_ },
@@ -90,19 +90,23 @@ namespace dbj {
 	using AnyVisitor = bool(AnyNode &);
 	// typedef typename std::function<AnyVisitor> AnyNodeVisitor;
 
-	inline void preorder(AnyNode root_, AnyVisitor f) {
+	/*
+	3 kinds of binary tree traversal
+	*/
+
+	inline void preorder( AnyNode & root_, AnyVisitor f) {
 		if (!f(root_)) return; // process, stop if false return
 		if (!AnyNode::empty(root_.left ))  preorder(AnyNode::val(root_.left), f); // left subtree
 		if (!AnyNode::empty(root_.right))  preorder(AnyNode::val(root_.right), f); // right subtree
 	}
 
-	inline void inorder(AnyNode root_, AnyVisitor f) {
+	inline void inorder( AnyNode & root_, AnyVisitor f) {
 		if (!AnyNode::empty(root_.left))  inorder(AnyNode::val(root_.left), f); // left subtree
 		if (!f(root_)) return; // process, stop if false return
 		if (!AnyNode::empty(root_.right))  inorder(AnyNode::val(root_.right), f); // right subtree
 	}
 
-	inline void postorder(AnyNode root_, AnyVisitor f) {
+	inline void postorder( AnyNode & root_, AnyVisitor f) {
 		if (!AnyNode::empty(root_.left))  postorder(AnyNode::val(root_.left), f); // left subtree
 		if (!AnyNode::empty(root_.right))  postorder(AnyNode::val(root_.right), f); // right subtree
 		if (!f(root_)) return; // process, stop if false return
