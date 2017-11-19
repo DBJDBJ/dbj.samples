@@ -3,43 +3,48 @@
 #pragma region dbj any with identity
 
 namespace dbj {
-	/* this in essence makes std::any a real usefull container of anything */
-	template <typename T>
-	class Any final {
-		mutable std::any value{}
-	public:
-		typedef T data_type ;
-		using type_ = Any;
+	// hiden implementation
+	namespace {
+		/* this in essence makes std::any a real usefull container of anything */
+		template <typename T>
+		class Any final {
+			mutable std::any value{};
+		public:
+			typedef T data_type;
+			using type_ = Any;
 
-		Any() {};
+			Any() {};
 
-		Any( T data ) : value(data) {	}
+			Any(data_type data) : value(data) {	}
 
-		T val() const {
-			try {
-				return std::any_cast<T>(this->value);
+			data_type val() const {
+				try {
+					return std::any_cast<data_type>(this->value);
+				}
+				catch (std::bad_any_cast & x) {
+					dbj::trace("function: %s. Exception at %s(%d) [%s]", __FUNCSIG__, __FILE__, __LINE__, x.what());
+					throw dbj::Exception(x.what());
+				}
 			}
-			catch (std::bad_any_cast & x) {
-				dbj::trace("function: %s. Exception at %s(%d) [%s]", __FUNCSIG__, __FILE__, __LINE__, x.what());
-				throw dbj::Exception(x.what());
+
+			bool empty() const {
+				return !(this->value).has_value();
 			}
-		}
 
-		bool empty() const {
-			return !(this->value).has_value();
-		}
+		}; // Any
+	} // nspace
+	// the interface is two lambdas
+	namespace any {
+		auto make = [](auto value)
+		{
+			return dbj::Any<decltype(value)>(value);
+		};
 
-	}; // Any
-
-	auto make_any = [](auto value)
-	{
-		return dbj::Any<decltype(value)>(value);
-	};
-
-	auto any_val = [](const auto & dbj_any)
-	{
-		return dbj_any.val();
-	};
+		auto val = [](const auto & dbj_any)
+		{
+			return dbj_any.val();
+		};
+	} // any
 
 } // dbj
 
@@ -47,8 +52,10 @@ namespace dbj {
 namespace dbj_any_testing {
 
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": value ptr ")) {
-		auto me = dbj::make_any(42);
-		auto vl = dbj::any_val (me);
+		auto me = dbj::any::make(42);
+		auto v1 = dbj::any::val (me);
+		// or
+		auto v2 = me.val();
 	}
 }
 #endif
