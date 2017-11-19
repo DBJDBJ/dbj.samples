@@ -18,14 +18,14 @@ namespace dbj {
 
 	struct AnyNode {
 
-		typedef typename std::any pointer_t;
+		typedef typename std::any handle_t;
 
 		std::string		uid{};
 		std::string		name{};
-		pointer_t		left{};
-		pointer_t		right{};
+		handle_t		left{};
+		handle_t		right{};
 
-		static AnyNode val(const pointer_t & tp_) {
+		static AnyNode val(const handle_t & tp_) {
 			try {
 				return std::any_cast<AnyNode>( tp_ );
 			}
@@ -35,7 +35,7 @@ namespace dbj {
 			}
 		}
 
-		static  const bool empty(const pointer_t & tp_) {
+		static  const bool empty(const handle_t & tp_) {
 			return ! (tp_).has_value();
 		}
 
@@ -57,8 +57,8 @@ namespace dbj {
 		*/
 		AnyNode(
 			const std::string   & name,
-			const pointer_t		& left_ = pointer_t{},
-			const pointer_t		& right_ = pointer_t{}
+			const handle_t		& left_ = handle_t{},
+			const handle_t		& right_ = handle_t{}
 		)
 			: name{ name },
 			left{ left_ },
