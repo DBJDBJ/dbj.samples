@@ -153,6 +153,8 @@
     <ClInclude Include="dbjtree\dbjdatadeletor.h" />
     <ClInclude Include="dbjtree\dbjtree.h" />
     <ClInclude Include="dbjtree\dbjtreeprint.h" />
+    <ClInclude Include="dbj_any\dbj_any.h" />
+    <ClInclude Include="dbj_any\dbj_any_node.h" />
     <ClInclude Include="dbj_atoms.h" />
     <ClInclude Include="dbj_lambda_lists.h" />
     <ClInclude Include="dbj_micro_printf.h" />
@@ -166,7 +168,6 @@
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="valueptr\dbj_any_node.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
