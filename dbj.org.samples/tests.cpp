@@ -4,7 +4,7 @@
 
 #include "dbj_lambda_lists.h"
 #include "dbj_any\dbj_any.h"
-// #include "dbj_any\dbj_any_node.h"
+#include "dbj_any\dbj_any_node.h"
 
 // dbj++ tests
 #include <test\dbj_commander_test.h>
@@ -35,9 +35,9 @@ namespace {
 		_O_TEXT to "translated mode" aka ANSI
 		_O_BINARY sets binary (untranslated) mode,
 		*/
-		int result = _setmode(_fileno(stdout), _O_U8TEXT);
+		int result = _setmode(_fileno(stdout), _O_U16TEXT);
 		if ( result == -1 )
-			perror("Cannot set mode to:" DBJ_STRINGIFY(_O_U8TEXT) );
+			perror("Cannot set mode to:" DBJ_STRINGIFY(_O_U16TEXT) );
 		// both should display: кошка 日本
 		// for any mode the second word is not displayed
 		wprintf(L"\nwprintf() result: %s\n",specimen);

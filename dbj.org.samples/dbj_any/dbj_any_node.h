@@ -18,7 +18,7 @@ namespace dbj {
 	}
 
 	/*
-	Desing of this binary tree is:
+	Design of this binary tree is:
 	extremely simple binary node
 	all operations through visitors
 	*/
@@ -51,7 +51,12 @@ namespace dbj {
 		handle_t		left{};
 		handle_t		right{};
 
-		static AnyNode val(const handle_t & tp_) {
+		const type_info& data_type_info () const {
+			return this->data.type();
+		}
+
+		// handle to node
+		static AnyNode node(const handle_t & tp_) {
 			try {
 				return std::any_cast<AnyNode>(tp_);
 			}
@@ -66,18 +71,28 @@ namespace dbj {
 		}
 
 		/*
+		default ctor leaves data, left and right as empty 
+		*/
+		AnyNode()
+			: uid{ address_as_string(this) }
+		{
+			// if not user defined name is uid 
+			if (this->name.empty()) this->name = uid;
+		}
+
+		/*
 		the only constructor requires data paramater only
 		left_ and right_ are AnyNodes handler's
 		*/
 		template<typename DT>
 		AnyNode(
-			const dbj::Any<DT>	& dta_ ,
+			const DT			& dta_ ,
 			const std::string   & name_ = std::string{},
 			const handle_t		& left_ = handle_t{},
 			const handle_t		& right_ = handle_t{}
 		)
 			: data{ dta_ },  // store data in std::any
-			  name{ name },
+			  name{ name_ },
 			  left{ left_ }, right{ right_ },
 			  uid{ address_as_string(this) }
 		{
@@ -112,23 +127,23 @@ namespace dbj {
 
 	 /*	3 kinds of binary tree traversal	*/
 
-	inline void preorder( AnyNode & root_, AnyNode::AnyVisitor f) {
+	auto preorder = [] ( AnyNode & root_, /* AnyNode::AnyVisitor*/ auto f) -> void {
 		if (!f(root_)) return; // process, stop if false return
-		if (!AnyNode::empty(root_.left ))  preorder(AnyNode::val(root_.left), f); // left subtree
-		if (!AnyNode::empty(root_.right))  preorder(AnyNode::val(root_.right), f); // right subtree
-	}
+		if (!AnyNode::empty(root_.left ))  preorder(AnyNode::node(root_.left), f); // left subtree
+		if (!AnyNode::empty(root_.right))  preorder(AnyNode::node(root_.right), f); // right subtree
+	};
 
-	inline void inorder( AnyNode & root_, AnyNode::AnyVisitor f) {
-		if (!AnyNode::empty(root_.left))  inorder(AnyNode::val(root_.left), f); // left subtree
+	auto inorder = [] ( AnyNode & root_, auto f) -> void {
+		if (!AnyNode::empty(root_.left))  inorder(AnyNode::node(root_.left), f); // left subtree
 		if (!f(root_)) return; // process, stop if false return
-		if (!AnyNode::empty(root_.right))  inorder(AnyNode::val(root_.right), f); // right subtree
-	}
+		if (!AnyNode::empty(root_.right))  inorder(AnyNode::node(root_.right), f); // right subtree
+	};
 
-	inline void postorder( AnyNode & root_, AnyNode::AnyVisitor f) {
-		if (!AnyNode::empty(root_.left))  postorder(AnyNode::val(root_.left), f); // left subtree
-		if (!AnyNode::empty(root_.right))  postorder(AnyNode::val(root_.right), f); // right subtree
+	auto postorder = [] ( AnyNode & root_, auto f) ->void {
+		if (!AnyNode::empty(root_.left))  postorder(AnyNode::node(root_.left), f); // left subtree
+		if (!AnyNode::empty(root_.right))  postorder(AnyNode::node(root_.right), f); // right subtree
 		if (!f(root_)) return; // process, stop if false return
-	}
+	};
 
 	/*
 	 With AnyVisitor and AnyNode traversals we can do anything wee need on the tree made of AnyNodes.
@@ -146,16 +161,17 @@ namespace dbj {
 		class Inserter final {
 
 			AnyNode node_to_be_inserted_{};
-			AnyNode::DecisionLogic insertion_logic ;
+			typename AnyNode::DecisionLogic insertion_logic ;
 
 		public:
 
+			template< typename ILF >
 			explicit Inserter( const AnyNode & new_node, 
 				/*
 				we give insertion logic at run time so we can 
 				change it dynamicaly, if required
 				*/
-				AnyNode::DecisionLogic insertion_logic_
+				ILF insertion_logic_
 			)
 				: node_to_be_inserted_( new_node ),
 				insertion_logic ( insertion_logic_ )
@@ -176,24 +192,60 @@ namespace dbj {
 
 } // dbj
 
+namespace dbj {
+	template<typename T>
+	struct BinaryTree final {
+		dbj::AnyNode root{ };
+
+		static T data( dbj::AnyNode node_ ) {
+			if (node_.data.has_value()) {
+				return std::any_cast<T>(node_.data);
+			}
+		}
+	};
+}
+
 #ifdef DBJ_TESTING_EXISTS
 #pragma region dbj testing
 namespace tree_testing {
 
-	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": value ptr ")) {
+	template<typename T> struct Identity_ { using type = T; };
 
-//		AnyNode root = AnyNode( "root payload", "root", AnyNode( "left payload", "L" ), AnyNode( "right payload", "R" )	);
+	template<typename T>
+		using Identity = typename Identity_<T>::type;
 
-		dbj::AnyNode root{ dbj::make_any(42) };
+		template<typename T>
+		struct Transformer final {
+			T operator () (std::any any_) const
+			{
+				try {
+					return std::any_cast<T>(any_);
+				}
+				catch (std::bad_any_cast & x) {
+					dbj::trace("Exception at %s(%d) [%s]", __FILE__, __LINE__, x.what());
+					// throw dbj::Exception(x.what());
+				}
+				return T{};
+			};
+		};
 
-			 auto printer = [] (AnyNode & n) -> bool {
-				 dbj::print("(name: '", n.name, "', uid:", n.uid, ", data: ",  dbj::any_val(n.data).val() , ")");
-				 return true;
-			 };
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj::AnyNode ")) {
 
-			 dbj::print("\n");
-			 dbj::preorder(root, printer);
-			 dbj::print("\n");
+		Transformer<const char *> node_data;
+
+		auto printer = [&node_data](auto & n) -> bool {
+			dbj::print("\n(name: '", n.name, "', \tuid:", n.uid, ", \tdata: ", node_data(n.data) , ")");
+			return true;
+		};
+
+	 auto root = dbj::AnyNode("root payload", "ROOT", dbj::AnyNode("left payload", "L"), dbj::AnyNode("right payload", "R")	);
+			 
+			 dbj::print("\n\nPreorder");
+			 dbj::preorder(root, printer );
+			 dbj::print("\n\nInorder");
+			 dbj::inorder(root, printer);
+			 dbj::print("\n\nPostorder");
+			 dbj::postorder(root, printer);
 	}
 }
 #pragma endregion

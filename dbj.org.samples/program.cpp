@@ -45,7 +45,12 @@ int main(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-	dbj::print("dbj")("print")("is")("fluent");
+	using namespace dbj::win;
+	con::switch_console( con::CODE::page_1252 );
+	con::setfont(L"Lucida Console");
+	// con::setfont(L"Arial");
+
+	dbj::print("\ndbj")("\tprint")("\tis")("\tfluent\n");
 
 	dbj::testing::execute();
 	return true;
