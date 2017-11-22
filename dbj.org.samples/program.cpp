@@ -43,6 +43,37 @@ int main(int argc, char* argv[])
 }
 #endif
 
+namespace dbj {
+
+#define _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+
+	auto	wargv_ = (__wargv);
+	auto	argv_  = (__argv );
+	auto	argc_  = (__argc );
+
+#undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
+
+	struct cli_type final {
+		using wvec_type = std::vector<std::wstring>;
+		using nvec_type = std::vector<std::string >;
+		wvec_type wvec;
+		nvec_type nvec;
+
+		cli_type() {
+			if (dbj::wargv_) {
+				wchar_t ** first =  wargv_ ;
+				wchar_t ** last = first + argc_;
+				wvec = wvec_type(first , last);
+			}
+			if (dbj::argv_) {
+				char ** first =  argv_ ;
+				char ** last = first + argc_;
+				nvec = nvec_type(first, last);
+			}
+		}
+
+	} cli ;
+}
 int main(int argc, char* argv[])
 {
 	using namespace dbj::win;
@@ -51,6 +82,9 @@ int main(int argc, char* argv[])
 	// con::setfont(L"Arial");
 
 	dbj::print("\ndbj")("\tprint")("\tis")("\tfluent\n");
+
+		dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
+		dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
 
 	dbj::testing::execute();
 	return true;

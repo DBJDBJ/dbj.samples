@@ -1,4 +1,5 @@
 #pragma once
+#if 0
 /*
 I looked into this: https://github.com/LoopPerfect/valuable
 and I decided it is not necessary. 
@@ -68,6 +69,15 @@ namespace dbj {
 
 		static  const bool empty(const handle_t & tp_) {
 			return !(tp_).has_value();
+		}
+
+		/* is this a leaf node */
+		bool leaf() const {
+			if (empty(this->left)) {
+				if (empty(this->right))
+					return true;
+			}
+			return false;
 		}
 
 		/*
@@ -150,6 +160,9 @@ namespace dbj {
 
 	 AnyVisitor can be lambda, functor, function or anything else 
 	 that is callable and confirms to AnyVisitor signature
+
+	 BIG NOTE: data on this tree is anonymous, i.e. typeless so we can not use operators on it, yet.
+
 	*/
 
 	namespace anyvisitors {
@@ -158,25 +171,27 @@ namespace dbj {
 			return AnyNode::where_next::nowhere;
 		}
 
+		/*	left or right, only if current node is leaf   */
+		inline AnyNode::where_next append_left (const AnyNode & current , const AnyNode & new_ ) {
+			 if (! current.leaf() ) return  AnyNode::where_next::nowhere;
+			 return AnyNode::where_next::left;
+		}
+
+		inline AnyNode::where_next append_right(const AnyNode & current, const AnyNode & new_) {
+			if (!current.leaf()) return  AnyNode::where_next::nowhere;
+			return AnyNode::where_next::right;
+		}
+
+		template< typename insertion_logic >
 		class Inserter final {
 
 			AnyNode node_to_be_inserted_{};
-			typename AnyNode::DecisionLogic insertion_logic ;
 
 		public:
 
-			template< typename ILF >
-			explicit Inserter( const AnyNode & new_node, 
-				/*
-				we give insertion logic at run time so we can 
-				change it dynamicaly, if required
-				*/
-				ILF insertion_logic_
-			)
-				: node_to_be_inserted_( new_node ),
-				insertion_logic ( insertion_logic_ )
-			{
-			}
+			explicit Inserter( const AnyNode & new_node )
+				: node_to_be_inserted_( new_node )
+			{		}
 
 			/*
 			this is the visitor function to be given to 
@@ -191,19 +206,6 @@ namespace dbj {
 	} // anyvisitors
 
 } // dbj
-
-namespace dbj {
-	template<typename T>
-	struct BinaryTree final {
-		dbj::AnyNode root{ };
-
-		static T data( dbj::AnyNode node_ ) {
-			if (node_.data.has_value()) {
-				return std::any_cast<T>(node_.data);
-			}
-		}
-	};
-}
 
 #ifdef DBJ_TESTING_EXISTS
 #pragma region dbj testing
@@ -239,7 +241,12 @@ namespace tree_testing {
 		};
 
 	 auto root = dbj::AnyNode("root payload", "ROOT", dbj::AnyNode("left payload", "L"), dbj::AnyNode("right payload", "R")	);
-			 
+
+	 dbj::anyvisitors::Inserter< decltype(dbj::anyvisitors::append_right) >
+		 to_right( dbj::AnyNode("yeat another payload", "LEAF" ));
+
+			dbj::preorder(root, to_right );
+
 			 dbj::print("\n\nPreorder");
 			 dbj::preorder(root, printer );
 			 dbj::print("\n\nInorder");
@@ -249,4 +256,6 @@ namespace tree_testing {
 	}
 }
 #pragma endregion
+#endif
+
 #endif

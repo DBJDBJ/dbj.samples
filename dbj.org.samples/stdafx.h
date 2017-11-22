@@ -20,6 +20,7 @@ limitations under the License.
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
 //
+#include "dbj_lambda_lists.h"
 #include "dbj_traits.h"
 #include "policy_classes.h"
 #include "no_inheritance.h"
