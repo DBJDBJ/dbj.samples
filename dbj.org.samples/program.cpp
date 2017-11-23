@@ -53,26 +53,43 @@ namespace dbj {
 
 #undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
-	struct cli_type final {
+	constexpr auto wargv_pointer = std::addressof(wargv_);
+
+	class cli_type final {
+		cli_type() = delete;
+		cli_type(const cli_type &) = delete;
+		cli_type & operator = (const cli_type &) = delete;
+	public:
 		using wvec_type = std::vector<std::wstring>;
 		using nvec_type = std::vector<std::string >;
-		wvec_type wvec;
-		nvec_type nvec;
+		wvec_type wvec{};
+		nvec_type nvec{};
 
-		cli_type() {
-			if (dbj::wargv_) {
+		static cli_type & object ( ) {
+			static cli_type data_{};
+			return data_;
+		};
+
+		/*
+		decide at compile time what the return type is going 
+		to be at runtime ... but how?
+		 even with if constexpr bellow all the returns have to return same type
+		 thus: void make()
+		*/
+		constexpr static void make() {
+			if constexpr (wargv_pointer) {
 				wchar_t ** first =  wargv_ ;
 				wchar_t ** last = first + argc_;
-				wvec = wvec_type(first , last);
+				cli_type::object().wvec = wvec_type(first, last);
 			}
-			if (dbj::argv_) {
+			else {
 				char ** first =  argv_ ;
 				char ** last = first + argc_;
-				nvec = nvec_type(first, last);
+				cli_type::object().nvec = nvec_type(first, last);
 			}
 		}
 
-	} cli ;
+	} ;
 }
 int main(int argc, char* argv[])
 {
@@ -83,8 +100,10 @@ int main(int argc, char* argv[])
 
 	dbj::print("\ndbj")("\tprint")("\tis")("\tfluent\n");
 
-		dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
-		dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
+	dbj::cli_type::make();
+
+		//dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
+		//dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
 
 	dbj::testing::execute();
 	return true;
