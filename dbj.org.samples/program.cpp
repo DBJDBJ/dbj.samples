@@ -48,8 +48,8 @@ namespace dbj {
 #define _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
 	auto	wargv_ = (__wargv);
-	auto	argv_  = (__argv );
-	auto	argc_  = (__argc );
+	auto	argv_ = (__argv);
+	auto	argc_ = (__argc);
 
 #undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
@@ -65,31 +65,22 @@ namespace dbj {
 		wvec_type wvec{};
 		nvec_type nvec{};
 
-		static cli_type & object ( ) {
+		static cli_type & object() {
 			static cli_type data_{};
 			return data_;
 		};
-
-		/*
-		decide at compile time what the return type is going 
-		to be at runtime ... but how?
-		 even with if constexpr bellow all the returns have to return same type
-		 thus: void make()
-		*/
-		constexpr static void make() {
-			if constexpr (wargv_pointer) {
-				wchar_t ** first =  wargv_ ;
-				wchar_t ** last = first + argc_;
-				cli_type::object().wvec = wvec_type(first, last);
-			}
-			else {
-				char ** first =  argv_ ;
-				char ** last = first + argc_;
-				cli_type::object().nvec = nvec_type(first, last);
-			}
+	};
+	/*
+	https://stackoverflow.com/questions/47452748/how-to-decide-on-auto-return-type-at-run-time/47457592#47457592
+	*/
+	auto command_line_data = [&]() {
+		if constexpr (wargv_pointer) {
+			return std::vector<std::wstring>(wargv_, wargv_ + argc_);
 		}
-
-	} ;
+		else {
+			return std::vector<std::string>(argv_, argv_ + argc_);
+		}
+	};
 }
 namespace basic_problem {
 	
@@ -113,9 +104,6 @@ namespace basic_problem {
 }
 int main(int argc, char* argv[])
 {
-	// auto vec = basic_problem::msvc_does_not_compile( std::string{});
-	// auto vec = basic_problem::msvc_does_not_compile_too(std::string{});
-
 	using namespace dbj::win;
 	con::switch_console( con::CODE::page_1252 );
 	con::setfont(L"Lucida Console");
@@ -123,10 +111,11 @@ int main(int argc, char* argv[])
 
 	dbj::print("\ndbj")("\tprint")("\tis")("\tfluent\n");
 
-	dbj::cli_type::make();
-
-		//dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
-		//dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
+	auto cli = dbj::command_line_data();
+	// dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
+	// dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
+	// auto vec = basic_problem::msvc_does_not_compile( std::string{});
+	// auto vec = basic_problem::msvc_does_not_compile_too(std::string{});
 
 	dbj::testing::execute();
 	return true;
