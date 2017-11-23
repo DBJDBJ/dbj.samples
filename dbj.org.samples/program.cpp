@@ -91,8 +91,31 @@ namespace dbj {
 
 	} ;
 }
+namespace basic_problem {
+	
+	auto msvc_does_not_compile = [] ( auto _string ) 
+		-> std::vector< decltype(_string) >
+	{
+		using string_type = decltype(_string);
+		return std::vector<string_type>{};
+	};
+
+	auto msvc_does_not_compile_too = [](auto _string )
+	{
+		using string_type = decltype(_string);
+
+		if constexpr ( std::is_same<string_type, std::string>::value )
+		      return std::vector<std::string> ;
+		else {
+			return std::vector<std::wstring>;
+		}
+	};
+}
 int main(int argc, char* argv[])
 {
+	// auto vec = basic_problem::msvc_does_not_compile( std::string{});
+	// auto vec = basic_problem::msvc_does_not_compile_too(std::string{});
+
 	using namespace dbj::win;
 	con::switch_console( con::CODE::page_1252 );
 	con::setfont(L"Lucida Console");
