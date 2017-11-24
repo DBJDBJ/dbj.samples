@@ -34,12 +34,15 @@ namespace dbj {
 			return nvecT{ argv_, argv_ + argc_ };
 		}
 
+		bool decide( int tt) {
+			return true;
+		}
 		// wargv_ !=  nullptr
-		auto decide(const std::true_type & ) {
+		bool decide(std::true_type tt) {
 			return true;
 		}
 		// wargv_ ==  nullptr
-		auto decide(const std::false_type & ) {
+		bool decide( bool ft) {
 			return false;
 		}
 	}
@@ -48,7 +51,11 @@ namespace dbj {
 		
 		    //typedef std::integral_constant<wchar_t **, wargv_> two_t;
 
-			return decide( wargv_  != nullptr ? std::true_type() : std::false_type() );
+			return decide( 
+				wargv_ != NULL 
+				? std::true_type{}
+				: false
+			);
 
 			// return cli_vec_<  >();
 	};
