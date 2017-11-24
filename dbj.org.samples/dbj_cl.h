@@ -33,17 +33,13 @@ namespace dbj {
 		{
 			return nvecT{ argv_, argv_ + argc_ };
 		}
-
-		bool decide( int tt) {
-			return true;
-		}
 		// wargv_ !=  nullptr
-		bool decide(std::true_type tt) {
-			return true;
+		auto decide(std::true_type tt) {
+			return wvecT{ wargv_, wargv_ + argc_ };
 		}
 		// wargv_ ==  nullptr
-		bool decide( bool ft) {
-			return false;
+		auto decide( bool ft) {
+			return nvecT{ argv_, argv_ + argc_ };
 		}
 	}
 
