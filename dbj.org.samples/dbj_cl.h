@@ -1,34 +1,20 @@
 #pragma once
 namespace dbj {
-	/*
-	_ACRTIMP int*       __cdecl __p___argc (void);
-	_ACRTIMP char***    __cdecl __p___argv (void);
-	_ACRTIMP wchar_t*** __cdecl __p___wargv(void);
-	*/
+
 #define _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
 	const auto  wargv_ = (__wargv);
 	const auto	argv_ = (__argv);
 	const auto	argc_ = (__argc);
-	/* also
-	char***    __cdecl __p__environ (void);
-	wchar_t*** __cdecl __p__wenviron(void);
-	*/
-	// (*__p__environ())  // Pointer to narrow environment table
-	constexpr char  **  dbj_env() { return (*__p__environ()); }
-	// (*__p__wenviron()) // Pointer to wide environment table
-	constexpr wchar_t	**  dbj_wenv() { return (*__p__wenviron()); }
+
 #undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
-	template<typename T>
-	constexpr bool is_null(const T const * tp = 0)
+	template<typename T, typename = std::enable_if_t< std::is_pointer<T>::value> >
+	constexpr inline bool is_null(const T tp = 0)
 	{
-		return (tp == nullptr);
+		return (tp != nullptr);
 	}
-
-
-	constexpr auto wargv_in_use = is_null(dbj_wenv());
-
+	
 	class cli_type final {
 		cli_type() = delete;
 		cli_type(const cli_type &) = delete;
@@ -78,12 +64,15 @@ namespace {
 		}
 	};
 
-	// auto vec = basic_problem::msvc_does_not_compile( std::string{});
-	// auto vec = basic_problem::msvc_does_not_compile_too(std::string{});
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj command line")) {
 
-	dbj::print("\ndbj")("\tprint")("\tis")("\tfluent\n");
+		auto wargv_in_use = dbj::is_null(dbj::wargv_);
+		auto argv_in_use = dbj::is_null(dbj::argv_);
 
-	// auto cli = dbj::command_line_data();
-	// dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
-	// dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
+		// auto vec = basic_problem::msvc_does_not_compile( std::string{});
+		// auto vec = basic_problem::msvc_does_not_compile_too(std::string{});
+		// auto cli = dbj::command_line_data();
+		// dbj::print( "\ndbj::cli.wvec", (dbj::cli.wvec) );
+		// dbj::print( "\ndbj::cli.nvec", (dbj::cli.nvec) );
+	}
 }
