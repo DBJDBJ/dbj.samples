@@ -60,6 +60,9 @@
     <ClInclude Include="dbj_any\dbj_any_node.h">
       <Filter>dbj_any</Filter>
     </ClInclude>
+    <ClInclude Include="dbj_cl.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
