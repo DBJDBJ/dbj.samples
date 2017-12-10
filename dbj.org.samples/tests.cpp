@@ -45,6 +45,7 @@ namespace {
 		// printf("\nprintf() result: %S\n",specimen);
 	}
 
+#if 0
 	// https://hackernoon.com/a-tour-of-c-17-if-constexpr-3ea62f62ff65
 	struct X {
 		X & xbegin() { return *this;  }
@@ -84,11 +85,13 @@ namespace {
 
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": lambda constexpr combinations")) {
 
-		// decltype(std::declval<X>().begin()) dumsy ;
+		decltype(std::declval<X>().begin()) dumsy ;
 
 		auto itdoes = detail::has_begin(std::string{});
 		detail::begin(X());
 	}
+#endif
+
 #pragma region constexpr strings
 	
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": constexpr strings")) {
