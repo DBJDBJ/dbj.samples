@@ -2,7 +2,8 @@
 namespace dbj {
 
 	template<typename T, typename = std::enable_if_t< std::is_pointer<T>::value> >
-	constexpr inline bool is_null(const T tp = 0)
+	constexpr inline bool 
+		is_null(const T tp = 0)
 	{
 		return (tp != nullptr);
 	}
@@ -10,9 +11,9 @@ namespace dbj {
 
 #define _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
-	const auto  wargv_ = (__wargv);
-	const auto	argv_ = (__argv);
-	const auto	argc_ = (__argc);
+	wchar_t **		wargv_	= std::as_const(__wargv	);
+	char    **		argv_	= std::as_const(__argv	);
+	unsigned int	argc_	= std::as_const(__argc	);
 
 #undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
@@ -42,24 +43,12 @@ namespace dbj {
 	};
 
 }
+
 namespace {
 	
-	auto msvc_does_compile = [](auto _string)
-	{
-		static_assert(
-			! std::is_same<decltype(_string), std::string>::value  ||
-			! std::is_same<decltype(_string), std::wstring>::value
-			, "\n\nstatic assert failure in:\t" __FUNCSIG__ "\n\n An unsupported type string argument!\n\n");
-
-		using string_type = decltype(_string);
-		return std::vector<string_type>{};
-	};
-
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj lambda return type")) {
 
 		dbj::print("\n _MSC_FULL_VER ", _MSC_FULL_VER);
-
-		// auto the_cli_data = dbj::cli_data();
 
 		dbj::print("\n\n",DBJ_NV(dbj::cli_data()));
 		dbj::print("\n\n", DBJ_NV(typeid(dbj::cli_data()).name()));
@@ -68,9 +57,6 @@ namespace {
 
 		dbj::print("\n\nargv_ is",dbj::is_null(dbj::argv_) ? "" : " not "," NULL");
 
-		bool wot = ( dbj::wargv_ != NULL ? true : false );
-
-		// auto vec1 = ( dbj::wargv_ ? msvc_does_compile(std::wstring{}) : msvc_does_compile(std::string{}) );
 	}
 }
 #if 0

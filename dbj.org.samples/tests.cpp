@@ -1,5 +1,6 @@
 ﻿
 #include "stdafx.h"
+
 #ifdef DBJ_TESTING_EXISTS
 
 #include "dbj_lambda_lists.h"
