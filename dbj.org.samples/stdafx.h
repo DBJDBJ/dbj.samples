@@ -17,23 +17,9 @@ limitations under the License.
 */
 
 // #define DBJ_WIN
-#define DBJ_TESTING_EXISTS
+// #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
 //
-#include "dbj_cl.h"
-#include "dbj_any/dbj_any.h"
-#include "dbj_lambda_lists.h"
-#include "dbj_traits.h"
-#include "policy_classes.h"
-#include "no_inheritance.h"
-#include "dbj_util.h"
-#include "dbj_tokenizer.h"
-#include "dbj_experimental.h"
-#include "dbj_win32.h"
-#include "dbj_trace.h"
-#include "dbj_atoms.h"
-#if DBJ_MICRO_PRINTF
-#include "dbj_micro_printf.h"
-#endif
+
 
 

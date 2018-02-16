@@ -1,4 +1,30 @@
 #pragma once
+
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+
+#if 0
+// in case dbj++ is not present
+namespace dbj {
+	namespace {
+		auto out_ = [](auto val_) {
+			std::cout << val_;
+		};
+	}
+	auto print = [](auto val_ , auto... param)
+	{
+		out_(val_);
+		if constexpr (sizeof...(param) > 0) {
+			char dummy[sizeof...(param)] = {
+				(out_(/* std::forward<decltype(param)> */ (param)), 0)...
+			};
+		}
+		return dbj::print;
+	};
+}
+#endif
+
 namespace dbj {
 
 	template<typename T, typename = std::enable_if_t< std::is_pointer<T>::value> >
@@ -34,7 +60,7 @@ namespace dbj {
 
 	auto cli_data = []() {
 		
-			static auto cli_vector = decide( 
+			auto cli_vector = decide( 
 				wargv_  
 				? std::true_type{}
 				: false
@@ -44,37 +70,7 @@ namespace dbj {
 
 }
 
-namespace {
-	
-	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj lambda return type")) {
-
-		dbj::print("\n _MSC_FULL_VER ", _MSC_FULL_VER);
-
-		dbj::print("\n\n",DBJ_NV(dbj::cli_data()));
-		dbj::print("\n\n", DBJ_NV(typeid(dbj::cli_data()).name()));
-
-		dbj::print("\n\nwargv_ is",dbj::is_null(dbj::wargv_) ? "" : " not " ," NULL");
-
-		dbj::print("\n\nargv_ is",dbj::is_null(dbj::argv_) ? "" : " not "," NULL");
-
-	}
-}
 #if 0
-class cli_type final {
-	cli_type() = delete;
-	cli_type(const cli_type &) = delete;
-	cli_type & operator = (const cli_type &) = delete;
-public:
-	using wvec_type = std::vector<std::wstring>;
-	using nvec_type = std::vector<std::string >;
-	wvec_type wvec{ wargv_, wargv_ + argc_ };
-	nvec_type nvec{ argv_, argv_ + argc_ };
-
-	static cli_type & object() {
-		static cli_type data_{};
-		return data_;
-	};
-};
 
 /*
 https://stackoverflow.com/questions/47452748/how-to-decide-on-auto-return-type-at-run-time/47457592#47457592
@@ -108,7 +104,8 @@ auto msvc_does_not_compile_too = [](auto _string)
 	}
 };
 /*
-no common type in this case so '::type' will be undefined
+string and wstring have no common type 
+so '::type' will be undefined here
 
 using string_type = std::common_type<std::wstring , std::string>::type;
 */

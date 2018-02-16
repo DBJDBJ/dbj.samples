@@ -1,23 +1,30 @@
 ﻿
 #include "stdafx.h"
-
 #ifdef DBJ_TESTING_EXISTS
+
+// testing the various stuff in this project
+#include "dbj_cl.h"
+#include "dbj_any/dbj_any.h"
+#include "dbj_lambda_lists.h"
+#include "dbj_traits.h"
+#include "policy_classes.h"
+#include "no_inheritance.h"
+#include "dbj_util.h"
+#include "dbj_tokenizer.h"
+#include "dbj_experimental.h"
+#include "dbj_win32.h"
+#include "dbj_trace.h"
+#include "dbj_atoms.h"
+
+#if DBJ_MICRO_PRINTF
+#include "dbj_micro_printf.h"
+#endif
 
 #include "dbj_lambda_lists.h"
 #include "dbj_any\dbj_any.h"
 #include "dbj_any\dbj_any_node.h"
-
-// dbj++ tests
-#include <test\dbj_commander_test.h>
-#include <test\dbj_console_test.h>
-#include <test\dbj_various_tests.h>
-#include <test\dbj_crt_testing.h>
-#include <test\dbj_defval_testing.h>
-
 #include "dbj_traits_test.h"
-
 #include "dbjtree\dbj_tree_tests.h"
-
 #include <fcntl.h>
 #include <io.h>
 
