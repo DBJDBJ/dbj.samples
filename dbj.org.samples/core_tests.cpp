@@ -9,6 +9,7 @@
 #include <test\dbj_crt_testing.h>
 #include <test\dbj_defval_testing.h>
 #include <dbj_array.h>
+#include <dbj_util.h> // also includes dbj_traits.h
 /*
 DBJ Test unit signature
 
@@ -19,14 +20,21 @@ DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": Test Title")) {
 }
 */
 #ifdef DBJ_TESTING_EXISTS
-#pragma region DBJ_TESTING_EXISTS
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj std array helpers")) {
 
-	dbj::print("\nEntering dbj::arr::test()\n");
 	dbj::arr::test();
-	dbj::print("\nExited   dbj::arr::test()\n");
 }
 
-#pragma endregion
+DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj utils")) {
+
+	dbj::dbj_util_test();
+}
+
+DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj traits")) {
+
+	dbj::dbj_traits_tests( dbj::print );
+}
+
+
 #endif // DBJ_TESTING_EXISTS

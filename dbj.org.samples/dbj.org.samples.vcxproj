@@ -163,10 +163,7 @@
     <ClInclude Include="dbj_micro_printf.h" />
     <ClInclude Include="dbj_tokenizer.h" />
     <ClInclude Include="dbj_trace.h" />
-    <ClInclude Include="dbj_traits_test.h" />
     <ClInclude Include="dbj_tree_tests.h" />
-    <ClInclude Include="dbj_util.h" />
-    <ClInclude Include="dbj_traits.h" />
     <ClInclude Include="dbj_experimental.h" />
     <ClInclude Include="no_inheritance.h" />
     <ClInclude Include="policy_classes.h" />

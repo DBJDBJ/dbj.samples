@@ -31,15 +31,6 @@
     <ClInclude Include="dbj_trace.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_traits.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_traits_test.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_util.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="no_inheritance.h">
       <Filter>headers</Filter>
     </ClInclude>
