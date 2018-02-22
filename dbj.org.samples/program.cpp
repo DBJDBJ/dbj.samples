@@ -14,11 +14,11 @@ _CRT_NONSTDC_DEPRECATE(_y1) _Check_return_ _ACRTIMP double __cdecl y1(_In_ doubl
 _CRT_NONSTDC_DEPRECATE(_yn) _Check_return_ _ACRTIMP double __cdecl yn(_In_ int _X, _In_ double _Y);
 */
 /* 
-   if there is no namespace arround users declarations/definitions:
+   if the is no namespace arround uss declarations/definitions:
 
-   error C2365: 'j0': redefinition; previous definition was 'function'
+   or C2365: 'j0': redefinition; previous definition was 'function'
    ...
-   error C2365: 'yn': redefinition; previous definition was 'function'
+   or C2365: 'yn': redefinition; previous definition was 'function'
  */
 namespace {
 	constexpr auto j0 = true;
@@ -32,19 +32,24 @@ namespace {
 int main(int argc, char* argv[])
 {
 	/*
-	if there is namespace arround users declarations/definitions above:
+	if the is namespace arround uss declarations/definitions above:
 
-	error C2872: 'j0': ambiguous symbol
+	or C2872: 'j0': ambiguous symbol
 	...
-	error C2872: 'yn': ambiguous symbol
+	or C2872: 'yn': ambiguous symbol
 	*/
 		std::cout << j0 << j1 << jn << y0 << y1 << yn ;
 	return true;
 }
 #endif
 
+extern "C" void quick_local_tests(decltype(dbj::print) & print);
+
 int main(int argc, char* argv[])
 {
+	quick_local_tests(dbj::print);
 	dbj::testing::execute();
 	return 1;
 }
+
+

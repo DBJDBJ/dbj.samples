@@ -3,8 +3,15 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="program.cpp" />
-    <ClCompile Include="tests.cpp" />
-    <ClCompile Include="core_tests.cpp" />
+    <ClCompile Include="core_tests.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="quick_local_test.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -68,6 +75,9 @@
     </Filter>
     <Filter Include="dbj_any">
       <UniqueIdentifier>{1362e0d0-d86d-45ac-8d82-eebe19bb81d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{a4ceaa6d-e9c6-40ce-941c-ac0f3b7e8236}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

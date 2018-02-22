@@ -23,12 +23,12 @@ DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": Test Title")) {
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj std array helpers")) {
 
-	dbj::arr::test();
+	dbj::arr::test(dbj::print );
 }
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj utils")) {
 
-	dbj::dbj_util_test();
+	dbj::dbj_util_test( dbj::print );
 }
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj traits")) {
