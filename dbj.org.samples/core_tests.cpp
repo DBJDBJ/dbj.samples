@@ -28,7 +28,7 @@ DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj std array helpers")) {
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj utils")) {
 
-	dbj::dbj_util_test( dbj::print );
+	dbj_util_test( dbj::print );
 }
 
 DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj traits")) {

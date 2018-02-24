@@ -1,20 +1,9 @@
 #include "stdafx.h"
-
-namespace {
-	static int magic_int_float_transformation(float f);
-	static int Program_Illustrating_the_use_of_Arrays_and_Functions(void);
-	static void test_vector_to_touple();
-	}
-
-extern "C" void quick_local_tests(decltype(dbj::print) & print)
-{
-	test_vector_to_touple();
-
-	int I = magic_int_float_transformation(42.42f);
-	Program_Illustrating_the_use_of_Arrays_and_Functions();
-}
+#include <dbj_util.h>
 
 
+
+#if 1
 namespace {
 	using namespace std;
 	/*
@@ -38,10 +27,10 @@ namespace {
 		int *i = change_object_type<int>(&f); // float is dead, long live the int!
 		return *i;
 	}
-/*
-Program Illustrating the use of Arrays and Functions
-https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
-*/
+	/*
+	Program Illustrating the use of Arrays and Functions
+	https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
+	*/
 	using namespace std;
 
 	typedef double numarr[];
@@ -97,7 +86,9 @@ https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
 		return max;
 
 	}
-
+}
+#endif
+#if 0
 	template <typename T, size_t... Indices>
 	auto vectorToTupleHelper(const vector<T>& v, index_sequence<Indices...>) {
 		return std::make_tuple(v[Indices]...);
@@ -107,48 +98,25 @@ https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
 		assert(v.size() >= N);
 		return vectorToTupleHelper(v, std::make_index_sequence<N>());
 	}
-	/*
-	dbj vector to touple optimization of  https://stackoverflow.com/posts/28411055/
-	*/
-	namespace dbjx {
+#endif
 
-		using namespace std;
-
-		template<class T>
-		struct is_vector : std::false_type {
-		};
-
-		template<class T>
-		struct is_vector<std::vector<T> > {
-			static bool const value = true;
-		};
-
-		auto vectorToTuple = [] (const auto & v)
-		{
-			constexpr auto ok = is_vector<decltype(v)>::value;
-
-			// template <typename T, size_t... Indices>
-			auto helper = [] (const auto & v, auto ... Indices ) {
-				return std::make_tuple(v[Indices]...);
-			};
-
-			return helper(v, 0, 1, 2);
-		};
-	}
-
-	// as per http://graphics.stanford.edu/~seander/bithacks.html#CopyIntegerSign
-	auto dbj_sign = [](const auto & v) constexpr -> int {
-		return (v > 0) - (v < 0); // -1, 0, or +1
-	};
 
 	static void test_vector_to_touple() {
 
-		auto r1 = dbj_sign(+2.0f);
-		auto r2 = dbj_sign(-2.0f);
-		auto r3 = dbj_sign(0.0f);
+		auto r1 = dbj::sign(+2.0f);
+		auto r2 = dbj::sign(-2.0f);
+		auto r3 = dbj::sign(0.0f);
 
 		auto r4 = std::signbit(+42.0f);
 
-		auto tp0 = dbjx::vectorToTuple(std::vector<int>{1,2,3});
+		auto tple = dbj::range_to_tuple(std::vector<int>{1,2,3});
+		// auto tp1 = dbjx::vectorToTuple(true);
 	}
-}
+
+	extern "C" void quick_local_tests(decltype(dbj::print) & print)
+	{
+		test_vector_to_touple();
+
+		// int I = magic_int_float_transformation(42.42f);
+		// Program_Illustrating_the_use_of_Arrays_and_Functions();
+	}
