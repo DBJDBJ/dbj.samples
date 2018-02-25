@@ -1,10 +1,11 @@
 
-# Modern C++ SAMPLES and LESSONS 
-## As presented and used on https://dbj.org 
+# Feasible and Modern C++ 
+## Libary and Mechanisms 
+### As presented and used throughout https://dbj.org 
 
 -------------------------------------
 
-Copyright 2017 by dbj@dbj.org
+Copyright 2017,2018 by dbj@dbj.org
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

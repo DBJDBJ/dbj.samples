@@ -5,7 +5,10 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbj.org.samples", "dbj.org.samples\dbj.org.samples.vcxproj", "{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbj++", "C:\dbj\include\dbj++.vcxproj", "{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2939622-AD3E-4C96-ACFE-BBB104432849}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +26,6 @@ Global
 		{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}.Release|x64.Build.0 = Release|x64
 		{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}.Release|x86.ActiveCfg = Release|Win32
 		{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}.Release|x86.Build.0 = Release|Win32
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Debug|x64.ActiveCfg = Debug|x64
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Debug|x64.Build.0 = Debug|x64
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Debug|x86.ActiveCfg = Debug|Win32
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Debug|x86.Build.0 = Debug|Win32
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Release|x64.ActiveCfg = Release|x64
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Release|x64.Build.0 = Release|x64
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Release|x86.ActiveCfg = Release|Win32
-		{FEDA0140-09C7-49E5-9EE1-2D9CB6E4391E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
