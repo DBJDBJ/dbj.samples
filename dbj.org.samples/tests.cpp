@@ -1,10 +1,20 @@
 ﻿
 #include "stdafx.h"
-#ifdef DBJ_TESTING_EXISTS
 
+#define DBJ_TESTING_EXISTS
+
+#ifdef DBJ_TESTING_EXISTS
+#include "dbj_any/dbj_any.h"
+namespace {
+	/*
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj any wrapper"))
+	{}
+	*/
+}
+
+#else
 // testing the various stuff in this project
 #include "dbj_cl.h"
-#include "dbj_any/dbj_any.h"
 #include "dbj_lambda_lists.h"
 #include "dbj_traits.h"
 #include "policy_classes.h"
@@ -224,4 +234,6 @@ DBJ_TEST_CASE("dbj tokenizer_test") {
 	}
 }
 #endif
+
+
 // EOF
