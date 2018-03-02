@@ -100,43 +100,12 @@ namespace {
 	}
 #endif
 
-	namespace original {
-		auto && range_to_tuple = [](const auto & v)
-		{
-			// Range Element Type 
-			using RET = typename decay<decltype(v)>::type;
-			// Tuple Type
-			using TT = tuple< typename RET::value_type >;
-
-			TT rett0 = tie(v[0]);
-
-			for (auto element_ : v) {
-				rett0 = (TT&&)(
-					tuple_cat(
-						rett0, tie(element_)
-					)
-					);
-			}
-			return rett0;
-		};
-	}
-
 	static void test_vector_to_touple() {
-
 		vector<int> vint{ 1, 2, 3 };
-		{
-			auto tpl0 = dbj::seq_tup<vector<int>,3>(vint);
+			auto tpl0 = dbj::util::seq_tup<vector<int>,3>(vint);
 
 			int vintage []{ 1, 2, 3 };
-			auto tpl1 = dbj::seq_tup(vintage); ; //  dbj::arr_tup(vintage);
-		}
-
-		auto tpl1 = original::range_to_tuple(vint);
-		auto tpl2 = dbj::range_to_tuple( vint );
-
-		array<int, 3> aint{1, 2, 3};
-		auto tpl3 = dbj::range_to_tuple(aint);
-
+			auto tpl1 = dbj::util::seq_tup(vintage);
 	}
 
 	extern "C" void quick_local_tests(decltype(dbj::print) & print)
