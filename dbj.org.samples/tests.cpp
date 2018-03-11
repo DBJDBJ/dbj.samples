@@ -1,10 +1,8 @@
 ﻿
 #include "stdafx.h"
 
-#define DBJ_TESTING_EXISTS
 
 #ifdef DBJ_TESTING_EXISTS
-#include "dbj_any/dbj_any.h"
 namespace {
 	/*
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj any wrapper"))

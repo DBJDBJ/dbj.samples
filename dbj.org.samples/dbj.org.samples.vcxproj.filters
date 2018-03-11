@@ -23,9 +23,6 @@
     <ClInclude Include="dbjtree\dbjdatadeletor.h">
       <Filter>dbjtree</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_atoms.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_experimental.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -62,6 +59,11 @@
     <ClInclude Include="dbj_cl.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="dbj_any\dbj_atoms.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_compiletime.h" />
+    <ClInclude Include="dbj_ctstring.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

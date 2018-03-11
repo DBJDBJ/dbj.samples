@@ -157,8 +157,10 @@
     <ClInclude Include="dbjtree\dbjtreeprint.h" />
     <ClInclude Include="dbj_any\dbj_any.h" />
     <ClInclude Include="dbj_any\dbj_any_node.h" />
-    <ClInclude Include="dbj_atoms.h" />
+    <ClInclude Include="dbj_any\dbj_atoms.h" />
     <ClInclude Include="dbj_cl.h" />
+    <ClInclude Include="dbj_compiletime.h" />
+    <ClInclude Include="dbj_ctstring.h" />
     <ClInclude Include="dbj_lambda_lists.h" />
     <ClInclude Include="dbj_micro_printf.h" />
     <ClInclude Include="dbj_tokenizer.h" />

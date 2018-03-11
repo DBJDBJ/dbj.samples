@@ -17,8 +17,14 @@ limitations under the License.
 */
 
 // #define DBJ_WIN
-// #define DBJ_TESTING_EXISTS
+#define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
+#include "dbj_any/dbj_any.h"
+#include  "dbj_ctstring.h"
+#include "dbj_compiletime.h"
+#include <dbj_xperimental.h>
+
+
 //
 
 
