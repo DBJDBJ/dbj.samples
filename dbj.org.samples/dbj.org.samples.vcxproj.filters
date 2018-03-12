@@ -12,6 +12,7 @@
     <ClCompile Include="quick_local_test.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="dbj_cpp_win_rt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -23,31 +24,7 @@
     <ClInclude Include="dbjtree\dbjdatadeletor.h">
       <Filter>dbjtree</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_experimental.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_micro_printf.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_tokenizer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_trace.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="no_inheritance.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="policy_classes.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_tree_tests.h">
-      <Filter>dbjtree</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_lambda_lists.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="dbj_any\dbj_any.h">
@@ -56,14 +33,39 @@
     <ClInclude Include="dbj_any\dbj_any_node.h">
       <Filter>dbj_any</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_cl.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_any\dbj_atoms.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_compiletime.h" />
-    <ClInclude Include="dbj_ctstring.h" />
+    <ClInclude Include="consola_vulgaris\dbj_compiletime.h" />
+    <ClInclude Include="consola_vulgaris\dbj_ctstring.h" />
+    <ClInclude Include="consola_vulgaris\dbj_fontlist.h" />
+    <ClInclude Include="consola_vulgaris\dbj_micro_printf.h" />
+    <ClInclude Include="consola_vulgaris\string_literals_with_universal_character_names.h" />
+    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h" />
+    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h" />
+    <ClInclude Include="msvc_conformance\new_nuggets.h" />
+    <ClInclude Include="cppwinrt\dbj_web_syndication.h" />
+    <ClInclude Include="headers\dbj_experimental.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_lambda_lists.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_tokenizer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_trace.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\no_inheritance.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\policy_classes.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_cl.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

@@ -19,10 +19,20 @@ limitations under the License.
 // #define DBJ_WIN
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
-#include "dbj_any/dbj_any.h"
-#include  "dbj_ctstring.h"
-#include "dbj_compiletime.h"
 #include <dbj_xperimental.h>
+#include <dbj_util.h>
+
+#include "dbj_any/dbj_any.h"
+#include  "consola_vulgaris\dbj_compiletime.h"
+#include  "consola_vulgaris\dbj_ctstring.h"
+#include  "consola_vulgaris\dbj_fontlist.h"
+#include  "consola_vulgaris\dbj_micro_printf.h"
+#include  "consola_vulgaris\string_literals_with_universal_character_names.h"
+
+#include "msvc_conformance\dbj_std_arr_handling.h"
+#include "msvc_conformance\lambda_runtime_retval_test.h"
+#include "msvc_conformance\new_nuggets.h"
+
 
 
 //

@@ -9,7 +9,7 @@ namespace dbj {
 
 		using namespace std;
 
-		auto data_store = [] (const auto * const new_val = 0 ) {
+		inline auto data_store = [] (const auto * const new_val = 0 ) {
 			static auto last_{ *new_val };
 			if (new_val) last_ = *new_val;
 			return last_;
@@ -139,7 +139,7 @@ namespace dbj {
 	};
 
 		// factory method
-		auto make = [](const auto & value , const auto & ... args)
+		inline auto make = [](const auto & value , const auto & ... args)
 		{
 			constexpr
 				size_t argsnum = sizeof...(args);
