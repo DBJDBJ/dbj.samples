@@ -12,7 +12,6 @@
     <ClCompile Include="quick_local_test.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="dbj_cpp_win_rt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">

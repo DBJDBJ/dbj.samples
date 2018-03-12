@@ -1,6 +1,7 @@
 #pragma once
 
 #include <variant>
+#include <dbj_testing.h>
 
 #pragma region dbj any with identity
 namespace dbj {
@@ -199,7 +200,7 @@ namespace dbj {
 #ifdef DBJ_TESTING_EXISTS
 namespace dbj_any_wrapper_testing {
 
-	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj any wrapper ")) {
+	DBJ_TEST_UNIT(": dbj any wrapper ") {
 		try {
 			auto me = dbj::any::any_wrapper<int>(42);
 			auto  v1 = me; // copy wrapper to wrapper

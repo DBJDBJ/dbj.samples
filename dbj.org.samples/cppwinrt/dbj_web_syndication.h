@@ -1,4 +1,5 @@
 #pragma once
+#include <dbj_testing.h>
 /*
 https://moderncpp.com/2017/11/01/cppwinrt-in-the-windows-sdk/
 https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/

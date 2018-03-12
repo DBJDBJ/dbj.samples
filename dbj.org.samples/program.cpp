@@ -1,6 +1,10 @@
 #include "stdafx.h"
 
-// #include "cppwinrt\dbj_web_syndication.h"
+#ifndef DBJ_TESTING_EXISTS
+#define DBJ_TESTING_EXISTS
+#endif
+
+#include "cppwinrt\dbj_web_syndication.h"
 
 extern "C" void quick_local_tests(decltype(dbj::print) & print);
 

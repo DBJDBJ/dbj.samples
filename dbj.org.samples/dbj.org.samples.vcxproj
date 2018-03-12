@@ -184,7 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_tests.cpp" />
-    <ClCompile Include="dbj_cpp_win_rt.cpp" />
     <ClCompile Include="quick_local_test.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
