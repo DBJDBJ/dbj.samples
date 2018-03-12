@@ -14,21 +14,27 @@ DBJ: be very carefull not to have namespace named "winrt"
 */
 namespace dbj::wrt {
 
+	constexpr const wchar_t * feed_uri[]{
+		L"https://kennykerr.ca/feed",
+		L"https://dbj.org/feed"
+	} ;
+
 	using namespace winrt;
 	using namespace Windows::Foundation;
 	using namespace Windows::Web::Syndication;
 
 	inline IAsyncAction MainAsync()
 	{
-		Uri uri(L"https://kennykerr.ca/feed");
+		Uri uri( feed_uri[1] );
 		SyndicationClient client;
 		SyndicationFeed feed = co_await client.RetrieveFeedAsync(uri);
 
 		for (auto&& item : feed.Items())
 		{
-			hstring title = item.Title().Text();
+			hstring title	= item.Title().Text();
+			hstring summary = item.Summary().Text();
 
-			printf("%ls\n", title.c_str());
+			dbj::print("\nTitle:\t", title.data(), "\nSummary:\t", summary.data());
 		}
 	}
 
