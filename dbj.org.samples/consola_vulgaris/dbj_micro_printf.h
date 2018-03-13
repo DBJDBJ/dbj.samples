@@ -1,15 +1,22 @@
 #pragma once
-#if 0
+#define dbj_micro_printf
+#ifdef dbj_micro_printf
 /*
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
 */
+#include <dbj_testing.h>
+/*
+	Why? 
+	-- does not throw exception on unknown format specifier
+	-- compiles into extremely small byte code
+	-- faster than iostreams
+*/
+namespace dbj::printf {
 
-namespace dbj {
-
-	namespace {
+	namespace internal {
 
 #ifdef BUFSIZ
 	constexpr auto BUFFER_SIZE = BUFSIZ * 2;
@@ -130,7 +137,7 @@ namespace dbj {
 		*buffer++ = 'e';
 		_itoa_s(exponent, buffer, BUFFER_SIZE, 10);
 	}
-inline int fprintf(FILE *file, char const *fmt, va_list arg) {
+inline size_t fprintf(FILE *file, char const *fmt, va_list arg) {
 
 		int int_temp;
 		char char_temp;
@@ -138,7 +145,7 @@ inline int fprintf(FILE *file, char const *fmt, va_list arg) {
 		double double_temp;
 
 		char ch;
-		int length = 0;
+		size_t length = 0;
 
 		char buffer[BUFFER_SIZE] = {} ;
 
@@ -211,21 +218,21 @@ inline int fprintf(FILE *file, char const *fmt, va_list arg) {
 		return length;
 	}
 
-} // namespace
+} // internal
 
-inline int fprintf(FILE *file, char const *fmt, ...) {
+inline size_t fprintf(FILE *file, char const *fmt, ...) {
 		va_list arg;
-		int length;
+		size_t length;
 
 		va_start(arg, fmt);
-		length = fprintf(file, fmt, arg);
+		length = internal::fprintf(file, fmt, arg);
 		va_end(arg);
 		return length;
 	}
 
-inline int printf(char const *fmt, ...) {
+inline size_t printf(char const *fmt, ...) {
 	va_list arg;
-	int length;
+	size_t length;
 
 	va_start(arg, fmt);
 	length = dbj::fprintf(stdout, fmt, arg);
@@ -236,16 +243,15 @@ inline int printf(char const *fmt, ...) {
 
 } // namespace dbj
 
-static int microprintftest() {
+DBJ_TEST_UNIT(" dbj micro printf test ") {
 
-	double floats[] = { 0.0, 1.234e-10, 1.234e+10, -1.234e-10, -1.234e-10 };
+	constexpr static double floats[] = { 0.0, 1.234e-10, 1.234e+10, -1.234e-10, -1.234e-10 };
 
-	dbj::printf("%s, %d, %x \n", "Some string", 1, 0x1234);
+	dbj::printf::printf("%s, %d, %x \n", "Some string", 1, 0x1234);
 
 	for (int i = 0; i < sizeof(floats) / sizeof(floats[0]); i++)
-		dbj::printf("%f, %e\n", floats[i], floats[i]);
+		dbj::printf::printf("%f, %e\n", floats[i], floats[i]);
 
-	return 0;
 }
 
 /* standard suffix for every other header here */
@@ -255,7 +261,7 @@ Inspired by: https://stackoverflow.com/questions/16647278/minimal-implementation
 
 The rest
 
-Copyright 2017 by dbj@dbj.org
+Copyright 2017,2018 by dbj@dbj.org
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
