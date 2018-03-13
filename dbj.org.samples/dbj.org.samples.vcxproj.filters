@@ -35,15 +35,7 @@
     <ClInclude Include="dbj_any\dbj_atoms.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="consola_vulgaris\dbj_compiletime.h" />
-    <ClInclude Include="consola_vulgaris\dbj_ctstring.h" />
-    <ClInclude Include="consola_vulgaris\dbj_fontlist.h" />
-    <ClInclude Include="consola_vulgaris\dbj_micro_printf.h" />
     <ClInclude Include="consola_vulgaris\string_literals_with_universal_character_names.h" />
-    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h" />
-    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h" />
-    <ClInclude Include="msvc_conformance\new_nuggets.h" />
-    <ClInclude Include="cppwinrt\dbj_web_syndication.h" />
     <ClInclude Include="headers\dbj_experimental.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -63,6 +55,30 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\dbj_cl.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="consola_vulgaris\dbj_compiletime.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="consola_vulgaris\dbj_ctstring.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="consola_vulgaris\dbj_fontlist.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="consola_vulgaris\dbj_micro_printf.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cppwinrt\dbj_web_syndication.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\new_nuggets.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
