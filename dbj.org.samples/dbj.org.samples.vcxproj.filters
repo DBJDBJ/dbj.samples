@@ -81,6 +81,7 @@
     <ClInclude Include="msvc_conformance\new_nuggets.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="msvc_conformance\supports_api.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

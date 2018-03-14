@@ -21,11 +21,6 @@ DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": Test Title")) {
 */
 #ifdef DBJ_TESTING_EXISTS
 
-DBJ_TEST_UNIT(": dbj std array helpers") {
-
-	dbj::arr::test(dbj::print );
-}
-
 DBJ_TEST_UNIT(": dbj utils") {
 
 	dbj_util_test( dbj::print );

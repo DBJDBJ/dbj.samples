@@ -180,6 +180,7 @@
     <ClInclude Include="msvc_conformance\new_nuggets.h" />
     <ClInclude Include="headers\no_inheritance.h" />
     <ClInclude Include="headers\policy_classes.h" />
+    <ClInclude Include="msvc_conformance\supports_api.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

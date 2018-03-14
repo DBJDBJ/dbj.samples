@@ -9,9 +9,13 @@ https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
 #include <winrt/Windows.Web.Syndication.h>
 
 #ifdef CPPWINRT_VERSION
-/*
-DBJ: be very carefull not to have namespace named "winrt"
-*/
+/// <summary>
+/// dbj namespace for all things related to WIN RT C++ API
+/// <remarks>
+/// 1. Be very careful not to have any namespace named "winrt"
+/// 2. Be extremely carefull not to #define anything cppWINRT names inside it
+/// </remarks>
+/// </summary>
 namespace dbj::wrt {
 
 	constexpr const wchar_t * feed_uri[]{
@@ -23,6 +27,10 @@ namespace dbj::wrt {
 	using namespace Windows::Foundation;
 	using namespace Windows::Web::Syndication;
 
+	/// <summary>
+	/// Main Async method to read the feed 
+	/// </summary>
+	/// <returns>Async object conforming to IAsyncAction interface</returns>
 	inline IAsyncAction MainAsync()
 	{
 		Uri uri( feed_uri[1] );
@@ -41,7 +49,7 @@ namespace dbj::wrt {
 #ifdef DBJ_TESTING_EXISTS
 	DBJ_TEST_UNIT(": dbj winrt web syndication ")
 	{
-		// hm? 
+		// hum? 
 		winrt::init_apartment();
 		//
 		MainAsync().get();

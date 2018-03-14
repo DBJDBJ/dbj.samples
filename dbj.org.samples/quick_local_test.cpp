@@ -9,10 +9,19 @@ namespace {
 	/*
 	http://www.open-std.org/pipmail/ub/2016-February/000565.html
 	*/
-
+	/// <summary>
+	/// C++ "stunt" which perhaps is not. It shows the good usage of std artefacts
+	/// based on SFINAE. And it is suffciently limiting function not to be labelled a "stunt"
+	/// Both types have to be :
+	///   -- of the same size
+	///   -- trivially copyable
+	///   -- and destructible
+	/// This also shows extremely efficient compile-time coding of course.
+	/// And. It this is an example where raw pointer are most efficient mechanism
+	/// No copying and no moving is invoved here ...
+	/// </summary>
 	template<typename T, typename U>
-	inline T *
-		change_object_type(U *p) {
+	static T * change_object_type(U *p) {
 		static_assert(sizeof(T) == sizeof(U));
 		static_assert(is_trivially_copyable_v<T> && is_trivially_copyable_v<U>);
 		char buff[sizeof(T)];
@@ -23,70 +32,87 @@ namespace {
 		return result;
 	}
 
+	/// <summary>
+	/// Encapsulation of the usage of  change_object_type
+	/// </summary>
+	/// <param name="f"> float to be magically transformed to int</param>
+	/// <returns>the result of the "magic"</returns>
 	static int magic_int_float_transformation(float f) {
-		int *i = change_object_type<int>(&f); // float is dead, long live the int!
+		/** float is dead, long live the int! */
+		int *i = change_object_type<int>(&f); 
 		return *i;
 	}
-	/*
-	Program Illustrating the use of Arrays and Functions
-	https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
-	*/
-	using namespace std;
 
-	typedef double numarr[];
+	/// <summary>
+	/// Illustrating the use of Arrays and Functions in C
+    /// https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
+    /// </summary>
+	namespace {
 
-	// Finds max in the array
-	static double maxArray(const numarr numbs, int arraySize);
+		typedef double numarr[];
 
-	static int Program_Illustrating_the_use_of_Arrays_and_Functions(void) {
+		// Finds max in the array
+		extern "C" static double maxArray(const numarr numbs, int arraySize);
 
-		numarr array1{ 10.0, 20.0, 100.0, 0.001 };
-		double array2[2][3]{ { 5.0, 10.0, 20.0 },{ 8.0, 15.0, 42.0 } };
+		extern "C"  static int Illustrating_the_use_of_Arrays_and_Functions(void) {
 
-		int sizes[2] = { 4, 3 };
-		double max1, max2, max3, max4, max5;
+			// here we use the typedef in declaration
+			numarr array1{ 10.0, 20.0, 100.0, 0.001 };
 
-		max1 = maxArray(array1, 4);
-		max2 = maxArray(array1, sizes[0]);
-		// max3 works becuse of how arrays are
-		// laid out in memory
-		// max3 is thus sum of the second row
-		// of the array2
-		max3 = maxArray(array2[1], 3);
-		// max4 also works becuse of how arrays are
-		// laid out in memory
-		// max4 is thus sum of the whole array2
-		max4 = maxArray(array2[0], 6);
-		max5 = maxArray(array1, -4);
+			// we can not use the same single dim array in declaring two dim array
+			double array2[2][3]{ 
+				{ 5.0, 10.0, 20.0 },
+				{ 8.0, 15.0, 42.0 } 
+			};
 
-		dbj::print("\nMaximums are ", max1, ", ", max2, ", ", max3
-			, ", ", max4, ", ", max5);
+			int sizes[2] = { 4, 3 };
+			double max1, max2, max3, max4, max5;
 
-		return 0;
-	}
+			max1 = maxArray(array1, 4);
+			max2 = maxArray(array1, sizes[0]);
+			// max3 works becuse of how arrays are
+			// laid out in memory
+			// max3 is thus sum of the second row
+			// of the array2
+			max3 = maxArray(array2[1], 3);
+			// max4 also works becuse of how arrays are
+			// laid out in memory
+			// max4 is thus sum of the whole array2
+			max4 = maxArray(array2[0], 6);
+			max5 = maxArray(array1, -4);
 
-	/*
-	Function to find the maximum in an array of floats
-	Note the use of the keyword "const" to prevent changing array data
-	*/
-	static double  maxArray(const numarr numbs, int arraySize) {
+			dbj::print("\nMaximums are ", max1, ", ", max2, ", ", max3
+				, ", ", max4, ", ", max5);
 
-		int i;
-		double max;
-
-		if (arraySize <= 0) {
-			return 0.0;
+			return 0;
 		}
 
-		max = numbs[0];
+		/// <summary>
+		/// Function to find the maximum in an array of doubles
+		/// Note the use of the keyword "const" to prevent changing array data
+		/// </summary>
+		/// <param name="numbs">array argument </param>
+		/// <param name="arraySize">user defined size of the array</param>
+		/// <returns></returns>
+		extern "C" static double  maxArray(const numarr numbs, int arraySize) {
 
-		for (i = 1; i < arraySize; i++)
-			max = (numbs[i] > max) ? numbs[i] : max;
+			int i;
+			double max;
 
-		return max;
+			if (arraySize <= 0) {
+				return 0.0;
+			}
 
-	}
-}
+			max = numbs[0];
+
+			for (i = 1; i < arraySize; i++)
+				max = (numbs[i] > max) ? numbs[i] : max;
+
+			return max;
+
+		}
+	} //ns
+} // ns
 #endif
 #if 0
 	template <typename T, size_t... Indices>
@@ -99,7 +125,11 @@ namespace {
 		return vectorToTupleHelper(v, std::make_index_sequence<N>());
 	}
 #endif
-
+	/// <summary>
+	/// tuple is collection of different types
+	/// vector elementes are all of the same type
+	/// there is no much point transforming vector to tuple
+	/// </summary>
 	static void test_vector_to_touple() {
 		vector<int> vint{ 1, 2, 3 };
 			auto tpl0 = dbj::util::seq_tup<vector<int>,3>(vint);
@@ -108,7 +138,8 @@ namespace {
 			auto tpl1 = dbj::util::seq_tup(vintage);
 	}
 
-	extern "C" void quick_local_tests(decltype(dbj::print) & print)
+#ifdef DBJ_TESTING_EXISTS
+	DBJ_TEST_UNIT(": quick_local_tests ")
 	{
 		test_vector_to_touple();
 
@@ -119,5 +150,6 @@ namespace {
 		auto r4 = std::signbit(+42.0f);
 
 		// int I = magic_int_float_transformation(42.42f);
-		// Program_Illustrating_the_use_of_Arrays_and_Functions();
+		// Illustrating_the_use_of_Arrays_and_Functions();
 	}
+#endif

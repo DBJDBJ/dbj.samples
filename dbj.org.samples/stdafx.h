@@ -1,6 +1,6 @@
 #pragma once
 /*
-Copyright 2017 by dbj@dbj.org
+Copyright 2017,2018 by dbj@dbj.org
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,10 +32,6 @@ limitations under the License.
 #include "msvc_conformance\dbj_std_arr_handling.h"
 #include "msvc_conformance\lambda_runtime_retval_test.h"
 #include "msvc_conformance\new_nuggets.h"
+#include "msvc_conformance\supports_api.h"
 
-
-
-//
-
-
-
+#include "cppwinrt\dbj_web_syndication.h"

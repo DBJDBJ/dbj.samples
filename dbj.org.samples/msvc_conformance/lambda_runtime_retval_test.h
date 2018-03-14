@@ -3,6 +3,10 @@
 #include <map>
 #include <string>
 
+/// <summary>
+/// CL -Bv reports 19.13.26128.0 after update to VS 15.6.2
+/// </summary>
+
 namespace CL_19_13_26128_0 {
 #ifdef __clang__
 	inline auto does_not_compile = [](auto _string)
@@ -37,7 +41,7 @@ namespace CL_19_13_26128_0 {
 	};
 }
 
-
+#if 0
 namespace CL_19_12_25835_0 {
 
 	inline auto does_not_compile = [](auto _string)
@@ -69,6 +73,7 @@ namespace CL_19_12_25835_0 {
 		}
 	};
 }
+#endif
 
 #ifdef DBJ_TESTING_EXISTS
 
