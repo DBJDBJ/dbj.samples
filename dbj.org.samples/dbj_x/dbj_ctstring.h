@@ -60,6 +60,7 @@ namespace dbj::ct {
 		    >::result{};    \
     } ();
 
+#ifdef DBJ_TESTING_EXISTS
 	DBJ_TEST_UNIT(": dbj compile time string ")
 	{
 		auto  str_hello = DBJ_CTSTRING("hello");
@@ -82,5 +83,5 @@ namespace dbj::ct {
 			process(str);
 		}
 	}
-
+#endif
 } // dbj::ct

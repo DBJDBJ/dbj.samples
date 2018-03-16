@@ -240,6 +240,7 @@ namespace dbj::printf {
 	}
 } // namespace dbj
 
+#ifdef DBJ_TESTING_EXISTS
 DBJ_TEST_UNIT(" dbj micro printf test ") {
 	constexpr static double floats[] = { 0.0, 1.234e-10, 1.234e+10, -1.234e-10, -1.234e-10 };
 
@@ -254,7 +255,7 @@ DBJ_TEST_UNIT(" dbj micro printf test ") {
 	for (size_t i = 0; i < dbj_count(floats); i++)
 		dbj::printf::printf("%f, %e\n", floats[i], floats[i]);
 }
-
+#endif // DBJ_TESTING_EXISTS
 /* standard suffix for every other header here */
 #pragma comment( user, __FILE__ "(c) " __DATE__ " by dbj@dbj.org | Version: " __DATE__ __TIME__ )
 /*

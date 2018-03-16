@@ -158,11 +158,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="consola_vulgaris\dbj_compiletime.h" />
-    <ClInclude Include="consola_vulgaris\dbj_ctstring.h" />
-    <ClInclude Include="consola_vulgaris\dbj_fontlist.h" />
-    <ClInclude Include="consola_vulgaris\dbj_micro_printf.h" />
-    <ClInclude Include="consola_vulgaris\string_literals_with_universal_character_names.h" />
+    <ClInclude Include="dbj_x\dbj_argv_argw.h" />
+    <ClInclude Include="dbj_x\dbj_compiletime.h" />
+    <ClInclude Include="dbj_x\dbj_ctstring.h" />
+    <ClInclude Include="dbj_x\dbj_fontlist.h" />
+    <ClInclude Include="dbj_x\dbj_micro_printf.h" />
+    <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
     <ClInclude Include="cppwinrt\dbj_web_syndication.h" />
     <ClInclude Include="dbjtree\dbjdatadeletor.h" />
     <ClInclude Include="dbjtree\dbjtree.h" />
