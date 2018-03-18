@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
+#include <dbj_testing.h>
 
-#ifndef _MSC_VER
+#ifdef _MSC_VER
 namespace dbj {
 	//from http://en.cppreference.com/w/cpp/language/fold
-	template<typename ...Args> void printer(Args&&... args) {
+	template<typename ...Args> 
+	void printer(Args&&... args) {
 		(std::cout << ... << args) << '\n';
 	}
 
@@ -146,27 +148,16 @@ namespace dbj::functional {
 }
 
 namespace dbj { 
-	namespace experimental {
+
 		
-		template <typename T> T identity(T);
-		/* used without actual function existence
-		struct X{};
-		using vx = std::vector<identity(X)> ;
-		*/
+#if 0
 
-			class Experimental final
-			{
-			public:
-				explicit constexpr Experimental() {}
-				~Experimental() {}
-			};
-
-template<std::size_t N>
-inline auto ordered_int_sequence(const std::size_t(&sequence)[N]) {
-
-	for (size_t j = 0; j != N; ++j) sequence(j) = j;
-	return sequence;
-}
+	class Experimental final
+	{
+	public:
+		explicit constexpr Experimental() {}
+		~Experimental() {}
+	};
 
 /*
 consider this:
@@ -266,10 +257,10 @@ public:
 	}
 private:
 };
-
+#endif
 } // experimental
 } // dbj
-
+#if 0
 namespace dbj {
 	namespace experimental_traits {
 
@@ -315,6 +306,7 @@ namespace dbj {
 
 	} // traits
 } // dbj
+#endif
   /* standard suffix for every other header here */
 #pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
   /*

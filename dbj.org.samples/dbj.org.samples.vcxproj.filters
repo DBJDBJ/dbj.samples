@@ -3,7 +3,15 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="program.cpp" />
-    <ClCompile Include="tests.cpp" />
+    <ClCompile Include="core_tests.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="quick_local_test.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -15,43 +23,7 @@
     <ClInclude Include="dbjtree\dbjdatadeletor.h">
       <Filter>dbjtree</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_atoms.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_experimental.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_micro_printf.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_tokenizer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_trace.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_traits.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_traits_test.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_util.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="no_inheritance.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="policy_classes.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_tree_tests.h">
-      <Filter>dbjtree</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_lambda_lists.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="dbj_any\dbj_any.h">
@@ -60,9 +32,57 @@
     <ClInclude Include="dbj_any\dbj_any_node.h">
       <Filter>dbj_any</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_cl.h">
+    <ClInclude Include="dbj_any\dbj_atoms.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="headers\dbj_experimental.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_lambda_lists.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_tokenizer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_trace.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\no_inheritance.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\policy_classes.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_cl.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cppwinrt\dbj_web_syndication.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\new_nuggets.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\supports_api.h" />
+    <ClInclude Include="dbj_x\dbj_compiletime.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_ctstring.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_fontlist.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_micro_printf.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
+    <ClInclude Include="dbj_x\dbj_argv_argw.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
@@ -76,6 +96,9 @@
     </Filter>
     <Filter Include="dbj_any">
       <UniqueIdentifier>{1362e0d0-d86d-45ac-8d82-eebe19bb81d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{a4ceaa6d-e9c6-40ce-941c-ac0f3b7e8236}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

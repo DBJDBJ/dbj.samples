@@ -23,7 +23,7 @@
     <ProjectGuid>{E1EC4AD5-85A2-4FD1-AE9E-6911E0C2612E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>why_inheritance</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
     <ProjectName>dbj.org.samples</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -85,6 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\dbj\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -96,6 +97,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MinimalRebuild>false</MinimalRebuild>
       <CompileAs>CompileAsCpp</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,12 +106,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +127,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,13 +138,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32; NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,34 +156,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dbj_x\dbj_argv_argw.h" />
+    <ClInclude Include="dbj_x\dbj_compiletime.h" />
+    <ClInclude Include="dbj_x\dbj_ctstring.h" />
+    <ClInclude Include="dbj_x\dbj_fontlist.h" />
+    <ClInclude Include="dbj_x\dbj_micro_printf.h" />
+    <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
+    <ClInclude Include="cppwinrt\dbj_web_syndication.h" />
     <ClInclude Include="dbjtree\dbjdatadeletor.h" />
     <ClInclude Include="dbjtree\dbjtree.h" />
     <ClInclude Include="dbjtree\dbjtreeprint.h" />
     <ClInclude Include="dbj_any\dbj_any.h" />
     <ClInclude Include="dbj_any\dbj_any_node.h" />
-    <ClInclude Include="dbj_atoms.h" />
-    <ClInclude Include="dbj_cl.h" />
-    <ClInclude Include="dbj_lambda_lists.h" />
-    <ClInclude Include="dbj_micro_printf.h" />
-    <ClInclude Include="dbj_tokenizer.h" />
-    <ClInclude Include="dbj_trace.h" />
-    <ClInclude Include="dbj_traits_test.h" />
-    <ClInclude Include="dbj_tree_tests.h" />
-    <ClInclude Include="dbj_util.h" />
-    <ClInclude Include="dbj_traits.h" />
-    <ClInclude Include="dbj_experimental.h" />
-    <ClInclude Include="no_inheritance.h" />
-    <ClInclude Include="policy_classes.h" />
+    <ClInclude Include="dbj_any\dbj_atoms.h" />
+    <ClInclude Include="headers\dbj_cl.h" />
+    <ClInclude Include="headers\dbj_lambda_lists.h" />
+    <ClInclude Include="headers\dbj_tokenizer.h" />
+    <ClInclude Include="headers\dbj_trace.h" />
+    <ClInclude Include="headers\dbj_experimental.h" />
+    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h" />
+    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h" />
+    <ClInclude Include="msvc_conformance\new_nuggets.h" />
+    <ClInclude Include="headers\no_inheritance.h" />
+    <ClInclude Include="headers\policy_classes.h" />
+    <ClInclude Include="msvc_conformance\supports_api.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="core_tests.cpp" />
+    <ClCompile Include="quick_local_test.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="program.cpp" />
+    <ClCompile Include="program.cpp">
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpplatest</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpplatest</LanguageStandard>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4702</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4702</DisableSpecificWarnings>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>

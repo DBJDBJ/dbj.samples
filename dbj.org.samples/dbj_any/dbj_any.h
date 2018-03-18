@@ -1,17 +1,178 @@
 #pragma once
 
-#pragma region dbj any with identity
+#include <variant>
+#include <dbj_testing.h>
 
+#pragma region dbj any with identity
+namespace dbj {
+	
+	namespace any {
+
+		using namespace std;
+
+		inline auto data_store = [] (const auto * const new_val = 0 ) {
+			static auto last_{ *new_val };
+			if (new_val) last_ = *new_val;
+			return last_;
+		};
+
+		template <typename T> class any_wrapper;
+
+		class base {
+		public:
+			// base of all visitors 
+			class visitor {};
+			// entrance for the visitor
+			virtual void enter( visitor && ) const = 0 ;
+		};
+
+		class null_wrapper final
+			: public base
+		{
+			void enter(visitor &&) const {}
+		};
+
+	template <typename T>
+	class any_wrapper final 
+		: public base
+	{
+
+		static_assert(!std::is_reference<T>::value, "[dbj::any_wrapper] Do not use a reference type");
+
+#if 0		
+		template <typename T>
+		struct data {
+			typedef T data_type;
+			static_assert(!std::is_reference<T>::value, "[dbj::any_wrapper] Do not use a reference type");
+			mutable std::any any_{};
+			T & get() const noexcept { return std::any_cast<data_type>(this->any_); }
+		};
+
+		template<typename T>
+		auto data_store (const std::optional<T> new_val = std::nullopt ) {
+			static data<T> last_{ new_val };
+			if (new_val) last_.any_ = *new_val;
+			return last_;
+		};
+
+		// with data
+		template <typename T>
+		any_wrapper(const T & ref) noexcept {
+			data_store<T>(ref);
+		}
+
+		template <typename T>
+		any_wrapper(T && ref) noexcept {
+			data_store<T>(move(ref));
+		}
+#endif
+		std::any any_{};
+
+	public:
+		// types
+		typedef any_wrapper type;
+		typedef T data_type;
+		typedef base parent;
+
+		void enter(visitor && v) const {
+		}
+
+		any_wrapper() {
+		}
+
+		// give data
+		any_wrapper( const data_type & ref) noexcept
+			: any_(ref) 		{
+		}
+
+		any_wrapper(data_type && ref) noexcept 
+			: any_( move(ref))	{
+		}
+		// copy
+		any_wrapper(const any_wrapper& rhs) noexcept : any_ ( rhs.any_ ) { }
+		any_wrapper& operator=(const any_wrapper& x) noexcept {
+			if (this != &x) {
+				this->any_ = x.any_; 
+			}
+			return *this;
+		}
+		// move
+		any_wrapper(any_wrapper && rhs) : any_(move(rhs.any_)) {  }
+		any_wrapper&& operator=(any_wrapper&& x) noexcept {
+			if ( this != &x ) {
+			this->any_ = move(x.any_); 
+			}
+			return *this;
+		}
+		// destruct
+		~any_wrapper() { this->any_.reset(); }
+
+		// using the stored value in std::any
+		// access
+		operator data_type		 & () const noexcept = delete;
+		operator data_type const & () const noexcept { return move(this->get());  }
+		operator data_type		&& () && noexcept    { return move(this->get()) ; }
+
+		// data_type && get()		const noexcept { return move(any_cast<data_type>(this->any_)); }
+
+		// only if function is stored
+		template< class... ArgTypes >
+		invoke_result_t<T&, ArgTypes...>
+			operator() (ArgTypes&&... args) const {
+			if (!empty()) {
+				return invoke(get(), forward<ArgTypes>(args)...);
+			} 
+			throw dbj::Exception(" can not call on empty data wrapped ");
+		}
+
+		data_type get () const {
+			try {
+				return any_cast<data_type>(this->any_);
+			}
+			catch (std::bad_any_cast & x) {
+				throw dbj::Exception(x.what());
+			}
+		}
+
+		bool empty() const {
+			return !(this->any_).has_value();
+		}
+	};
+
+		// factory method
+		inline auto make = [](const auto & value , const auto & ... args)
+		{
+			constexpr
+				size_t argsnum = sizeof...(args);
+			using   data_type = decay_t<decltype(value)>;
+			using	ANYW		= typename dbj::any::any_wrapper< data_type > ;
+			using   any_range   = vector< ANYW >;
+
+			any_range rezult{}; rezult.resize(1 + argsnum);
+			rezult.push_back(ANYW{ value });
+
+			if ( argsnum > 0) {
+				char dumzy[argsnum] = { ((rezult.push_back(ANYW{args}))  ,0)... };
+			}
+
+			return rezult;
+		};
+
+
+	} // any
+} // dbj
+#if 0
 namespace dbj {
 	// hiden implementation
 	namespace {
 		/* this in essence makes std::any a real usefull container of anything */
 		template <typename T>
 		class Any final {
+			static_assert(!std::is_reference<T>::value, "Do not use a reference type");
 			mutable std::any value{};
 		public:
 			typedef T data_type;
-			using type_ = Any;
+			typedef Any type ;
 
 			Any() {};
 
@@ -34,28 +195,24 @@ namespace dbj {
 		}; // Any
 	} // nspace
 	// the interface is two lambdas
-	namespace any {
-		auto make = [](auto value)
-		{
-			return dbj::Any<decltype(value)>(value);
-		};
-
-		auto val = [](const auto & dbj_any)
-		{
-			return dbj_any.val();
-		};
-	} // any
-
 } // dbj
-
+#endif
 #ifdef DBJ_TESTING_EXISTS
-namespace dbj_any_testing {
+namespace dbj_any_wrapper_testing {
 
-	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": value ptr ")) {
-		auto me = dbj::any::make(42);
-		auto v1 = dbj::any::val (me);
-		// or
-		auto v2 = me.val();
+	DBJ_TEST_UNIT(": dbj any wrapper ") {
+		try {
+			auto me = dbj::any::any_wrapper<int>(42);
+			auto  v1 = me; // copy wrapper to wrapper
+			auto  v2 = v1.get(); // wrapper to value and so on
+		}	catch (...) {
+			dbj::print(
+				dbj::win::con::CMD::text_color_reset,
+				dbj::win::con::CMD::bright_red, 
+				__FUNCSIG__ "  Unknown exception caught! ",
+				dbj::win::con::CMD::text_color_reset
+				);
+		}
 	}
 }
 #endif

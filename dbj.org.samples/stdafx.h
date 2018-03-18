@@ -1,6 +1,6 @@
 #pragma once
 /*
-Copyright 2017 by dbj@dbj.org
+Copyright 2017,2018 by dbj@dbj.org
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,21 +19,7 @@ limitations under the License.
 // #define DBJ_WIN
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
-//
-#include "dbj_cl.h"
-#include "dbj_any/dbj_any.h"
-#include "dbj_lambda_lists.h"
-#include "dbj_traits.h"
-#include "policy_classes.h"
-#include "no_inheritance.h"
-#include "dbj_util.h"
-#include "dbj_tokenizer.h"
-#include "dbj_experimental.h"
-#include "dbj_win32.h"
-#include "dbj_trace.h"
-#include "dbj_atoms.h"
-#if DBJ_MICRO_PRINTF
-#include "dbj_micro_printf.h"
-#endif
+#include <dbj_xperimental.h>
+#include <dbj_util.h>
 
 

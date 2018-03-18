@@ -1,22 +1,38 @@
 ﻿
 #include "stdafx.h"
+
+
 #ifdef DBJ_TESTING_EXISTS
+namespace {
+	/*
+	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj any wrapper"))
+	{}
+	*/
+}
+
+#else
+// testing the various stuff in this project
+#include "dbj_cl.h"
+#include "dbj_lambda_lists.h"
+#include "dbj_traits.h"
+#include "policy_classes.h"
+#include "no_inheritance.h"
+#include "dbj_util.h"
+#include "dbj_tokenizer.h"
+#include "dbj_experimental.h"
+#include "dbj_win32.h"
+#include "dbj_trace.h"
+#include "dbj_atoms.h"
+
+#if DBJ_MICRO_PRINTF
+#include "dbj_micro_printf.h"
+#endif
 
 #include "dbj_lambda_lists.h"
 #include "dbj_any\dbj_any.h"
 #include "dbj_any\dbj_any_node.h"
-
-// dbj++ tests
-#include <test\dbj_commander_test.h>
-#include <test\dbj_console_test.h>
-#include <test\dbj_various_tests.h>
-#include <test\dbj_crt_testing.h>
-#include <test\dbj_defval_testing.h>
-
 #include "dbj_traits_test.h"
-
 #include "dbjtree\dbj_tree_tests.h"
-
 #include <fcntl.h>
 #include <io.h>
 
@@ -45,6 +61,7 @@ namespace {
 		// printf("\nprintf() result: %S\n",specimen);
 	}
 
+#if 0
 	// https://hackernoon.com/a-tour-of-c-17-if-constexpr-3ea62f62ff65
 	struct X {
 		X & xbegin() { return *this;  }
@@ -84,11 +101,13 @@ namespace {
 
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": lambda constexpr combinations")) {
 
-		// decltype(std::declval<X>().begin()) dumsy ;
+		decltype(std::declval<X>().begin()) dumsy ;
 
 		auto itdoes = detail::has_begin(std::string{});
 		detail::begin(X());
 	}
+#endif
+
 #pragma region constexpr strings
 	
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": constexpr strings")) {
@@ -213,4 +232,6 @@ DBJ_TEST_CASE("dbj tokenizer_test") {
 	}
 }
 #endif
+
+
 // EOF
