@@ -10,7 +10,7 @@ namespace dbj {
 #undef _CRT_DECLARE_GLOBAL_VARIABLES_DIRECTLY
 
 	template<typename T, typename = std::enable_if_t< std::is_pointer<T>::value> >
-	constexpr inline bool is_null(const T tp = 0)
+	constexpr inline bool is_null_pointer (const T tp = 0)
 	{
 		return (tp != nullptr);
 	}
@@ -19,7 +19,7 @@ namespace dbj {
 		
 		using wvecT = std::vector<std::wstring>;
 		using nvecT = std::vector<std::string >;
-
+#if 0
 		template <typename T, typename R> R cli_vec_(R * = 0 );
 
 		template <>
@@ -33,6 +33,7 @@ namespace dbj {
 		{
 			return nvecT{ argv_, argv_ + argc_ };
 		}
+#endif
 		// wargv_ !=  nullptr
 		auto decide(std::true_type tt) {
 			return wvecT{ wargv_, wargv_ + argc_ };
@@ -55,7 +56,7 @@ namespace dbj {
 
 			// return cli_vec_<  >();
 	};
-	
+#if 0
 	class cli_type final {
 		cli_type() = delete;
 		cli_type(const cli_type &) = delete;
@@ -71,6 +72,7 @@ namespace dbj {
 			return data_;
 		};
 	};
+#endif
 	/*
 	https://stackoverflow.com/questions/47452748/how-to-decide-on-auto-return-type-at-run-time/47457592#47457592
 	*/
@@ -86,7 +88,7 @@ namespace dbj {
 	*/
 }
 namespace {
-
+#if 0
 	auto msvc_does_not_compile = [](auto _string)
 		-> std::vector< decltype(_string) >
 	{
@@ -104,7 +106,7 @@ namespace {
 			return std::vector<std::wstring>;
 		}
 	};
-
+#endif
 	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj command line")) {
 
 		auto the_cli_data = dbj::cli_data();
