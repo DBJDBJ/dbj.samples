@@ -1,5 +1,4 @@
 #pragma once
-#include <dbj_testing.h>
 /*
 https://moderncpp.com/2017/11/01/cppwinrt-in-the-windows-sdk/
 https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
@@ -8,12 +7,15 @@ https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Web.Syndication.h>
 
+#include <dbj_testing.h>
+
 #ifdef CPPWINRT_VERSION
 /// <summary>
 /// dbj namespace for all things related to WIN RT C++ API
 /// <remarks>
 /// 1. Be very careful not to have any namespace named "winrt"
-/// 2. Be extremely carefull not to #define anything cppWINRT names inside it
+/// 2. Be extremely carefull not to #define anything 
+/// to equal any cppWINRT name
 /// </remarks>
 /// </summary>
 namespace dbj::wrt {
@@ -42,7 +44,7 @@ namespace dbj::wrt {
 			hstring title	= item.Title().Text();
 			hstring summary = item.Summary().Text();
 
-			dbj::print("\nTitle:\t", title.data(), "\nSummary:\t", summary.data());
+			WINRT_TRACE("\nTitle:\t", title.data(), "\nSummary:\t", summary.data());
 		}
 	}
 

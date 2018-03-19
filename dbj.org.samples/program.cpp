@@ -12,7 +12,6 @@
 #include "msvc_conformance\new_nuggets.h"
 #include "msvc_conformance\supports_api.h"
 
-#include "cppwinrt\dbj_web_syndication.h"
 #include "dbj_x\dbj_argv_argw.h"
 
 int main(int argc, char* argv[])
