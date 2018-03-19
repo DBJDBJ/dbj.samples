@@ -12,15 +12,14 @@
 #include "msvc_conformance\new_nuggets.h"
 #include "msvc_conformance\supports_api.h"
 
-#include "dbj_x\dbj_argv_argw.h"
+#include "dbj_x\dbj_cli_args.h"
 
+/// <summary>
+/// just execute all the registered tests
+/// in no particulat order
+/// </summary>
 int main(int argc, char* argv[])
 {
-#ifdef _DEBUG
-	constexpr decltype(auto) see_me = dbj::YEAR;
-	(void)see_me;
-#endif
-
 	dbj::testing::execute();
-	return 1;
+	return  EXIT_SUCCESS;
 }

@@ -74,17 +74,14 @@ namespace dbj::cli {
 	template< typename T> struct actual_type {
 		typedef typename std::decay_t< T > value_type  ;
 		 enum { is_pointer_ = false, single_pointer = false, double_pointer = false  };
-		//static constexpr bool pointer{ std::is_pointer<T>::value } ;
 	};
 	template< typename T> struct actual_type<T*> {
 		typedef typename std::decay_t< T > value_type;
 		enum { is_pointer_ = true, single_pointer = true, double_pointer = false };
-		//static constexpr bool pointer{ std::is_pointer<T>::value };
 	};
 	template< typename T> struct actual_type<T**> {
 		typedef typename std::decay_t< T > value_type;
 		enum { is_pointer_ = true, single_pointer = false, double_pointer = true };
-		//static constexpr bool pointer{ std::is_pointer<T>::value };
 	};
 
 	inline auto show_actual_type = [] ( auto actual) {
@@ -125,9 +122,8 @@ namespace dbj::cli {
 #ifdef _DEBUG
 		show_actual_type(actual_type< T >{});
 #endif
-
-		command_line_data_type<ARGC> rezult{};
-		size_t j = 0;
+	command_line_data_type<ARGC> rezult{};
+	size_t j = 0;
 
 		if  constexpr ( is_same_v<args_type, char> ) {
 			for_each(args, args + ARGC,
