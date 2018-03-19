@@ -121,6 +121,8 @@ namespace dbj::cli {
 
 #ifdef _DEBUG
 		show_actual_type(actual_type< T >{});
+		constexpr bool is_it_char{ is_same_v<args_type, char> };
+		constexpr bool is_it_wchar{ is_same_v<args_type, wchar_t> };
 #endif
 	command_line_data_type<ARGC> rezult{};
 	size_t j = 0;
