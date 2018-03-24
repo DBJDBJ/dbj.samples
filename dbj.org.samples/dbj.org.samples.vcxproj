@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dbj_x\dbj_actual_type.h" />
     <ClInclude Include="dbj_x\dbj_cli_args.h" />
     <ClInclude Include="dbj_x\dbj_compiletime.h" />
     <ClInclude Include="dbj_x\dbj_ctstring.h" />

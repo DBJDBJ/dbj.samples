@@ -18,7 +18,11 @@
 /// just execute all the registered tests
 /// in no particulat order
 /// </summary>
-int main(int argc, char* argv[])
+#ifdef UNICODE
+int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
+#else
+int main(int argc, char* argv[], char *envp[])
+#endif
 {
 	dbj::testing::execute();
 	return  EXIT_SUCCESS;

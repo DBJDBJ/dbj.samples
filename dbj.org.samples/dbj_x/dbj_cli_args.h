@@ -2,7 +2,13 @@
 
 #include <string>
 #include <algorithm>
+#include <thread>
+#include <chrono>
+
 #include <dbj_traits.h>
+
+#include "dbj_actual_type.h"
+
 
 /// <summary>
 /// The Command Line encapsulation aka TCL-ENC
@@ -22,84 +28,14 @@
 /// </summary>
 namespace dbj::cli {
 
-	template<size_t N>
-	using command_line_data_type = std::array< std::string, N >;
-
 	/// <summary>
-	/// make cli data from "any" type
-	/// while in reality we know the only two types
-	/// can be char and wchar_t
+	/// this dats type we use everyhwere
+	/// to provide CLI interface implementation
 	/// </summary>
-	template<size_t ARGC, typename T>
-	inline auto make_command_line_data(const T * const argw[]);
-
-	/// <summary>
-	/// make command_line_data_type from wchar_t * argw[argc]
-	/// </summary>
-	template<size_t ARGC>
-	inline auto make_command_line_data(const wchar_t * const argw[])
-		-> command_line_data_type<ARGC>
-	{
-		command_line_data_type<ARGC>  rezult{};
-		size_t j = 0;
-		std::for_each(argw, argw + ARGC,
-			[&]( const wchar_t * arg) {
-			const std::wstring trans{ arg };
-			rezult[j++] = std::string(trans.begin(), trans.end());
-		}
-		);
-		return rezult;
-	}
-
-	/// <summary>
-	/// make command_line_data_type from char * argv[argc]
-	/// </summary>
-	template<size_t ARGC>
-	inline auto make_command_line_data(const char * const argv[])
-		-> command_line_data_type<ARGC>
-	{
-		command_line_data_type<ARGC>  rezult{};
-		size_t j = 0;
-		std::for_each(argv, argv + ARGC,
-			[&](const char * arg) {
-				rezult[j++] = std::string(arg);
-		}
-		);
-		return rezult;
-	}
-
-	/// <summary>
-	/// reveal the actual type of T
-	/// </summary>
-	template< typename T> struct actual_type {
-		typedef typename std::decay_t< T > value_type  ;
-		 enum { is_pointer_ = false, single_pointer = false, double_pointer = false  };
-	};
-	template< typename T> struct actual_type<T*> {
-		typedef typename std::decay_t< T > value_type;
-		enum { is_pointer_ = true, single_pointer = true, double_pointer = false };
-	};
-	template< typename T> struct actual_type<T**> {
-		typedef typename std::decay_t< T > value_type;
-		enum { is_pointer_ = true, single_pointer = false, double_pointer = true };
-	};
-
-	inline auto show_actual_type = [] ( auto actual) {
-		using at = decltype(actual);
-		using actual_value_type = at::value_type;
-		dbj::print("\nactual type of argument:", typeid(actual_value_type).name(),
-			"\nis actual type a pointer:", (at::is_pointer_ ? "true" : "false"),
-			"\nis actual type a single pointer:", (at::single_pointer ? "true" : "false"),
-			"\nis actual type a bouble pointer:", (at::double_pointer ? "true" : "false")
-		);
-	};
+	using command_line_data_type = std::vector< std::wstring_view >;
 
 	/// <summary>
 	/// transform argv or argw to command_line_data_type
-	/// if on windows best to use like so:
-	/// <code>
-	/// auto cli = make_command_line_data<argc>(__targv);
-	/// </code>
 	/// base your cli proc code on command_line_data_type
 	/// instead of raw pointers 
 	/// command_line_data_type is standard c++ range
@@ -107,74 +43,102 @@ namespace dbj::cli {
 	/// <param name="args">__argv or __argw</param>
 	/// <param name="ARGC">__argc</param>
 	/// <returns>
-	/// instance of command_line_data_type<argc>
+	/// instance of command_line_data_type
 	/// </returns>
-	template<size_t ARGC, typename T>
-	inline auto command_line_data ( const T (&args)[ARGC] )
-		 -> command_line_data_type<ARGC>
+	inline auto command_line_data = [] (size_t ARGC, auto  args )
+		 -> command_line_data_type
 	{
 		using namespace std;
+		using argument_type = decltype(args);
+		using args_type = typename actual_type< argument_type >::value_type;
 
-		// T is actually a pointer here
-		// we need a type of the value it points to
-		using args_type = typename actual_type< T >::value_type;
+		static_assert(
+			actual_type< argument_type >::double_pointer,
+			" dbj command_line_data() argument must be a double pointer"
+			);
+
+		if (args == nullptr) {
+			DBJ::TRACE(" dbj command_line_data() argument found to be null ptr?");
+			return {}; // empty rezult
+		}
 
 #ifdef _DEBUG
-		show_actual_type(actual_type< T >{});
-		constexpr bool is_it_char{ is_same_v<args_type, char> };
-		constexpr bool is_it_wchar{ is_same_v<args_type, wchar_t> };
+		dbj::show_actual_type< argument_type >();
 #endif
-	command_line_data_type<ARGC> rezult{};
-	size_t j = 0;
 
-		if  constexpr ( is_same_v<args_type, char> ) {
-			for_each(args, args + ARGC,
-				[&](const char * arg) {
-				rezult[j++] = string(arg);
-			}
-			);
-			return rezult;
+		if  constexpr ( is_same_v<args_type, wchar_t> ) 
+		{
+			return command_line_data_type{ args, args + ARGC } ;
 		}
 		
-		if  constexpr (is_same_v<args_type, wchar_t>) {
-			for_each(args, args + ARGC,
-				[&](const wchar_t * arg) {
-				const wstring wide{ arg };
-				rezult[j++] = string(wide.begin(), wide.end());
-			}
-			);
+		// have to make vector<wstring_view>
+		if  constexpr (is_same_v<args_type, char>) 
+		{
+			command_line_data_type rezult{};
+			vector< string > temporum{ args, args + ARGC };
+			for (auto narrow : temporum ) {
+				rezult.push_back(wstring{ narrow.begin(), narrow.end() });
+			  }
 			return rezult;
 		}
-#pragma message ( __FILE__ " :: WARNING! Type is not found to be char or wchar_t at compile time")
-			throw runtime_error("only char and wchar_t may be types of cli arguments");
-		return rezult;
+
+		DBJ::TRACE("only char and wchar_t may be types of cli arguments");
+		return {}; // empty rezult
 	};
 
 #ifdef DBJ_TESTING_EXISTS
 	DBJ_TEST_UNIT(" dbj command line data test ") {
 
-constexpr 
-	const wchar_t * wcli_emulated[] { 
-		L"c:/one/two/three/app.exe", L"/?", L"-k ", L"{000-1111-222-333}" 
-};
+		char ** varg = (__argv);
+		wchar_t **  warg = (__wargv);
+		std::size_t argc = (__argc);
 
-constexpr
-	const char * cli_emulated[]{
-	"c:/one/two/three/app.exe",	"/?", "-k ","{000-1111-222-333}"
-};
-
-constexpr 
-	const size_t argc = _countof(cli_emulated);
-
-	auto cliw = make_command_line_data<argc>(wcli_emulated);
-	auto cliv = make_command_line_data<argc>(cli_emulated);
-
-	// auto clit = make_command_line_data<argc>(__targv);
-		
-
-	auto cli = command_line_data(wcli_emulated);
-
+	/// <summary>
+	///  we are here *before* main so __argv or __argw might be still empty
+	///  TODO: this is perhaps naive implementation?
+	/// </summary>
+	while ((varg == nullptr) && (warg == nullptr)) {
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+
+	command_line_data_type 
+		varg_data{ command_line_data(argc, varg) } , 
+		warg_data{ command_line_data(argc, warg) };
+
+	DBJ_ASSERT(
+		(varg_data.size() > 0) || (warg_data.size() > 0)
+	);
+
+	// here we return and use the one of the two 
+	// which is not empty
+
+	// now we repeat the same logic 
+	// for the environment string table aka envp
+	wchar_t **  wenv = (_wenviron);
+	char ** venv = (_environ);
+	//  but we need to 
+	// calculate the count of env vars first
+
+	auto count_to_null = []( auto ** list_ ) constexpr -> size_t {
+		size_t rez{0};
+		if (list_ == nullptr) return {}; // empty
+		for (; list_[rez] != NULL; ++rez) {};
+		return rez;
+	};
+
+	size_t envp_count{};
+	if (wenv) {	envp_count = count_to_null(wenv) ;}
+	if (venv) { envp_count = count_to_null(venv) ;}
+
+	command_line_data_type
+		envp_data{ command_line_data(envp_count, venv) },
+		wenvp_data{ command_line_data(envp_count, wenv) };
+
+	DBJ_ASSERT(
+		(envp_data.size() > 0) || (wenvp_data.size() > 0)
+	);
+
+  }
 #endif 
 } // dbj::cli
 

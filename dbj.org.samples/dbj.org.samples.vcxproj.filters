@@ -83,6 +83,7 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="dbj_x\dbj_cli_args.h" />
+    <ClInclude Include="dbj_x\dbj_actual_type.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
