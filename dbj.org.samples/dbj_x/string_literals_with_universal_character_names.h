@@ -2,13 +2,18 @@
 
 #include <iostream>
 
+#ifdef DBJ_TESTING_EXISTS
+
 namespace {
 
-	inline void string_literals_with_universal_character_names() {
+	auto out = [&]( auto s_) {
+		// std::cout << std::endl << s_ << std::endl;
+		dbj::print("\n", s_ , "\n");
+		return out ;
+	};
+	/* */
+	DBJ_TEST_UNIT(": string_literals_with_universal_character_names") {
 
-		auto out = []( auto s_ ) {
-			std::cout << s_ << std::endl;
-		};
 		/*
 		https://docs.microsoft.com/en-us/cpp/cpp/string-and-character-literals-cpp
 		*/
@@ -27,11 +32,12 @@ namespace {
 		// UTF-32 encoded SMILING FACE WITH SUNGLASSES (U+1F60E)  
 		const char32_t* s5 = U"😎 = \U0001F60E is B-)";
 
-		out(s1);
-		out(s2);
-		out(s3);
-		out(s4);
-		out(s5);
+		out("ASCII smiling face ")(s1);
+		out("UTF-16 (on Windows) encoded WINKING FACE (U+1F609)")(s2);
+		out("UTF-8  encoded SMILING FACE WITH HALO (U+1F607)")(s3);
+		out("UTF-16 encoded SMILING FACE WITH OPEN MOUTH (U+1F603)")(s4);
+		out("UTF-32 encoded SMILING FACE WITH SUNGLASSES (U+1F60E)")(s5);
 
 	}
 }
+#endif

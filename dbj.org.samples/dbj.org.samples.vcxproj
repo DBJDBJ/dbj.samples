@@ -163,6 +163,7 @@
     <ClInclude Include="dbj_x\dbj_ctstring.h" />
     <ClInclude Include="dbj_x\dbj_fontlist.h" />
     <ClInclude Include="dbj_x\dbj_micro_printf.h" />
+    <ClInclude Include="dbj_x\dbj_timer.h" />
     <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp" />
     <ClInclude Include="dbjtree\dbjdatadeletor.h" />

@@ -201,16 +201,17 @@ namespace dbj {
 namespace dbj_any_wrapper_testing {
 
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
+		using namespace dbj::win::con;
 		try {
 			auto me = dbj::any::any_wrapper<int>(42);
 			auto  v1 = me; // copy wrapper to wrapper
 			auto  v2 = v1.get(); // wrapper to value and so on
 		}	catch (...) {
 			dbj::print(
-				dbj::win::con::CMD::text_color_reset,
-				dbj::win::con::CMD::bright_red, 
+				painter_command::text_color_reset,
+				painter_command::bright_red,
 				__FUNCSIG__ "  Unknown exception caught! ",
-				dbj::win::con::CMD::text_color_reset
+				painter_command::text_color_reset
 				);
 		}
 	}
