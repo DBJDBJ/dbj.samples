@@ -21,6 +21,7 @@
 #ifdef UNICODE
 int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
 #else
+#error "What could be the [t]reason this is not UNICODE code?"
 int main(int argc, char* argv[], char *envp[])
 #endif
 {
