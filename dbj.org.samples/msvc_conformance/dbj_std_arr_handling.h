@@ -5,9 +5,27 @@
 
 #include <dbj_array.h>
 
-namespace dbj {
 
 #ifdef DBJ_TESTING_EXISTS
+	
+		struct XX final {
+			std::string name{ "struct X" };
+		};
+
+		namespace dbj::win::con {
+			// namespace {
+				inline void out(XX x_) {
+					dbj::win::con::out(x_.name);
+				}
+			// }
+		}
+
+		namespace {
+		
+		DBJ_TEST_UNIT(": dbj print for UDT ")
+		{
+			dbj::print(XX{});
+		}
 
 	DBJ_TEST_UNIT(": test_dbj_std_arr_handling ")
 	{
@@ -18,9 +36,9 @@ namespace dbj {
 		}
 		{
 			std::array<char, 3> three_chars{ 'A','B','C' };
-
+			[[maybe_unused]]
 			const char(&uar)[3] = *(char(*)[3])three_chars.data();
-			(void)uar;
+			// (void)uar;
 		}
 		{
 			using A16 = dbj::arr::ARH<int, 16>;
@@ -52,7 +70,7 @@ namespace dbj {
 			const auto std_arr = dbj::to_array(char_array);
 			dbj::print(std_arr);
 
-			dbj::print( std::make_tuple( "A", true, 42.0f ) );
+			dbj::print(std::make_tuple("A", true, 42.0f));
 		}
 	}
 }
