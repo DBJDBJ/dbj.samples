@@ -12,6 +12,7 @@
     <ClCompile Include="quick_local_test.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="winfile_testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -85,6 +86,7 @@
     <ClInclude Include="dbj_x\dbj_cli_args.h" />
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
     <ClInclude Include="dbj_x\dbj_timer.h" />
+    <ClInclude Include="winfile_dbj\dbj_multimap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

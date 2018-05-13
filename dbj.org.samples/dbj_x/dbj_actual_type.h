@@ -29,24 +29,13 @@ namespace dbj {
 	template< typename T> struct actual_type {
 		typedef typename std::decay_t< T > value_type;
 		enum {
-			is_lv_ref = std::is_lvalue_reference_v<T>,
-			is_rv_ref = std::is_rvalue_reference_v<T>,
-			is_pointer_ = std::is_pointer_v<T>,
-			double_pointer = is_pointer_pointer_v<T> 
+			is_lv_ref		= std::is_lvalue_reference_v<T>,
+			is_rv_ref		= std::is_rvalue_reference_v<T>,
+			is_pointer_		= std::is_pointer_v<T>,
+			double_pointer	= is_pointer_pointer_v<T> 
 		};
 	};
 	
-	/*
-	template< typename T> struct actual_type<T*> {
-		typedef typename std::decay_t< T > value_type;
-		enum { is_pointer_ = true, double_pointer = false };
-	};
-	template< typename T> struct actual_type<T**> {
-		typedef typename std::decay_t< T > value_type;
-		enum { is_pointer_ = true, double_pointer = true };
-	};
-	*/
-
 	// template alias helper for the above
 	template<typename T>
 	using actual_type_t = typename actual_type<T>::value_type;

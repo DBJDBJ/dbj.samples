@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <thread>
 #include <chrono>
+#include <map>
 
 #include <dbj_traits.h>
 
@@ -29,115 +30,103 @@
 namespace dbj::cli {
 
 	/// <summary>
+	/// we develop only unicode windows app's
 	/// this dats type we use everyhwere
 	/// to provide CLI interface implementation
 	/// </summary>
-	using command_line_data_type = std::vector< std::wstring_view >;
+	using data_type = std::vector< std::wstring_view >;
 
 	/// <summary>
-	/// transform argv or argw to command_line_data_type
-	/// base your cli proc code on command_line_data_type
+	/// transform argv or argw to data_type
+	/// base your cli proc code on data_type
 	/// instead of raw pointers 
-	/// command_line_data_type is standard c++ range
+	/// data_type is standard c++ range
 	/// </summary>
 	/// <param name="args">__argv or __argw</param>
 	/// <param name="ARGC">__argc</param>
 	/// <returns>
-	/// instance of command_line_data_type
+	/// instance of data_type
 	/// </returns>
-	inline auto command_line_data = [] (size_t ARGC, auto  args )
-		 -> command_line_data_type
+	inline auto command_line_data (size_t ARGC, wchar_t **  args )
+		 -> data_type
 	{
-		using namespace std;
-		using argument_type = decltype(args);
-		using args_type = typename actual_type< argument_type >::value_type;
-
-		static_assert(
-			actual_type< argument_type >::double_pointer,
-			" dbj command_line_data() argument must be a double pointer"
-			);
-
-		if (args == nullptr) {
-			DBJ::TRACE(" dbj command_line_data() argument found to be null ptr?");
-			return {}; // empty rezult
-		}
-
-#ifdef _DEBUG
-		dbj::show_actual_type< argument_type >();
-#endif
-
-		if  constexpr ( is_same_v<args_type, wchar_t> ) 
-		{
-			return command_line_data_type{ args, args + ARGC } ;
-		}
-		
-		// have to make vector<wstring_view>
-		if  constexpr (is_same_v<args_type, char>) 
-		{
-			command_line_data_type rezult{};
-			vector< string > temporum{ args, args + ARGC };
-			for (auto narrow : temporum ) {
-				rezult.push_back(wstring{ narrow.begin(), narrow.end() });
-			  }
-			return rezult;
-		}
-
-		DBJ::TRACE("only char and wchar_t may be types of cli arguments");
-		return {}; // empty rezult
+		_ASSERTE(*args != nullptr);
+			return data_type{ args, args + ARGC } ;
 	};
+
+	struct app_env_struct final {
+
+		std::size_t cli_args_count{};
+		data_type cli_data{};
+		std::size_t env_vars_count{};
+
+		using env_kv_data_type = std::map<std::wstring_view,std::wstring_view>;
+		env_kv_data_type env_vars{};
+	};
+
+	inline auto app_env_initor = []() {
+
+		wchar_t **  warg = (__wargv);
+		std::size_t argc = (__argc);
+		wchar_t **  wenv = (_wenviron);
+
+		/// <summary>
+		///  we are here *before* main so __argv or __argw might be still empty
+		///  TODO: this is perhaps naive implementation?
+		/// </summary>
+		while ( *warg == nullptr) {
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
+		_ASSERTE( *warg != nullptr);
+
+		while (*wenv == nullptr) {
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+		}
+		_ASSERTE(*wenv != nullptr);
+
+		data_type
+			warg_data{ command_line_data(argc, warg) };
+
+		// calculate the count of env vars first
+		auto count_to_null = [](auto ** list_) constexpr->size_t {
+			size_t rez{ 0 };
+			_ASSERTE(*list_ != nullptr);
+			for (; list_[rez] != NULL; ++rez) {};
+			return rez;
+		};
+
+		size_t evc = count_to_null(wenv);
+
+		data_type
+			wenvp_data{ command_line_data( evc, wenv) };
+		app_env_struct::env_kv_data_type
+			wenvp_map{};
+
+		//transform env vars to k/v map
+		// each envar entry is 
+		// L"key=value" format
+		for (auto kv : wenvp_data) {
+			auto delimpos = kv.find(L"=");
+			auto key = kv.substr(0, delimpos);
+			auto val = kv.substr(delimpos + 1);
+			wenvp_map[key] = val;
+		}
+
+		return app_env_struct { argc, warg_data , evc, wenvp_map };
+	};
+
+	inline static app_env_struct APP_ENV_STRUCT = app_env_initor();
 
 #ifdef DBJ_TESTING_EXISTS
 	DBJ_TEST_UNIT(" dbj command line data test ") {
-
-		char ** varg = (__argv);
-		wchar_t **  warg = (__wargv);
-		std::size_t argc = (__argc);
-
-	/// <summary>
-	///  we are here *before* main so __argv or __argw might be still empty
-	///  TODO: this is perhaps naive implementation?
-	/// </summary>
-	while ((varg == nullptr) && (warg == nullptr)) {
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-	}
-
-	command_line_data_type 
-		varg_data{ command_line_data(argc, varg) } , 
-		warg_data{ command_line_data(argc, warg) };
-
-	DBJ_ASSERT(
-		(varg_data.size() > 0) || (warg_data.size() > 0)
-	);
-
-	// here we return and use the one of the two 
-	// which is not empty
-
-	// now we repeat the same logic 
-	// for the environment string table aka envp
-	wchar_t **  wenv = (_wenviron);
-	char ** venv = (_environ);
-	//  but we need to 
-	// calculate the count of env vars first
-
-	auto count_to_null = []( auto ** list_ ) constexpr -> size_t {
-		size_t rez{0};
-		if (list_ == nullptr) return {}; // empty
-		for (; list_[rez] != NULL; ++rez) {};
-		return rez;
-	};
-
-	size_t envp_count{};
-	if (wenv) {	envp_count = count_to_null(wenv) ;}
-	if (venv) { envp_count = count_to_null(venv) ;}
-
-	command_line_data_type
-		envp_data{ command_line_data(envp_count, venv) },
-		wenvp_data{ command_line_data(envp_count, wenv) };
-
-	DBJ_ASSERT(
-		(envp_data.size() > 0) || (wenvp_data.size() > 0)
-	);
-
+		print(
+			APP_ENV_STRUCT.cli_data
+		);
+		print("\nEnv vars found");
+		for (const auto & kv : APP_ENV_STRUCT.env_vars)
+		{
+			print("\nKey", kv.first.data(), " = Value: ", kv.second.data());
+		}
   }
 #endif 
 } // dbj::cli

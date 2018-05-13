@@ -1,32 +1,28 @@
 #pragma once
 
-#include <vector>
-#include <array>
-
 #include <dbj_array.h>
-
 
 #ifdef DBJ_TESTING_EXISTS
 	
-		struct XX final {
+namespace {
+	/*
+	   struct XX final {
 			std::string name{ "struct X" };
 		};
 
 		namespace dbj::win::con {
-			// namespace {
+			namespace {
 				inline void out(XX x_) {
-					dbj::win::con::out(x_.name);
+					dbj::win::con::out(x_.name.c_str());
 				}
-			// }
+			}
 		}
 
-		namespace {
-		
 		DBJ_TEST_UNIT(": dbj print for UDT ")
 		{
 			dbj::print(XX{});
 		}
-
+		*/
 	DBJ_TEST_UNIT(": test_dbj_std_arr_handling ")
 	{
 		{
@@ -50,24 +46,12 @@
 			A16::ARP arp = A16::to_arp(arr); (void)arp;
 			A16::ARF arf = A16::to_arf(arr);  (void)arf;
 
-			auto rdr0 = dbj::arr::intrinsic_array_to_vector(arf);
-
-			/*
-			decltype(auto) bellow reveals the underlying type
-			namely it transform int* to int(&)[]
-			that is reference to c array inside std::array
-			*/
-			decltype(auto) arf2 = dbj::arr::internal_array_reference(arr);
-
-			decltype(auto) rdr1 = dbj::arr::intrinsic_array_to_vector(arf2);
-
-			decltype(auto) arf3 = arf2;
-			auto rdr2 = dbj::arr::intrinsic_array_to_vector(arf3);
+			auto rdr0 = A16::to_vector (arf);
 		}
 		{
 			[[ maybe_unused ]]
 			constexpr char char_array[]{"ABCDEFGH"};
-			const auto std_arr = dbj::to_array(char_array);
+			const auto std_arr = dbj::native_to_std_array(char_array);
 			dbj::print(std_arr);
 
 			dbj::print(std::make_tuple("A", true, 42.0f));

@@ -184,6 +184,7 @@
     <ClInclude Include="headers\policy_classes.h" />
     <ClInclude Include="msvc_conformance\supports_api.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="winfile_dbj\dbj_multimap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_tests.cpp" />
@@ -205,6 +206,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="tests.cpp" />
+    <ClCompile Include="winfile_testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

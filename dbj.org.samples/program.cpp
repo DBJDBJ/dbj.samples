@@ -19,9 +19,9 @@
 /// in no particulat order
 /// </summary>
 #ifdef UNICODE
-int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
+int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 #else
-#error "What could be the [t]reason this is not UNICODE code?"
+#error "What could be the [t]reason this is not UNICODE build?"
 int main(int argc, char* argv[], char *envp[])
 #endif
 {
