@@ -34,7 +34,7 @@ namespace dbj::cli {
 	/// this dats type we use everyhwere
 	/// to provide CLI interface implementation
 	/// </summary>
-	using data_type = std::vector< std::wstring_view >;
+	using data_type = std::vector< std::wstring >;
 
 	/// <summary>
 	/// transform argv or argw to data_type
@@ -60,7 +60,7 @@ namespace dbj::cli {
 		data_type cli_data{};
 		std::size_t env_vars_count{};
 
-		using env_kv_data_type = std::map<std::wstring_view,std::wstring_view>;
+		using env_kv_data_type = std::map<std::wstring,std::wstring>;
 		env_kv_data_type env_vars{};
 	};
 
@@ -123,9 +123,13 @@ namespace dbj::cli {
 			APP_ENV_STRUCT.cli_data
 		);
 		print("\nEnv vars found");
+		int counter = 0;
+		std::wstring key, val;
 		for (const auto & kv : APP_ENV_STRUCT.env_vars)
 		{
-			print("\nKey", kv.first.data(), " = Value: ", kv.second.data());
+			key = kv.first.data();
+			val = kv.second.data();
+			print("\n[", counter++ , "] Key: ", key, "\t = \tValue: ", val);
 		}
   }
 #endif 
