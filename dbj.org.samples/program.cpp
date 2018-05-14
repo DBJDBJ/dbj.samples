@@ -14,6 +14,8 @@
 
 #include "dbj_x\dbj_cli_args.h"
 
+#include <dbj_string_compare.h>
+
 /// <summary>
 /// just execute all the registered tests
 /// in no particulat order

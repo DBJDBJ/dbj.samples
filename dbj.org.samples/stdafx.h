@@ -21,6 +21,5 @@ limitations under the License.
 #include <dbj++.h> 
 #include <dbj_xperimental.h>
 #include <dbj_util.h>
-#include <dbj_string_compare.h>
 
 
