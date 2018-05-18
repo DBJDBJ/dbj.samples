@@ -15,7 +15,7 @@ namespace dbj {
 	constexpr auto is_pointer_pointer_v = is_pointer_pointer<T>::value;
 
 	auto is_p2p = [](auto arg) constexpr -> bool {
-		using arg_type = std::decay_t< decltype(arg) >;
+		using arg_type = decltype(arg) ;
 #if 0
 		return std::is_pointer_v<arg_type> &&
 			std::is_pointer_v< typename std::remove_pointer_t<arg_type> >;
@@ -31,6 +31,7 @@ namespace dbj {
 		enum {
 			is_lv_ref		= std::is_lvalue_reference_v<T>,
 			is_rv_ref		= std::is_rvalue_reference_v<T>,
+			is_array        = std::is_array_v<T>,
 			is_pointer_		= std::is_pointer_v<T>,
 			double_pointer	= is_pointer_pointer_v<T> 
 		};
@@ -47,20 +48,25 @@ namespace dbj {
 	inline auto show_actual_type = []() 
 		-> std::string 
 	{
+		auto add = [] (string & host_, const string & prompt_ , const string & val_ = "" ) {
+			static char empty_[]{ "" };
+			host_.append( prompt_  )
+				.append( val_ );
+		};
+
 		using at = actual_type< T > ;
 		using actual_value_type = typename at::value_type;
 
 		std::string tempo_{ BUFSIZ || 1024 }; // optimize so that heap mem alloc does not happen
 
-		tempo_ = " { 'actual_type' : " ;
-		tempo_.append(typeid(actual_value_type).name())
-			.append(", 'is_lv_ref':").append(at::is_lv_ref ? "true" : "false")
-			.append(", 'is_rv_ref':").append(at::is_rv_ref ? "true" : "false")
-			.append(", 'pointer':").append(at::is_pointer_ ? "true" : "false")
-			// .append(", 'single_pointer':").append(at::single_pointer ? "true" : "false")
-			.append(", 'double_pointer':")
-			.append(at::double_pointer ? "true" : "false")
-			.append("}");
+		tempo_ = typeid(at).name();
+		add( tempo_ , "\n {\n\t'value_type' :\t " , typeid(actual_value_type).name());
+		add(tempo_, ", \n\t'is_lv_ref':\t", at::is_lv_ref ? "true" : "false");
+		add(tempo_, ", \n\t'is_rv_ref':\t", at::is_rv_ref ? "true" : "false");
+		add(tempo_, ", \n\t'array':\t", at::is_array ? "true" : "false");
+		add(tempo_, ", \n\t'pointer':\t", at::is_pointer_ ? "true" : "false");
+		add(tempo_, ", \n\t'pointer_pointer':\t", at::double_pointer ? "true" : "false");
+		add(tempo_, "\n }\n");
 
 		return tempo_.data() ;
 	};
@@ -74,38 +80,30 @@ namespace {
 
 	auto lambada = []( auto arg ) {
 		using naive_type = decltype(arg);
+		dbj::print("\nNaive\n", dbj::show_actual_type<naive_type>());
 		using the_type = dbj::actual_type_t< naive_type >;
-		dbj::print("\nCalled with arg type:\t", typeid(naive_type).name());
-		dbj::print("\n", dbj::show_actual_type<naive_type>());
+		dbj::print("\nActual\n", dbj::show_actual_type<the_type>());
 	};
 
 	auto lambada_complicada = []( const auto & arg) {
 		using naive_type = decltype(arg);
+		dbj::print("\nNaive\n", dbj::show_actual_type<naive_type>());
 		using the_type = dbj::actual_type_t< naive_type >;
-		dbj::print("\nCalled with arg type:\t", typeid(naive_type).name());
-		dbj::print("\n",dbj::show_actual_type<naive_type>());
+		dbj::print("\nActual\n", dbj::show_actual_type<the_type>());
 	};
 
 
 	DBJ_TEST_UNIT(" dbj actual type; motivation and testing ") {
 
-		const char * argv{ "ONE" };
-
-		 bool bubble1 = dbj::is_p2p( & argv );
-		 bool bubble2 = dbj::is_p2p(argv[0] ) ;
-
-		 bool bubble3 = dbj::is_pointer_pointer_v< decltype(&argv) >;
-		 bool bubble4 = dbj::is_pointer_pointer_v< decltype( argv ) >;
+		const char * argv[]{ "ONE", "TWO", "THREE" };
 
 		dbj::print("\n\n---------------------------------\nNow Calling lambada\n");
 		lambada(argv);
 		dbj::print("\n");
-		lambada(&argv);
 
 		dbj::print("\n\n---------------------------------\nNow Calling lambada complicada\n");
 		lambada_complicada(argv);
 		dbj::print("\n");
-		lambada_complicada(&argv);
 
 	}
 }

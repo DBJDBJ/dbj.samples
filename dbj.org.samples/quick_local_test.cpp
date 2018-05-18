@@ -13,9 +13,9 @@ namespace {
 	/// C++ "stunt" which perhaps is not. It shows the good usage of std artefacts
 	/// based on SFINAE. And it is suffciently limiting function not to be labelled a "stunt"
 	/// Both types have to be :
-	///   -- of the same size
-	///   -- trivially copyable
-	///   -- and destructible
+	///  of the same size
+	///  trivially copyable
+	///  and destructible
 	/// This also shows extremely efficient compile-time coding of course.
 	/// And. It this is an example where raw pointer are most efficient mechanism
 	/// No copying and no moving is invoved here ...
@@ -137,10 +137,69 @@ namespace {
 			int vintage []{ 1, 2, 3 };
 			auto tpl1 = dbj::util::seq_tup(vintage);
 	}
+	
+	/// <summary>
+	/// c++ 17 generic lambdas have issues
+	/// with required types of auto arguments
+	/// in c++20 this will be fixed with new
+	/// lambda arguments template declaration syntax
+	/// </summary>
+	namespace required_types
+	{
+		template<typename RQ>
+		inline auto  is_required_type = [](const auto & v_ = 0) constexpr -> bool
+		{
+			using T = std::decay_t< decltype(v_) >;
+			return std::is_same<T, RQ>();
+		};
+
+
+		inline auto is_uint64 = [] ( const auto & v_ = 0 ) constexpr -> bool
+		{
+			return is_required_type<std::uint64_t>(v_);
+		};
+
+	} // required_types
+
+	namespace {
+		
+		using namespace required_types;
+
+		inline auto tv = [](const char prompt[] = "", const auto & value) {
+			std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
+		};
+
+
+		inline auto make_double_value = [](auto value)
+		{
+			if constexpr (is_uint64(value)) {
+				tv("\n\nDoubling required type (std::uint_64):", value);
+				return value + value;
+			}
+
+			tv("\n\nWill try to double 'illegal' type", value);
+			return value + value;
+		};
+
+	}
+	//------------------------------------------------------------------------------
 
 #ifdef DBJ_TESTING_EXISTS
-	DBJ_TEST_UNIT(": quick_local_tests ")
+	extern void quick_local_tests()
 	{
+		// call with 'llegal' type
+		std::uint64_t u42 = 42u;
+		auto double_value_2 = make_double_value(u42);
+		tv("\nResult:", double_value_2);
+
+		// call with 'illegal' types
+		auto double_value = make_double_value(42u);
+		tv("\nResult:", double_value);
+
+		std::string one{"--ONE--"};
+		auto double_value_3 = make_double_value(one);
+		tv("\nResult:", double_value_3 );
+
 		test_vector_to_touple();
 
 		auto r1 = dbj::sign(+2.0f);

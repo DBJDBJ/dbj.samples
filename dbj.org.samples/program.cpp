@@ -15,6 +15,9 @@
 #include "dbj_x\dbj_cli_args.h"
 
 #include <dbj_string_compare.h>
+#include "headers/no_inheritance.h"
+
+extern void quick_local_tests();
 
 /// <summary>
 /// just execute all the registered tests
@@ -27,6 +30,7 @@ int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 int main(int argc, char* argv[], char *envp[])
 #endif
 {
+	quick_local_tests();
 	dbj::testing::execute();
 	return  EXIT_SUCCESS;
 }

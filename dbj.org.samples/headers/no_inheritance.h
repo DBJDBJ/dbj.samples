@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef implements
+#define implements public
+#endif
+
 namespace dbj {
 	namespace docops {
 		using string = std::string;
@@ -111,6 +115,52 @@ namespace documents {
 
 	}
 } // dbj
+
+namespace {
+
+/* use for CRTP and Delegation */
+template<typename T> class Log_Service 
+{
+public:
+	void log ( const T * client_ ) const noexcept {
+	}
+};
+
+/* CRTP */
+class App1 : Log_Service<App1> {
+public:
+	App1() {}
+	void log() {
+		// use the log service 
+		// from the base
+		Log_Service::log( this );
+	}
+};
+
+/*	Delegation*/
+class App2 {
+	const Log_Service<App2> & log_svc_;
+public:
+	App2() : log_svc_(Log_Service<App2>()) {
+	}
+	void log() {
+		// delegate to log 
+		// service Behind
+		log_svc_.log(this);
+	}
+};
+
+#ifdef DBJ_TESTING_EXISTS
+	namespace {
+		DBJ_TEST_UNIT(" dbj delegation research") {
+			App2 app_2 ;
+			App1 app_1 ;
+			app_1.log();
+			app_2.log();
+		}
+	}
+#endif
+}
   /* standard suffix for every other header here */
 #pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
 
