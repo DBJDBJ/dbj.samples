@@ -183,10 +183,99 @@ namespace {
 
 	}
 	//------------------------------------------------------------------------------
+	// https://stackoverflow.com/questions/13401716/selecting-a-member-function-using-different-enable-if-conditions/50412114#50412114
+	namespace so {
+		template<typename T>
+		struct Point
+		{
+			static_assert (
+				std::is_same<T, std::uint64_t>() ||
+				std::is_same<T, std::float_t>()
+				);
+
+			typedef T value_type;
+
+			Point() = default;
+
+			auto data() const {
+				return std::array<T,2>{ this->x, this->y };
+			}
+
+			template<typename U>
+			const Point & assign(U x_, U y_)
+			{
+				if constexpr (std::is_same<T, U>()) {
+					worker(x_, y_);
+				}
+				// else 
+				worker(
+					static_cast<T>(x_),
+					static_cast<T>(y_)
+				);
+				return *this;
+			}
+
+			template<typename U>
+			const Point & assign(Point<U> p_)
+			{
+				if constexpr (std::is_same<T, U>()) {
+					worker(p_.x, p_.y);
+				}
+				// else 
+				worker(
+					static_cast<T>(p_.x),
+					static_cast<T>(p_.ys)
+				);
+				return *this;
+			}
+
+
+		private:
+
+			mutable T x{}, y{};
+
+			void worker(T x_, T y_)
+			{
+				x = x_; y = y_;
+			}
+
+			friend
+			Point mid(const Point & p1, const Point & p2) {
+			Point retval;
+				if constexpr ( std::is_same<value_type, std::uint64_t>() ) {
+					// we need to transform to integer
+					std::uint64_t mid_x = (std::uint64_t)((p1.x + p2.x) / 2);
+					std::uint64_t mid_y = (std::uint64_t)((p1.y + p2.y) / 2);
+
+					return retval.assign( mid_x, mid_y );
+				}
+
+				return retval.assign(
+						static_cast<value_type>((p1.x + p2.x) / 2),
+						static_cast<value_type>((p1.y + p2.y) / 2)
+					);
+			}
+		};
+	}
+
+	static void limit_on_type() {
+		so::Point<std::uint64_t>		pi1, pi2;
+		so::Point<std::float_t>	pf1;
+
+		pi1.assign(1234, -2878);
+		pi2.assign(-734, 9876);
+		pf1.assign(1324.980f, 456.390f);
+
+		auto mid_ = mid(pi1 , pi2);
+
+		auto[x, y] = mid_.data();
+	}
 
 #ifdef DBJ_TESTING_EXISTS
 	extern void quick_local_tests()
 	{
+		limit_on_type();
+
 		// call with 'llegal' type
 		std::uint64_t u42 = 42u;
 		auto double_value_2 = make_double_value(u42);

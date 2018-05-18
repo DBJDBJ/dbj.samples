@@ -1,6 +1,5 @@
 #pragma once
-#define dbj_micro_printf
-#ifdef dbj_micro_printf
+#if 0
 /*
 #include <stdarg.h>
 #include <stdio.h>
@@ -256,8 +255,6 @@ DBJ_TEST_UNIT(" dbj micro printf test ") {
 		dbj::printf::printf("%f, %e\n", floats[i], floats[i]);
 }
 #endif // DBJ_TESTING_EXISTS
-/* standard suffix for every other header here */
-#pragma comment( user, __FILE__ "(c) " __DATE__ " by dbj@dbj.org | Version: " __DATE__ __TIME__ )
 /*
 Inspired by: https://stackoverflow.com/questions/16647278/minimal-implementation-of-sprintf-or-printf
 
@@ -278,4 +275,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#endif // DBJ_MICRO_PRINTF
+#endif // #if 0

@@ -17,6 +17,8 @@
 #include <dbj_string_compare.h>
 #include "headers/no_inheritance.h"
 
+#include <dbj_native_arr_ref.h>
+
 extern void quick_local_tests();
 
 /// <summary>
