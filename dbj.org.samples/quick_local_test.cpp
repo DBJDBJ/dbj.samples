@@ -271,9 +271,19 @@ namespace {
 		auto[x, y] = mid_.data();
 	}
 
+	static void read_only_memory() {
+ char * hello_1{ "Hello!" };
+ char   hello_2[]{ "Hello!" };
+
+//  *hello_1 = '*' ; // <-- write access violation
+ 
+ *hello_2 = '*'; // <-- OK
+	}
+
 #ifdef DBJ_TESTING_EXISTS
 	extern void quick_local_tests()
 	{
+		read_only_memory();
 		limit_on_type();
 
 		// call with 'llegal' type
