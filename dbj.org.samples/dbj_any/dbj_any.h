@@ -17,7 +17,7 @@ namespace dbj {
 		};
 
 		template <typename T> class any_wrapper;
-
+/*
 		class base {
 		public:
 			// base of all visitors 
@@ -31,10 +31,10 @@ namespace dbj {
 		{
 			void enter(visitor &&) const {}
 		};
-
+*/
 	template <typename T>
 	class any_wrapper final 
-		: public base
+		// : public base
 	{
 
 		static_assert(!std::is_reference<T>::value, "[dbj::any_wrapper] Do not use a reference type");
@@ -72,13 +72,8 @@ namespace dbj {
 		// types
 		typedef any_wrapper type;
 		typedef T data_type;
-		typedef base parent;
 
-		void enter(visitor && v) const {
-		}
-
-		any_wrapper() {
-		}
+		any_wrapper() {	}
 
 		// give data
 		any_wrapper( const data_type & ref) noexcept
@@ -102,7 +97,7 @@ namespace dbj {
 			if ( this != &x ) {
 			this->any_ = move(x.any_); 
 			}
-			return *this;
+			return std::forward<any_wrapper>( *this );
 		}
 		// destruct
 		~any_wrapper() { this->any_.reset(); }
@@ -140,27 +135,56 @@ namespace dbj {
 	};
 
 		// factory method
-		inline auto make = [](const auto & value , const auto & ... args)
+
+
+		template <
+			typename T,
+			typename ANYW = typename dbj::any::any_wrapper< T >
+		>
+			inline auto make(T val_)
 		{
-			constexpr
-				size_t argsnum = sizeof...(args);
-			using   data_type = decay_t<decltype(value)>;
-			using	ANYW		= typename dbj::any::any_wrapper< data_type > ;
-			using   any_range   = vector< ANYW >;
+			static_assert(!std::is_same<const char *, T>(),
+				"std::any::make() can not use 'char *' pointer argument");
 
-			any_range rezult{}; rezult.resize(1 + argsnum);
-			rezult.push_back(ANYW{ value });
+			return ANYW{val_};
+		};
+		/*
+		inline auto make( const char * val_)
+		{
+			static_assert(! std::is_pointer<char *>(),
+				"std::any::make() can not use 'char *' pointer argument");
+			return dbj::any::any_wrapper< const char * >{val_};
+		};
+		*/
+		// returns std::array of any wrappers
+		// of the same type
+		template <
+			typename T,
+			std::size_t N,
+			typename ANYW = typename dbj::any::any_wrapper< T >
+		>
+			inline auto range(const T(&arrf)[N])
+		{
+			using   any_range = std::array< ANYW, N >;
+			any_range rezult{};
+			size_t j{ 0 };
 
-			if ( argsnum > 0) {
-				char dumzy[argsnum] = { ((rezult.push_back(ANYW{args}))  ,0)... };
+			for (T element : arrf) {
+				rezult[j++] = dbj::any::make(element);
 			}
-
 			return rezult;
 		};
 
-
 	} // any
 } // dbj
+
+namespace dbj::win::con {
+	template< typename T>
+	void out(const dbj::any::any_wrapper<T> & daaw_) {
+		dbj::win::con::out(daaw_.get());
+	}
+}
+
 #if 0
 namespace dbj {
 	// hiden implementation
@@ -200,13 +224,29 @@ namespace dbj {
 #ifdef DBJ_TESTING_EXISTS
 namespace dbj_any_wrapper_testing {
 
+	template< typename T, size_t N >
+	inline auto range_test (const T(&arg_)[N] )
+	{
+		auto any_0 = dbj::any::range(arg_);
+		dbj::print("\n", DBJ_NV(any_0[0].get()));
+		return any_0;
+	};
+
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
-		using namespace dbj::win::con;
+
 		try {
-			auto me = dbj::any::any_wrapper<int>(42);
-			auto  v1 = me; // copy wrapper to wrapper
+			dbj::print( "\n is a result of:\t", DBJ_NV(range_test({ 42 }))  );
+			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
+
+			char word_[] = "Hallo bre!";
+			// yes can do
+			auto    any_2 = dbj::any::make( word_);
+			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
+
+			auto  v1 = any_2; // copy wrapper to wrapper
 			auto  v2 = v1.get(); // wrapper to value and so on
 		}	catch (...) {
+			using namespace dbj::win::con;
 			dbj::print(
 				painter_command::text_color_reset,
 				painter_command::bright_red,
