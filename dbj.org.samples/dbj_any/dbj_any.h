@@ -120,7 +120,7 @@ namespace dbj {
 			throw dbj::Exception(" can not call on empty data wrapped ");
 		}
 
-		data_type get () const {
+		constexpr data_type get () const {
 			try {
 				return any_cast<data_type>(this->any_);
 			}
@@ -132,10 +132,31 @@ namespace dbj {
 		bool empty() const {
 			return !(this->any_).has_value();
 		}
+
+		const std::string to_string () const {
+			const auto val_ = this->get();
+			if constexpr( std::is_arithmetic<decltype(val_)>() ) {
+				return { std::to_string(val_) };
+			}
+
+			if constexpr(std::is_integral<decltype(val_)>()) {
+				return { std::to_string(val_) };
+			}
+
+			return { reinterpret_cast<const char *>(val_) };
+		}
+
+		operator const std::string () const  {
+			return
+				std::string{ "dbj::any::any_wrapper<" }
+			.append(typeid(T).name())
+			.append(" = ")
+			.append(this->to_string())
+			.append(">");
+		}
 	};
 
-		// factory method
-
+		// factory methods ----------------------------------------
 
 		template <
 			typename T,
@@ -178,13 +199,6 @@ namespace dbj {
 	} // any
 } // dbj
 
-namespace dbj::win::con {
-	template< typename T>
-	void out(const dbj::any::any_wrapper<T> & daaw_) {
-		dbj::win::con::out(daaw_.get());
-	}
-}
-
 #if 0
 namespace dbj {
 	// hiden implementation
@@ -224,31 +238,35 @@ namespace dbj {
 #ifdef DBJ_TESTING_EXISTS
 namespace dbj_any_wrapper_testing {
 
-	template< typename T, size_t N >
-	inline auto range_test (const T(&arg_)[N] )
+	template< typename lambada_type >
+	inline auto test_lambada ( const char * expression , lambada_type && lambada )
 	{
-		auto any_0 = dbj::any::range(arg_);
-		dbj::print("\n", DBJ_NV(any_0[0].get()));
-		return any_0;
+		auto anything = lambada();
+		dbj::print( 
+			"\n- expression -> ", expression, 
+			"\n\t- rezult type-> ", typeid(anything).name(), 
+			"\n\t\t- value -> ", anything);
+		return anything;
 	};
+
+#define DBJ_TEST_LINE(x) test_lambada( DBJ_EXPAND(x), [&] { return (x);} ) 
 
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
 
 		try {
-			dbj::print( "\n is a result of:\t", DBJ_NV(range_test({ 42 }))  );
+			auto any_0 = DBJ_TEST_LINE( dbj::any::range({ 42 }) );
 			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
 
-			char word_[] = "Hallo bre!";
 			// yes can do
-			auto    any_2 = dbj::any::make( word_);
+			char word_[] = "Hallo bre!";
+			auto    any_2 = DBJ_TEST_LINE( dbj::any::make( word_) ) ;
 			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
 
 			auto  v1 = any_2; // copy wrapper to wrapper
-			auto  v2 = v1.get(); // wrapper to value and so on
+			auto  v2 = DBJ_TEST_LINE( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
 			using namespace dbj::win::con;
 			dbj::print(
-				painter_command::text_color_reset,
 				painter_command::bright_red,
 				__FUNCSIG__ "  Unknown exception caught! ",
 				painter_command::text_color_reset
