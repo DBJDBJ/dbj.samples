@@ -54,16 +54,19 @@ namespace dbj::cli {
 			return data_type{ args, args + ARGC } ;
 	};
 
+	//---------------------------------------------------------------------------
 	struct app_env_struct final {
 
 		std::size_t cli_args_count{};
-		data_type cli_data{};
+		data_type	cli_data{};
 		std::size_t env_vars_count{};
 
-		using env_kv_data_type = std::map<std::wstring,std::wstring>;
-		env_kv_data_type env_vars{};
+		using map_type = 
+					std::map<std::wstring,std::wstring>;
+		map_type env_vars{};
 	};
 
+	//---------------------------------------------------------------------------
 	inline auto app_env_initor = []() {
 
 		wchar_t **  warg = (__wargv);
@@ -99,7 +102,7 @@ namespace dbj::cli {
 
 		data_type
 			wenvp_data{ command_line_data( evc, wenv) };
-		app_env_struct::env_kv_data_type
+		app_env_struct::map_type
 			wenvp_map{};
 
 		//transform env vars to k/v map

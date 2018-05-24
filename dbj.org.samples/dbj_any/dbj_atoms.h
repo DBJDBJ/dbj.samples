@@ -11,7 +11,6 @@
 namespace dbj::nuclear {
 
 #ifdef DBJ_TESTING_EXISTS
-
 	namespace {
 
 		template<typename T>

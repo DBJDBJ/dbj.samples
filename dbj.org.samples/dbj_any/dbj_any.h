@@ -142,8 +142,11 @@ namespace dbj {
 			if constexpr(std::is_integral<decltype(val_)>()) {
 				return { std::to_string(val_) };
 			}
-
+#pragma warning( push )
+#pragma warning( disable: 4312 )
 			return { reinterpret_cast<const char *>(val_) };
+#pragma message("### DBJ --> Warning 4312 disabled in file: " __FILE__ ) 
+#pragma warning( pop )
 		}
 
 		operator const std::string () const  {
@@ -238,6 +241,7 @@ namespace dbj {
 #ifdef DBJ_TESTING_EXISTS
 namespace dbj_any_wrapper_testing {
 
+	/*
 	template< typename lambada_type >
 	inline auto test_lambada ( const char * expression , lambada_type && lambada )
 	{
@@ -249,21 +253,21 @@ namespace dbj_any_wrapper_testing {
 		return anything;
 	};
 
-#define DBJ_TEST_LINE(x) test_lambada( DBJ_EXPAND(x), [&] { return (x);} ) 
-
+#define DBJ_TEST_ATOM(x) test_lambada( DBJ_EXPAND(x), [&] { return (x);} ) 
+*/
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
 
 		try {
-			auto any_0 = DBJ_TEST_LINE( dbj::any::range({ 42 }) );
+			auto any_0 = DBJ_TEST_ATOM( dbj::any::range({ 42 }) );
 			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
 
 			// yes can do
 			char word_[] = "Hallo bre!";
-			auto    any_2 = DBJ_TEST_LINE( dbj::any::make( word_) ) ;
+			auto    any_2 = DBJ_TEST_ATOM( dbj::any::make( word_) ) ;
 			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
 
 			auto  v1 = any_2; // copy wrapper to wrapper
-			auto  v2 = DBJ_TEST_LINE( v1.get() ); // wrapper to value and so on
+			auto  v2 = DBJ_TEST_ATOM( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
 			using namespace dbj::win::con;
 			dbj::print(
