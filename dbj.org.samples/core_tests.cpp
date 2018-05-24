@@ -26,10 +26,4 @@ DBJ_TEST_UNIT(": dbj utils") {
 	dbj_util_test( dbj::print );
 }
 
-DBJ_TEST_UNIT(": dbj traits") {
-
-	dbj::dbj_traits_tests( dbj::print );
-}
-
-
 #endif // DBJ_TESTING_EXISTS

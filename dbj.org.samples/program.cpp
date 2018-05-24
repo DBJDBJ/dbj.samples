@@ -19,7 +19,6 @@
 
 #include <dbj_native_arr_ref.h>
 
-#include "headers/dbj_demang.h"
 
 extern void quick_local_tests();
 
@@ -45,7 +44,7 @@ std::wostream & operator << ( std::wostream & wos, const std::string & str ) {
 template<typename T>
 constexpr wchar_t tv_print (T && v_, const wchar_t  prompt[] = L"" ) {
 	using v_type = std::remove_reference_t< T >;
-	std::wcout << prompt << L" { " <<  dbj::demang< v_type >() << L" : " << (v_) << " } " ;
+	std::wcout << prompt << L" { " <<  dbj::name< v_type >() << L" : " << (v_) << " } " ;
 	return L' ';
 };
 

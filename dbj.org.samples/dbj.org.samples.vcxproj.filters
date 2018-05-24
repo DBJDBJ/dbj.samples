@@ -87,7 +87,6 @@
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
     <ClInclude Include="dbj_x\dbj_timer.h" />
     <ClInclude Include="winfile_dbj\dbj_multimap.h" />
-    <ClInclude Include="headers\dbj_demang.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

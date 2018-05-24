@@ -173,7 +173,6 @@
     <ClInclude Include="dbj_any\dbj_any_node.h" />
     <ClInclude Include="dbj_any\dbj_atoms.h" />
     <ClInclude Include="headers\dbj_cl.h" />
-    <ClInclude Include="headers\dbj_demang.h" />
     <ClInclude Include="headers\dbj_lambda_lists.h" />
     <ClInclude Include="headers\dbj_tokenizer.h" />
     <ClInclude Include="headers\dbj_trace.h" />
