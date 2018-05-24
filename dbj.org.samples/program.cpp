@@ -30,13 +30,16 @@ extern void quick_local_tests();
 /// just execute all the registered tests
 /// in no particulat order
 /// </summary>
-static void program_start
-(const int argc, const wchar_t *argv[], const wchar_t *envp[])
-{
+static void program_start (
+	const int argc, 
+	const wchar_t *argv[], 
+	const wchar_t *envp[]
+) {
 	quick_local_tests();
 	dbj::testing::execute();
 }
 
+#if 0
 std::wostream & operator << ( std::wostream & wos, const std::string & str ) {
 	return wos << (const char *)str.c_str();
 }
@@ -48,6 +51,39 @@ constexpr wchar_t tv_print (T && v_, const wchar_t  prompt[] = L"" ) {
 	return L' ';
 };
 
+static void fundamental(
+	const int argc,	const wchar_t *argv[],const wchar_t *envp[]) 
+{
+	using namespace std;
+	auto print = [&](auto & x)
+	{
+		tv_print(x, L"\n\ninside auto print = [](auto & x)\nx : ");
+		using x_type = remove_reference_t< decltype(x) >;
+		static_assert(
+			is_array<x_type>(), "argument must be an native array reference"
+			);
+
+		size_t j{ 0 }; for (auto e : x)
+			std::wcout << L"\n [" << j++ << L"] : " << tv_print(e);
+	};
+
+	tv_print(argv[0], L"\n argv [0] : ");
+	// pointer to array
+	typedef  const char *(*ARP)[1];
+	// ref to array
+	typedef  const char *(&ARF)[1];
+	// output is 
+	// just the first letter of the
+	// full path
+	print(*(ARP)(argv));
+	// output is 
+	// garbage
+	print((ARF)(argv));
+
+	wcout.flush();
+}
+#endif
+
 #ifdef UNICODE
 int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 #else
@@ -55,33 +91,9 @@ int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 int main(int argc, char* argv[], char *envp[])
 #endif
 {
-	using namespace std;
-	auto print = [&](auto & x)
-	{
-	    tv_print(x,L"\n\ninside auto print = [](auto & x)\nx : ");
-		using x_type = remove_reference_t< decltype(x) >;
-	static_assert(
-		is_array<x_type>() , "argument must be an native array reference"
-	);
+	program_start(argc, argv, envp);
 
-	size_t j{ 0 }; for (auto e : x) 
-			std::wcout << L"\n [" << j++ << L"] : " << tv_print(e) ;
-	};
-
-	tv_print( argv[0], L"\n argv [0] : ");
-   // pointer to array
-	typedef  const char *(*ARP)[1];
-	// ref to array
-	typedef  const char *(&ARF)[1];
-	// output is 
-	// just the first letter of the
-	// full path
-	print( * (ARP)(argv));
-	// output is 
-	// garbage
-	print((ARF)(argv));
-
-	wcout.flush(); return  EXIT_SUCCESS;
+	return  EXIT_SUCCESS;
 }
 
 #pragma warning( pop ) // 4100
