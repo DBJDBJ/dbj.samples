@@ -15,7 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-
+#include <array>
+#include <iostream>
 // #define DBJ_WIN
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
