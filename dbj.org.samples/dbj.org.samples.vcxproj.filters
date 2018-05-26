@@ -13,6 +13,7 @@
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="winfile_testing.cpp" />
+    <ClCompile Include="any_narf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">

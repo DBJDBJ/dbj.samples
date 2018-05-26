@@ -91,8 +91,16 @@ int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 int main(int argc, char* argv[], char *envp[])
 #endif
 {
-	program_start(argc, argv, envp);
-
+	try {
+		program_start(argc, argv, envp);
+	} catch (...) {
+		using namespace dbj::win::con;
+		dbj::print(
+		painter_command::bright_red,
+		__FUNCSIG__ "  Unknown exception caught! ",
+		painter_command::text_color_reset
+		);
+	}
 	return  EXIT_SUCCESS;
 }
 

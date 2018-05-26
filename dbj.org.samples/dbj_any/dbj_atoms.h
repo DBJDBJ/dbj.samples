@@ -6,7 +6,8 @@
  It seems std::atomic + MSVC are not  ready yet? The simple code bellow throws a lot of exceptions 
  like this one:
 
- Exception thrown at 0x7461B872 in dbj.org.samples.exe: Microsoft C++ exception: std::out_of_range at memory location 0x00EFEA3C.
+ Exception thrown at 0x7461B872 in dbj.org.samples.exe: 
+ Microsoft C++ exception: std::out_of_range at memory location 0x00EFEA3C.
 */
 namespace dbj::nuclear {
 

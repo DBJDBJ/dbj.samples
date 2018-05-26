@@ -187,6 +187,7 @@
     <ClInclude Include="winfile_dbj\dbj_multimap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="any_narf.cpp" />
     <ClCompile Include="core_tests.cpp" />
     <ClCompile Include="quick_local_test.cpp" />
     <ClCompile Include="stdafx.cpp">
