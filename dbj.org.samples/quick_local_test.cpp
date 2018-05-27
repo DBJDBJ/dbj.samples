@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 
-
 #if 1
 namespace {
 	using namespace std;

@@ -3,12 +3,7 @@
 
 
 #ifdef DBJ_TESTING_EXISTS
-namespace {
-	/*
-	DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": dbj any wrapper"))
-	{}
-	*/
-}
+
 
 #else
 // testing the various stuff in this project

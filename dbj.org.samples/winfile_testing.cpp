@@ -1,4 +1,9 @@
 #include "stdafx.h"
+/*
+
+copy to dbj++ here WINFILE R&D internals
+and test here
+
 #include "./winfile_dbj/dbj_multimap.h"
 
 
@@ -17,3 +22,4 @@ static bool dbj_winfile_testing() {
 
 static bool do_it_here = dbj_winfile_testing();
 #endif
+*/

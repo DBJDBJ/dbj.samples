@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#if 0
 #include "dbj_any/dbj_any.h"
 #include  "dbj_x\dbj_compiletime.h"
 #include  "dbj_x\dbj_ctstring.h"
@@ -18,7 +19,7 @@
 #include "headers/no_inheritance.h"
 
 #include <dbj_native_arr_ref.h>
-
+#endif
 
 extern void quick_local_tests();
 
