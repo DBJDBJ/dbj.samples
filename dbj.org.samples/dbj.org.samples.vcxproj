@@ -158,7 +158,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
-    <ClInclude Include="dbj_x\dbj_cli_args.h" />
     <ClInclude Include="dbj_x\dbj_compiletime.h" />
     <ClInclude Include="dbj_x\dbj_ctstring.h" />
     <ClInclude Include="dbj_x\dbj_fontlist.h" />
@@ -172,7 +171,6 @@
     <ClInclude Include="dbj_any\dbj_any.h" />
     <ClInclude Include="dbj_any\dbj_any_node.h" />
     <ClInclude Include="dbj_any\dbj_atoms.h" />
-    <ClInclude Include="headers\dbj_cl.h" />
     <ClInclude Include="headers\dbj_lambda_lists.h" />
     <ClInclude Include="headers\dbj_tokenizer.h" />
     <ClInclude Include="headers\dbj_trace.h" />

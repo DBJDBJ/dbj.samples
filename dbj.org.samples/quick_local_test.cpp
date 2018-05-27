@@ -279,7 +279,7 @@ namespace {
 	}
 
 #ifdef DBJ_TESTING_EXISTS
-	extern void quick_local_tests()
+	static void quick_local_tests()
 	{
 		read_only_memory();
 		limit_on_type();
@@ -308,4 +308,9 @@ namespace {
 		// int I = magic_int_float_transformation(42.42f);
 		// Illustrating_the_use_of_Arrays_and_Functions();
 	}
+
+	DBJ_TEST_UNIT(": quick local tests ") {
+		quick_local_tests();
+	}
+
 #endif

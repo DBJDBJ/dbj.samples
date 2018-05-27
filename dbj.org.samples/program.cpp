@@ -21,8 +21,6 @@
 #include <dbj_native_arr_ref.h>
 #endif
 
-extern void quick_local_tests();
-
 #pragma warning( push )
 #pragma warning( disable: 4100 )
 // https://msdn.microsoft.com/en-us/library/26kb9fy0.aspx 
@@ -36,7 +34,6 @@ static void program_start (
 	const wchar_t *argv[], 
 	const wchar_t *envp[]
 ) {
-	quick_local_tests();
 	dbj::testing::execute();
 }
 

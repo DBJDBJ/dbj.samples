@@ -56,9 +56,6 @@
     <ClInclude Include="headers\policy_classes.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="headers\dbj_cl.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -85,7 +82,6 @@
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_x\dbj_cli_args.h" />
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
     <ClInclude Include="dbj_x\dbj_timer.h" />
     <ClInclude Include="winfile_dbj\dbj_multimap.h" />

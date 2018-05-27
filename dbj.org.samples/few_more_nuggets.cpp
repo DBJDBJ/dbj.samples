@@ -62,7 +62,7 @@ namespace {
 			return 0 ;
 	}
 
-	static int few_more_nuggets() 
+	DBJ_TEST_UNIT(" few_more_nuggets")
 	{
 		decltype(auto) wot_1 = DBJ_TEST_ATOM(
 			typeid(  void (std::string::*) (int) ).name() 
@@ -73,8 +73,5 @@ namespace {
 			DBJ_TEST_ATOM(
 				compute(specimen)
 				);
-		return 0;
 	}
-
-	static auto rezult = few_more_nuggets();
 }
