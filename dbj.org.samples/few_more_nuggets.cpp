@@ -2,6 +2,16 @@
 
 // https://medium.com/@LoopPerfect/c-17-vs-c-14-if-constexpr-b518982bb1e2
 
+// does T supports some method popular solution does not work?
+struct X final {
+	void A(int) {
+		DBJ::TRACE("In %s", __func__);
+	}
+	void B(float) {
+		DBJ::TRACE("In %s", __func__);
+	}
+};
+
 namespace {
 
 	using namespace std;
@@ -25,49 +35,45 @@ namespace {
 		}
 	};
 
-	// does T supports some method 
-
 	template<class T>
-	constexpr auto supportsAPI() 
-		-> decltype(
-			& T::Method1, 
-			& T::Method2,
-			true_type
-			)
-	{
-		
+	constexpr auto supportsAPI( ) -> decltype(&T::begin, &T::end, true_type{}) {
 		return {};
 	}
 
 	template<class T>
-	constexpr auto supportsAPI () -> false_type
-	{
+	constexpr auto supportsAPI( ) -> false_type {
 		return {};
 	}
 	
 	//usage
-	template<class T>
-	int compute(T x) {
-		if constexpr(supportsAPI<T>()) {
-			// only gets compiled if the condition is true
-			return x.Method1();
+	template<typename T>
+	auto compute( const T & x) {
+		
+		auto name = dbj::name<T>() ;
+		
+		if constexpr(
+			supportsAPI<T>()
+		) 
+		{
+			DBJ::TRACE("\n%s has method 'begin()'", name  ) ;
+			return x.begin();
 		}
-		else {
-			return 0;
-		}
+			DBJ::TRACE("\n%s has no method 'begin()'", name );
+			return 0 ;
 	}
 
-	static int few_more_nuggets() {
-		struct X final {
-			void Method1() {}
-			void Method2() {}
-		};
+	static int few_more_nuggets() 
+	{
+		decltype(auto) wot_1 = DBJ_TEST_ATOM(
+			typeid(  void (std::string::*) (int) ).name() 
+			);
 
-		using wot = decltype( & X::Method1 );
-
-		auto isthis = typeid(wot).name();
-
-		return compute(X{});
+		auto specimen = string{ "0123456789" };
+		decltype(auto) wot_2 = 
+			DBJ_TEST_ATOM(
+				compute(specimen)
+				);
+		return 0;
 	}
 
 	static auto rezult = few_more_nuggets();
