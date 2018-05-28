@@ -15,9 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-// #define DBJ_WIN will include 
-// windows.h and gdi.h 
-// 
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
 #include <dbj++tests.h> 

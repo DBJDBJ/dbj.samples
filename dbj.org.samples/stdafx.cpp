@@ -5,5 +5,5 @@
 #include "stdafx.h"
 
 #ifdef DBJ_WIN
-#error DBJ_WIN makes problems :)
+#warning DBJ_WIN makes problems :)
 #endif
