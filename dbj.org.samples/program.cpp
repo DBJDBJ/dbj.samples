@@ -34,51 +34,44 @@ static void program_start (
 	const wchar_t *argv[], 
 	const wchar_t *envp[]
 ) {
-	dbj::testing::execute();
+	dbj::testing::execute(argc, argv, envp);
 }
 
 #if 0
-std::wostream & operator << ( std::wostream & wos, const std::string & str ) {
-	return wos << (const char *)str.c_str();
-}
 
-template<typename T>
-constexpr wchar_t tv_print (T && v_, const wchar_t  prompt[] = L"" ) {
-	using v_type = std::remove_reference_t< T >;
-	std::wcout << prompt << L" { " <<  dbj::name< v_type >() << L" : " << (v_) << " } " ;
-	return L' ';
-};
+static dbj::c_line<80, '-'> L80;
 
-static void fundamental(
+static bool fundamental(
 	const int argc,	const wchar_t *argv[],const wchar_t *envp[]) 
 {
 	using namespace std;
+
 	auto print = [&](auto & x)
 	{
-		tv_print(x, L"\n\ninside auto print = [](auto & x)\nx : ");
+		DBJ_TEST_ATOM(x);
 		using x_type = remove_reference_t< decltype(x) >;
 		static_assert(
 			is_array<x_type>(), "argument must be an native array reference"
 			);
-
-		size_t j{ 0 }; for (auto e : x)
-			std::wcout << L"\n [" << j++ << L"] : " << tv_print(e);
+		size_t j{ 0 }; 
+		for (auto && e : x)
+		{ dbj::print("\n [", j++, L"] : " , e ); }
+		return "done";
 	};
 
-	tv_print(argv[0], L"\n argv [0] : ");
+	DBJ_TEST_ATOM(argv[0]);
 	// pointer to array
-	typedef  const char *(*ARP)[1];
+	typedef  const wchar_t *(*ARP)[1];
 	// ref to array
-	typedef  const char *(&ARF)[1];
+	typedef  const wchar_t *(&ARF)[1];
 	// output is 
 	// just the first letter of the
 	// full path
-	print(*(ARP)(argv));
+	DBJ_TEST_ATOM( print(*(ARP)(argv)) );
 	// output is 
 	// garbage
-	print((ARF)(argv));
-
-	wcout.flush();
+	DBJ_TEST_ATOM( print((ARF)(argv))  );
+	return true;
 }
 #endif
 
