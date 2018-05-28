@@ -132,7 +132,7 @@ namespace {
 		inline auto  is_required_type = [](const auto & v_ = 0) constexpr -> bool
 		{
 			using T = std::decay_t< decltype(v_) >;
-			return std::is_same<T, RQ>();
+			return std::is_same<T, RQ>() ;
 		};
 
 
@@ -145,8 +145,9 @@ namespace {
 
 	using namespace required_types;
 
-	inline auto tv = [](const char prompt[] = "", const auto & value) {
-		std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
+	inline auto tv = [](const char prompt[] = "", const auto & value) -> void {
+		// std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
+		dbj::print(prompt);  DBJ_TEST_ATOM(value);
 	};
 
 
@@ -250,41 +251,27 @@ namespace {
 		auto[x, y] = mid_.data();
 	}
 
-	static void read_only_memory() {
-		char * hello_1{ "Hello!" };
-		char   hello_2[]{ "Hello!" };
-
-		//  *hello_1 = '*' ; // <-- write access violation
-
-		*hello_2 = '*'; // <-- OK
-	}
-
 #ifdef DBJ_TESTING_EXISTS
 	static void quick_local_tests()
 	{
-		read_only_memory();
 		limit_on_type();
 
 		// call with 'llegal' type
 		std::uint64_t u42 = 42u;
-		auto double_value_2 = make_double_value(u42);
-		tv("\nResult:", double_value_2);
+		auto double_value_2 = DBJ_TEST_ATOM( make_double_value(u42) );
 
 		// call with 'illegal' types
-		auto double_value = make_double_value(42u);
-		tv("\nResult:", double_value);
+		auto double_value = DBJ_TEST_ATOM( make_double_value(42u) );
 
 		std::string one{ "--ONE--" };
-		auto double_value_3 = make_double_value(one);
-		tv("\nResult:", double_value_3);
+		auto double_value_3 = DBJ_TEST_ATOM( make_double_value(one) );
 
 		test_vector_to_touple();
 
-		auto r1 = dbj::sign(+2.0f);
-		auto r2 = dbj::sign(-2.0f);
-		auto r3 = dbj::sign(0.0f);
-
-		auto r4 = std::signbit(+42.0f);
+		auto r1 = DBJ_TEST_ATOM(dbj::sign(+2.0f));
+		auto r2 = DBJ_TEST_ATOM(dbj::sign(-2.0f));
+		auto r3 = DBJ_TEST_ATOM(dbj::sign(0.0f));
+		auto r4 = DBJ_TEST_ATOM(std::signbit(+42.0f));
 
 		// int I = magic_int_float_transformation(42.42f);
 		// Illustrating_the_use_of_Arrays_and_Functions();

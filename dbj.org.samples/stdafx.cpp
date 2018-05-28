@@ -5,5 +5,5 @@
 #include "stdafx.h"
 
 #ifdef DBJ_WIN
-#warning DBJ_WIN makes problems :)
+#pragma message ("\nWARNING: This is DBJ_WIN dbj++ build\n")
 #endif
