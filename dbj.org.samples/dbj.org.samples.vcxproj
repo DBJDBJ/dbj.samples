@@ -109,7 +109,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -182,7 +182,6 @@
     <ClInclude Include="headers\policy_classes.h" />
     <ClInclude Include="msvc_conformance\supports_api.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="winfile_dbj\dbj_multimap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="any_narf.cpp" />
@@ -206,9 +205,10 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="tests.cpp" />
-    <ClCompile Include="winfile_testing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\cpp.hint" />
+    <None Include="cpp.hint" />
     <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,3 @@
-
-
 #include "stdafx.h"
 
 #ifdef DBJ_TESTING_EXISTS

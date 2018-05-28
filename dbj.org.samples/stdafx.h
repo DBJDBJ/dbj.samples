@@ -15,24 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-// #include <array>
-// #include <iostream>
-// DBJ_WIN will include windows.h and gdi.h 
-// #define DBJ_WIN
+// #define DBJ_WIN will include 
+// windows.h and gdi.h 
+// 
 #define DBJ_TESTING_EXISTS
 #include <dbj++.h> 
+#include <dbj++tests.h> 
 
-// core dbj++ tests
-// are not included in dbj++.h
-#include <test\dbj_commander_test.h>
-#include <test\dbj_console_test.h>
-#include <test\dbj_various_tests.h>
-#include <test\dbj_crt_testing.h>
-#include <test\dbj_defval_testing.h>
 
 // dbj++ does not use cout and/or wcout
-#include <iostream>
-#include <array>
+// #include <iostream>
+// #include <array>
 
 
 

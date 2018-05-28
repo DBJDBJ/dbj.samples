@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-
-#if 1
 namespace {
 	using namespace std;
 	/*
@@ -37,92 +35,78 @@ namespace {
 	/// <returns>the result of the "magic"</returns>
 	static int magic_int_float_transformation(float f) {
 		/** float is dead, long live the int! */
-		int *i = change_object_type<int>(&f); 
+		int *i = change_object_type<int>(&f);
 		return *i;
 	}
 
 	/// <summary>
 	/// Illustrating the use of Arrays and Functions in C
-    /// https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
-    /// </summary>
-	namespace {
+	/// https://www.cs.uic.edu/~jbell/CourseNotes/C_Programming/Arrays.html
+	/// </summary>
 
-		typedef double numarr[];
+	typedef double numarr[];
 
-		// Finds max in the array
-		extern "C" static double maxArray(const numarr numbs, int arraySize);
+	// Finds max in the array
+	extern "C" static double maxArray(const numarr numbs, int arraySize);
 
-		extern "C"  static int Illustrating_the_use_of_Arrays_and_Functions(void) {
+	extern "C"  static int Illustrating_the_use_of_Arrays_and_Functions(void) {
 
-			// here we use the typedef in declaration
-			numarr array1{ 10.0, 20.0, 100.0, 0.001 };
+		// here we use the typedef in declaration
+		numarr array1{ 10.0, 20.0, 100.0, 0.001 };
 
-			// we can not use the same single dim array in declaring two dim array
-			double array2[2][3]{ 
-				{ 5.0, 10.0, 20.0 },
-				{ 8.0, 15.0, 42.0 } 
-			};
+		// we can not use the same single dim array in declaring two dim array
+		double array2[2][3]{
+			{ 5.0, 10.0, 20.0 },
+			{ 8.0, 15.0, 42.0 }
+		};
 
-			int sizes[2] = { 4, 3 };
-			double max1, max2, max3, max4, max5;
+		int sizes[2] = { 4, 3 };
+		double max1, max2, max3, max4, max5;
 
-			max1 = maxArray(array1, 4);
-			max2 = maxArray(array1, sizes[0]);
-			// max3 works becuse of how arrays are
-			// laid out in memory
-			// max3 is thus sum of the second row
-			// of the array2
-			max3 = maxArray(array2[1], 3);
-			// max4 also works becuse of how arrays are
-			// laid out in memory
-			// max4 is thus sum of the whole array2
-			max4 = maxArray(array2[0], 6);
-			max5 = maxArray(array1, -4);
+		max1 = maxArray(array1, 4);
+		max2 = maxArray(array1, sizes[0]);
+		// max3 works becuse of how arrays are
+		// laid out in memory
+		// max3 is thus sum of the second row
+		// of the array2
+		max3 = maxArray(array2[1], 3);
+		// max4 also works becuse of how arrays are
+		// laid out in memory
+		// max4 is thus sum of the whole array2
+		max4 = maxArray(array2[0], 6);
+		max5 = maxArray(array1, -4);
 
-			dbj::print("\nMaximums are ", max1, ", ", max2, ", ", max3
-				, ", ", max4, ", ", max5);
+		dbj::print("\nMaximums are ", max1, ", ", max2, ", ", max3
+			, ", ", max4, ", ", max5);
 
-			return 0;
+		return 0;
+	}
+
+	/// <summary>
+	/// Function to find the maximum in an array of doubles
+	/// Note the use of the keyword "const" to prevent changing array data
+	/// </summary>
+	/// <param name="numbs">array argument </param>
+	/// <param name="arraySize">user defined size of the array</param>
+	/// <returns></returns>
+	extern "C" static double  maxArray(const numarr numbs, int arraySize) {
+
+		int i;
+		double max;
+
+		if (arraySize <= 0) {
+			return 0.0;
 		}
 
-		/// <summary>
-		/// Function to find the maximum in an array of doubles
-		/// Note the use of the keyword "const" to prevent changing array data
-		/// </summary>
-		/// <param name="numbs">array argument </param>
-		/// <param name="arraySize">user defined size of the array</param>
-		/// <returns></returns>
-		extern "C" static double  maxArray(const numarr numbs, int arraySize) {
+		max = numbs[0];
 
-			int i;
-			double max;
+		for (i = 1; i < arraySize; i++)
+			max = (numbs[i] > max) ? numbs[i] : max;
 
-			if (arraySize <= 0) {
-				return 0.0;
-			}
+		return max;
 
-			max = numbs[0];
-
-			for (i = 1; i < arraySize; i++)
-				max = (numbs[i] > max) ? numbs[i] : max;
-
-			return max;
-
-		}
-	} //ns
-} // ns
-#endif
-#if 0
-	template <typename T, size_t... Indices>
-	auto vectorToTupleHelper(const vector<T>& v, index_sequence<Indices...>) {
-		return std::make_tuple(v[Indices]...);
 	}
-	template <std::size_t N, typename T>
-	auto vectorToTuple(const std::vector<T>& v) {
-		assert(v.size() >= N);
-		return vectorToTupleHelper(v, std::make_index_sequence<N>());
-	}
-#endif
+
 	/// <summary>
 	/// tuple is collection of different types
 	/// vector elementes are all of the same type
@@ -130,12 +114,12 @@ namespace {
 	/// </summary>
 	static void test_vector_to_touple() {
 		vector<int> vint{ 1, 2, 3 };
-			auto tpl0 = dbj::util::seq_tup<vector<int>,3>(vint);
+		auto tpl0 = dbj::util::seq_tup<vector<int>, 3>(vint);
 
-			int vintage []{ 1, 2, 3 };
-			auto tpl1 = dbj::util::seq_tup(vintage);
+		int vintage[]{ 1, 2, 3 };
+		auto tpl1 = dbj::util::seq_tup(vintage);
 	}
-	
+
 	/// <summary>
 	/// c++ 17 generic lambdas have issues
 	/// with required types of auto arguments
@@ -152,34 +136,31 @@ namespace {
 		};
 
 
-		inline auto is_uint64 = [] ( const auto & v_ = 0 ) constexpr -> bool
+		inline auto is_uint64 = [](const auto & v_ = 0) constexpr -> bool
 		{
 			return is_required_type<std::uint64_t>(v_);
 		};
 
 	} // required_types
 
-	namespace {
-		
-		using namespace required_types;
+	using namespace required_types;
 
-		inline auto tv = [](const char prompt[] = "", const auto & value) {
-			std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
-		};
+	inline auto tv = [](const char prompt[] = "", const auto & value) {
+		std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
+	};
 
 
-		inline auto make_double_value = [](auto value)
-		{
-			if constexpr (is_uint64(value)) {
-				tv("\n\nDoubling required type (std::uint_64):", value);
-				return value + value;
-			}
-
-			tv("\n\nWill try to double 'illegal' type", value);
+	inline auto make_double_value = [](auto value)
+	{
+		if constexpr (is_uint64(value)) {
+			tv("\n\nDoubling required type (std::uint_64):", value);
 			return value + value;
-		};
+		}
 
-	}
+		tv("\n\nWill try to double 'illegal' type", value);
+		return value + value;
+	};
+
 	//------------------------------------------------------------------------------
 	// https://stackoverflow.com/questions/13401716/selecting-a-member-function-using-different-enable-if-conditions/50412114#50412114
 	namespace so {
@@ -196,7 +177,7 @@ namespace {
 			Point() = default;
 
 			auto data() const {
-				return std::array<T,2>{ this->x, this->y };
+				return std::array<T, 2>{ this->x, this->y };
 			}
 
 			template<typename U>
@@ -238,20 +219,20 @@ namespace {
 			}
 
 			friend
-			Point mid(const Point & p1, const Point & p2) {
-			Point retval;
-				if constexpr ( std::is_same<value_type, std::uint64_t>() ) {
+				Point mid(const Point & p1, const Point & p2) {
+				Point retval;
+				if constexpr (std::is_same<value_type, std::uint64_t>()) {
 					// we need to transform to integer
 					std::uint64_t mid_x = (std::uint64_t)((p1.x + p2.x) / 2);
 					std::uint64_t mid_y = (std::uint64_t)((p1.y + p2.y) / 2);
 
-					return retval.assign( mid_x, mid_y );
+					return retval.assign(mid_x, mid_y);
 				}
 
 				return retval.assign(
-						static_cast<value_type>((p1.x + p2.x) / 2),
-						static_cast<value_type>((p1.y + p2.y) / 2)
-					);
+					static_cast<value_type>((p1.x + p2.x) / 2),
+					static_cast<value_type>((p1.y + p2.y) / 2)
+				);
 			}
 		};
 	}
@@ -264,18 +245,18 @@ namespace {
 		pi2.assign(-734, 9876);
 		pf1.assign(1324.980f, 456.390f);
 
-		auto mid_ = mid(pi1 , pi2);
+		auto mid_ = mid(pi1, pi2);
 
 		auto[x, y] = mid_.data();
 	}
 
 	static void read_only_memory() {
- char * hello_1{ "Hello!" };
- char   hello_2[]{ "Hello!" };
+		char * hello_1{ "Hello!" };
+		char   hello_2[]{ "Hello!" };
 
-//  *hello_1 = '*' ; // <-- write access violation
- 
- *hello_2 = '*'; // <-- OK
+		//  *hello_1 = '*' ; // <-- write access violation
+
+		*hello_2 = '*'; // <-- OK
 	}
 
 #ifdef DBJ_TESTING_EXISTS
@@ -293,9 +274,9 @@ namespace {
 		auto double_value = make_double_value(42u);
 		tv("\nResult:", double_value);
 
-		std::string one{"--ONE--"};
+		std::string one{ "--ONE--" };
 		auto double_value_3 = make_double_value(one);
-		tv("\nResult:", double_value_3 );
+		tv("\nResult:", double_value_3);
 
 		test_vector_to_touple();
 
@@ -313,4 +294,5 @@ namespace {
 		quick_local_tests();
 	}
 
+} // namespace
 #endif
