@@ -147,7 +147,8 @@ namespace {
 
 	inline auto tv = [](const char prompt[] = "", const auto & value) -> void {
 		// std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
-		dbj::print(prompt);  DBJ_TEST_ATOM(value);
+		dbj::print(prompt);  
+		auto rez[[maybe_unused]] = DBJ_TEST_ATOM(value);
 	};
 
 

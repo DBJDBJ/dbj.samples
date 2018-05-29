@@ -3,6 +3,29 @@
 
 
 #ifdef DBJ_TESTING_EXISTS
+namespace {
+
+	/// <summary>
+	///	OK since VS 2017 15.5 update		
+	/// auto vec1 = msvc_does_compile(std::string{});
+	/// </summary>
+	auto msvc_does_compile = [](auto _string)
+	{
+		using string_type = decltype(_string);
+		return std::vector<string_type>{};
+	};
+
+	/// <summary>
+	/// explicit return type makes msvc not to compile
+	/// </summary>
+	auto msvc_does_not_compile = [](auto _string)
+		// explicit return type makes msvc not to compile
+		-> std::vector< decltype(_string) >
+	{
+		using string_type = decltype(_string);
+		return std::vector<string_type>{};
+	};
+}
 
 #else
 // testing the various stuff in this project
