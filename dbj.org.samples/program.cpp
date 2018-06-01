@@ -10,7 +10,7 @@
 
 /// <summary>
 /// just execute all the registered tests
-/// in no particulat order
+/// in no particular order
 /// </summary>
 static void program_start (
 	const int argc, 
