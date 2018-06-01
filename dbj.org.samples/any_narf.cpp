@@ -4,15 +4,11 @@
 
 #include "stdafx.h"
 
-auto && description = dbj::testing::FILELINE(__FILE__, __LINE__, " test_fun ");
-
-void test_fun() {
-
-	auto naf [[maybe_unused]] = DBJ_TEST_ATOM(dbj::narf::make({ 1,2,3 }));
+DBJ_TEST_UNIT("dbj narf") 
+{
+auto naf [[maybe_unused]] = DBJ_TEST_ATOM(dbj::narf::make({ 1,2,3 }));
 };
-
-namespace { 
-  
+/*
 	auto caller = [&]() -> bool 
 	{
 	auto && registration
@@ -26,4 +22,4 @@ namespace {
 		return true;
 	};
 	inline auto call_ = caller();
-}
+	*/
