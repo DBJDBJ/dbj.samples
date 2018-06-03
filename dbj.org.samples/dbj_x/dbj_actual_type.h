@@ -72,7 +72,7 @@ namespace dbj {
 	};
 } // dbj
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 /*
  Reasoning, motivation and testing
 */

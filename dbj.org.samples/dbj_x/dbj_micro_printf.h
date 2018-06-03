@@ -239,7 +239,7 @@ namespace dbj::printf {
 	}
 } // namespace dbj
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 DBJ_TEST_UNIT(" dbj micro printf test ") {
 	constexpr static double floats[] = { 0.0, 1.234e-10, 1.234e+10, -1.234e-10, -1.234e-10 };
 
@@ -254,7 +254,7 @@ DBJ_TEST_UNIT(" dbj micro printf test ") {
 	for (size_t i = 0; i < dbj_count(floats); i++)
 		dbj::printf::printf("%f, %e\n", floats[i], floats[i]);
 }
-#endif // DBJ_TESTING_EXISTS
+#endif // DBJ_TESTING_ONAIR
 /*
 Inspired by: https://stackoverflow.com/questions/16647278/minimal-implementation-of-sprintf-or-printf
 

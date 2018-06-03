@@ -150,7 +150,7 @@ public:
 	}
 };
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	namespace {
 		DBJ_TEST_UNIT(" dbj delegation research") {
 			App2 app_2 ;

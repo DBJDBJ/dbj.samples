@@ -35,7 +35,7 @@ namespace dbj::compile_time {
 
 }// dbj::compile_time
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 
 #ifndef DBJ_TEST_UNIT
 #define DBJ_TEST_UNIT(x) DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, x))

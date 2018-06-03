@@ -5,7 +5,7 @@
 #include "stdafx.h"
 
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 namespace {
 
 	/// <summary>

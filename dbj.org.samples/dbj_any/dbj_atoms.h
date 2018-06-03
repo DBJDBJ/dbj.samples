@@ -11,7 +11,7 @@
 */
 namespace dbj::nuclear {
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	namespace {
 
 		template<typename T>
@@ -37,6 +37,6 @@ namespace dbj::nuclear {
 		}
 	}
 
-#endif // DBJ_TESTING_EXISTS
+#endif // DBJ_TESTING_ONAIR
 
 }

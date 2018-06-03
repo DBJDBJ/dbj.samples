@@ -13,7 +13,7 @@ DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": Test Title")) {
 }
 */
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 
 
-#endif // DBJ_TESTING_EXISTS
+#endif // DBJ_TESTING_ONAIR

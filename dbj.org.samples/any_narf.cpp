@@ -4,22 +4,12 @@
 
 #include "stdafx.h"
 
-DBJ_TEST_UNIT("dbj narf") 
-{
-auto naf [[maybe_unused]] = DBJ_TEST_ATOM(dbj::narf::make({ 1,2,3 }));
-};
-/*
-	auto caller = [&]() -> bool 
-	{
-	auto && registration
-      = * dbj::testing::add( description, test_fun , __COUNTER__ );
-	
-	std::string desc = registration.second;
-	dbj::testing::testunittype func_p = registration.first;
+DBJ_TEST_SPACE_OPEN(narf)
 
-		dbj::print("\nCalling ", desc );
-		func_p();
-		return true;
-	};
-	inline auto call_ = caller();
-	*/
+DBJ_TEST_UNIT("dbj narf")
+{
+ auto DBJ_UNUSED(naf) = 
+    DBJ_TEST_ATOM(dbj::narf::make({ 1,2,3 }));
+};
+
+DBJ_TEST_SPACE_CLOSE(narf)

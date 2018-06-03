@@ -68,7 +68,7 @@ namespace visual_studio_15_6_2::supports_api {
 		// but no Method2 here
 	};
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	DBJ_TEST_UNIT(": Problem with 'if constexpr' ")
 	{
 		auto r1 = supportsAPI(string{});

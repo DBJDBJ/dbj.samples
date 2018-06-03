@@ -207,7 +207,7 @@ namespace dbj {
 
 } // dbj
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 #pragma region dbj testing
 namespace tree_testing {
 

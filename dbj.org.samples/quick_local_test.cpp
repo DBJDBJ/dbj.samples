@@ -256,7 +256,7 @@ namespace {
 		auto[x, y] = mid_.data();
 	}
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	static void quick_local_tests()
 	{
 		limit_on_type();

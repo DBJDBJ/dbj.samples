@@ -98,7 +98,7 @@ namespace dbj {
 	/*
 	------------------------------------------------------------------------------------
 	*/
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	DBJ_TEST_UNIT(": quick_test_of_some_new_ NOT clever_nuggets ")
 	{
 		using namespace dbj::util;

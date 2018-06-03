@@ -75,7 +75,7 @@ namespace CL_19_12_25835_0 {
 }
 #endif
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 
 namespace {
 	using namespace std;

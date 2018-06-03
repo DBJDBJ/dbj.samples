@@ -48,7 +48,7 @@ namespace dbj::wrt {
 		}
 	}
 
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 	DBJ_TEST_UNIT(": dbj winrt web syndication ")
 	{
 		// hum? 

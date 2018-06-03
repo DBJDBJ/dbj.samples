@@ -239,7 +239,7 @@ namespace dbj {
 	// the interface is two lambdas
 } // dbj
 #endif
-#ifdef DBJ_TESTING_EXISTS
+#ifdef DBJ_TESTING_ONAIR
 namespace dbj_any_wrapper_testing {
 
 	/*

@@ -20,8 +20,6 @@ static void program_start (
 	dbj::testing::execute(argc, argv, envp);
 }
 
-
-
 #ifdef UNICODE
 int wmain(const int argc, const wchar_t *argv[], const wchar_t *envp[])
 #else
