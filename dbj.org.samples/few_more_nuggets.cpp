@@ -1,5 +1,4 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
-
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 #include "stdafx.h"
@@ -9,10 +8,10 @@
 // does T supports some method popular solution does not work?
 struct X final {
 	void A(int) {
-		DBJ::TRACE("In %s", __func__);
+		DBJ::TRACE("\n\nIn %s\n\n", __func__);
 	}
 	void B(float) {
-		DBJ::TRACE("In %s", __func__);
+		DBJ::TRACE("\n\nIn %s\n\n", __func__);
 	}
 };
 
@@ -53,16 +52,16 @@ namespace {
 	template<typename T>
 	auto compute( const T & x) {
 		
-		auto name = dbj::name<T>() ;
+		const auto name = dbj::name<T>() ;
 		
 		if constexpr(
 			supportsAPI<T>()
 		) 
 		{
-			DBJ::TRACE("\n%s has method 'begin()'", name  ) ;
+			DBJ::TRACE("\n\n%s has method 'begin()'\n\n", name.c_str()  ) ;
 			return x.begin();
 		}
-			DBJ::TRACE("\n%s has no method 'begin()'", name );
+			DBJ::TRACE("\n\n%s has no method 'begin()'\n\n", name.c_str() );
 			return 0 ;
 	}
 
