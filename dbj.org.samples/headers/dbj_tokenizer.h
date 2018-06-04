@@ -29,7 +29,7 @@ This is how my original code was old today.
 #include <comutil.h>
 #endif
 //---------------------------------------------------------------------------------------
-namespace dbj {
+namespace dbj_samples {
 /* fm == Foundation Mechanisms */
 namespace fm {
 		template< typename STYPE, typename CHARTYPE >
@@ -138,7 +138,7 @@ namespace fm {
 			}
 
 			// 
-			STYPE getWord(const unsigned pos_) const
+			STYPE getWord(const size_t pos_) const
 			{
 				// dbjVERIFY( pos_ > -1 );
 				// std::end() points after the end so we can't assert pos < vector_of_begins.size()

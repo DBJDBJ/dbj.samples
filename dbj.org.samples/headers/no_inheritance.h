@@ -4,7 +4,7 @@
 #define implements public
 #endif
 
-namespace dbj {
+namespace dbj_samples {
 	namespace docops {
 		using string = std::string;
 		/*
@@ -111,7 +111,7 @@ namespace documents {
 		/* a single method to open any kind of a document
 			polymorphic behaviour is OK here
 		*/
-		DBJ_INLINE int opendoc(Document & doc, string name) { return doc.open(name); }
+		inline int opendoc(Document & doc, string name) { return doc.open(name); }
 
 	}
 } // dbj

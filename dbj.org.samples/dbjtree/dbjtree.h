@@ -7,7 +7,7 @@
 #include <memory>
 #endif
 
-namespace dbj {
+namespace dbj_samples {
 	namespace tree {
 	/* 
 	Binary Tree made more useful the easy and quick way thanks to modern C++
@@ -225,9 +225,6 @@ namespace dbj {
 	} // tree
 } // dbj
 
-#define DBJVERSION __DATE__ __TIME__
-#pragma comment( user, "(c) 2017 by dbj@dbj.org code, Version: " DBJVERSION ) 
-#undef DBJVERSION
   /*
   Copyright 2017 dbj@dbj.org
 

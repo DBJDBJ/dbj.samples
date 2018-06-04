@@ -18,7 +18,7 @@ https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
 /// to equal any cppWINRT name
 /// </remarks>
 /// </summary>
-namespace dbj::wrt {
+namespace dbj_samples::wrt {
 
 	constexpr const wchar_t * feed_uri[]{
 		L"https://kennykerr.ca/feed",

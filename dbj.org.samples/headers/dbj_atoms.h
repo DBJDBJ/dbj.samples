@@ -9,19 +9,20 @@
  Exception thrown at 0x7461B872 in dbj.org.samples.exe: 
  Microsoft C++ exception: std::out_of_range at memory location 0x00EFEA3C.
 */
-namespace dbj::nuclear {
+namespace dbj_samples::nuclear {
 
 #ifdef DBJ_TESTING_ONAIR
 	namespace {
 
 		template<typename T>
 		auto  nested_init_list_args ( const std::initializer_list< std::initializer_list< T >> & arg ) {
-			dbj::print("\n",__func__, "\t", DBJ_NV(typeid(arg).name()));
+			dbj::print("\n", __func__);
+			// DBJ_TEST_ATOM(arg);
 		};
 
 		struct Counters { int a; int b; };      // user-defined trivially-copyable type
 
-		DBJ_TEST_CASE(__FILE__) {
+		DBJ_TEST_UNIT(" dbj atomic stuff") {
 			std::atomic<Counters> cnt{};         // specialization for the user-defined type
 
 			Counters c1 = { 1, 2 };

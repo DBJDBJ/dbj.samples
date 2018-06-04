@@ -21,6 +21,8 @@ limitations under the License.
 #include <dbj++tests.h> 
 #endif
 
+#include <fcntl.h>
+#include <io.h>
 
 // dbj++ does not use cout and/or wcout
 // #include <iostream>

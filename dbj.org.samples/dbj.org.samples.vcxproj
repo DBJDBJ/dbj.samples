@@ -158,26 +158,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
-    <ClInclude Include="dbj_x\dbj_compiletime.h" />
     <ClInclude Include="dbj_x\dbj_ctstring.h" />
     <ClInclude Include="dbj_x\dbj_fontlist.h" />
     <ClInclude Include="dbj_x\dbj_micro_printf.h" />
     <ClInclude Include="dbj_x\dbj_timer.h" />
     <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp" />
-    <ClInclude Include="dbjtree\dbjdatadeletor.h" />
     <ClInclude Include="dbjtree\dbjtree.h" />
     <ClInclude Include="dbjtree\dbjtreeprint.h" />
     <ClInclude Include="dbj_any\dbj_any.h" />
     <ClInclude Include="dbj_any\dbj_any_node.h" />
-    <ClInclude Include="dbj_any\dbj_atoms.h" />
+    <ClInclude Include="headers\dbj_atoms.h" />
     <ClInclude Include="headers\dbj_lambda_lists.h" />
     <ClInclude Include="headers\dbj_tokenizer.h" />
-    <ClInclude Include="headers\dbj_trace.h" />
-    <ClInclude Include="headers\dbj_experimental.h" />
-    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h" />
     <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h" />
-    <ClInclude Include="msvc_conformance\new_nuggets.h" />
     <ClInclude Include="headers\no_inheritance.h" />
     <ClInclude Include="headers\policy_classes.h" />
     <ClInclude Include="msvc_conformance\supports_api.h" />

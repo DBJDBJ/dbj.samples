@@ -5,7 +5,7 @@
 #include <dbj_testing.h>
 
 #pragma region dbj any with identity
-namespace dbj {
+namespace dbj_samples {
 	
 	namespace any {
 
@@ -164,7 +164,7 @@ namespace dbj {
 
 		template <
 			typename T,
-			typename ANYW = typename dbj::any::any_wrapper< T >
+			typename ANYW = typename dbj_samples::any::any_wrapper< T >
 		>
 			inline auto make(T val_)
 		{
@@ -186,7 +186,7 @@ namespace dbj {
 		template <
 			typename T,
 			std::size_t N,
-			typename ANYW = typename dbj::any::any_wrapper< T >
+			typename ANYW = typename dbj_samples::any::any_wrapper< T >
 		>
 			inline auto range(const T(&arrf)[N])
 		{
@@ -195,7 +195,7 @@ namespace dbj {
 			size_t j{ 0 };
 
 			for (T element : arrf) {
-				rezult[j++] = dbj::any::make(element);
+				rezult[j++] = dbj_samples::any::make(element);
 			}
 			return rezult;
 		};
@@ -204,7 +204,7 @@ namespace dbj {
 } // dbj
 
 #if 0
-namespace dbj {
+namespace dbj_samples {
 	// hiden implementation
 	namespace {
 		/* this in essence makes std::any a real usefull container of anything */
@@ -258,13 +258,14 @@ namespace dbj_any_wrapper_testing {
 */
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
 
+		using namespace dbj_samples;
 		try {
-			auto any_0 = DBJ_TEST_ATOM( dbj::any::range({ 42 }) );
+			auto any_0 = DBJ_TEST_ATOM(dbj_samples::any::range({ 42 }) );
 			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
 
 			// yes can do
 			char word_[] = "Hallo bre!";
-			auto    any_2 = DBJ_TEST_ATOM( dbj::any::make( word_) ) ;
+			auto    any_2 = DBJ_TEST_ATOM(dbj_samples::any::make( word_) ) ;
 			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
 
 			auto  v1 = any_2; // copy wrapper to wrapper

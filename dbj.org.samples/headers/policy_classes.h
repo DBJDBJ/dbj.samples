@@ -1,11 +1,16 @@
 #pragma once
 
+#include <dbj_crt.h>
 /*
 __interface msvc keyword
 explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 */
 
-namespace dbj {
+#ifndef implements
+#define implements public
+#endif
+
+namespace dbj_samples {
 	namespace philology {
 		using std::string;
 		using dbj::print;
@@ -77,9 +82,8 @@ public:
 
 
 	} // namespace philology 
-} //namespace dbj 
-/* standard suffix for every other header here */
-#pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
+} //namespace dbj_samples 
+
 /*Copyright 2017 by dbj@dbj.org
 
 Licensed under the Apache License, Version 2.0 (the "License");

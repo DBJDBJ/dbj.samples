@@ -1,5 +1,5 @@
 #pragma once
-namespace dbj {
+namespace dbj_samples {
 
 	template<typename T>
 	struct is_pointer_pointer final {
@@ -26,9 +26,11 @@ namespace dbj {
 	/// <summary>
 	/// reveal the actual type of T
 	/// </summary>
-	template< typename T> struct actual_type {
+	template< typename T> struct actually 
+	{
 		typedef typename std::decay_t< T > value_type;
-		enum {
+
+		enum class traits {
 			is_lv_ref		= std::is_lvalue_reference_v<T>,
 			is_rv_ref		= std::is_rvalue_reference_v<T>,
 			is_array        = std::is_array_v<T>,
@@ -39,7 +41,7 @@ namespace dbj {
 	
 	// template alias helper for the above
 	template<typename T>
-	using actual_type_t = typename actual_type<T>::value_type;
+	using actual_type_t = typename actually<T>::value_type;
 
 	/// <summary>
 	/// return the actual type description in json format
@@ -52,9 +54,10 @@ namespace dbj {
 			static char empty_[]{ "" };
 			host_.append( prompt_  )
 				.append( val_ );
+			return add;
 		};
 
-		using at = actual_type< T > ;
+		using at = actually< T > ;
 		using actual_value_type = typename at::value_type;
 
 		std::string tempo_{ BUFSIZ || 1024 }; // optimize so that heap mem alloc does not happen

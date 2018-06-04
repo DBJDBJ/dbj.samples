@@ -22,9 +22,6 @@
     <ClInclude Include="dbjtree\dbjtreeprint.h">
       <Filter>dbjtree</Filter>
     </ClInclude>
-    <ClInclude Include="dbjtree\dbjdatadeletor.h">
-      <Filter>dbjtree</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -34,19 +31,10 @@
     <ClInclude Include="dbj_any\dbj_any_node.h">
       <Filter>dbj_any</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_any\dbj_atoms.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\dbj_experimental.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\dbj_lambda_lists.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\dbj_tokenizer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="headers\dbj_trace.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="headers\no_inheritance.h">
@@ -55,19 +43,10 @@
     <ClInclude Include="headers\policy_classes.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="msvc_conformance\dbj_std_arr_handling.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="msvc_conformance\new_nuggets.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="msvc_conformance\supports_api.h" />
-    <ClInclude Include="dbj_x\dbj_compiletime.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_x\dbj_ctstring.h">
       <Filter>headers</Filter>
     </ClInclude>
@@ -78,11 +57,16 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
-    <ClInclude Include="cppwinrt\dbj_web_syndication.cpp">
+    <ClInclude Include="cppwinrt\dbj_web_syndication.cpp" />
+    <ClInclude Include="dbj_x\dbj_actual_type.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_x\dbj_actual_type.h" />
-    <ClInclude Include="dbj_x\dbj_timer.h" />
+    <ClInclude Include="dbj_x\dbj_timer.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\dbj_atoms.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />

@@ -2,7 +2,7 @@
 
 #pragma region LAMBDA LISP
 
-namespace dbj {
+namespace dbj_samples {
 	/*
 	The key abstraction : list lambda
 	*/
@@ -73,21 +73,23 @@ namespace dbj {
 			);
 		};
 } // list 
-} // dbj
+} // dbj_samples
 
-DBJ_TEST_CASE(dbj::FILELINE(__FILE__, __LINE__, ": lambda lists")) {
+DBJ_TEST_UNIT(": dbj lambda lists") {
+
+	using namespace dbj_samples;
 	// usage
-	auto my_list = dbj::llist(1, '2', "3", false, 13.0f); // return lambda() internal to list()
-	auto my_head = dbj::ll::head(my_list); // returns list of one element -- list(1)
-	auto my_tail = dbj::ll::tail(my_list); // returns list('2', "3", false, 13.0f)
+	auto my_list = llist(1, '2', "3", false, 13.0f); // return lambda() internal to list()
+	auto my_head = ll::head(my_list); // returns list of one element -- list(1)
+	auto my_tail = ll::tail(my_list); // returns list('2', "3", false, 13.0f)
 	/*
 	after playing with lambda lists we print what we need to print
 	we use tuple() because dbj::print() knows how to print touples
 	but not lambda lists
 	*/
-	dbj::print("\nlist: ", dbj::ll::tuple(my_list));
-	dbj::print("\nhead: ", dbj::ll::tuple(my_head));
-	dbj::print("\ntail: ", dbj::ll::tuple(my_tail));
+	dbj::print("\nlist: ", ll::tuple(my_list));
+	dbj::print("\nhead: ", ll::tuple(my_head));
+	dbj::print("\ntail: ", ll::tuple(my_tail));
 
 	// dbj::print("\n", DBJ_NV( length(list()) ));
 }

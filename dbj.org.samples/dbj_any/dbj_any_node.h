@@ -9,7 +9,7 @@ Hence dbj::AnyNode Proof Of Concept (POC)
 
 */
 
-namespace dbj {
+namespace dbj_samples {
 	
 	template<typename T>
 	inline std::string address_as_string(T * p) {

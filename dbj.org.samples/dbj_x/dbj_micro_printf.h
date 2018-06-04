@@ -16,7 +16,7 @@
 */
 
 ///
-namespace dbj::printf {
+namespace dbj_samples::printf {
 	namespace internal {
 #ifdef BUFSIZ
 		constexpr auto BUFFER_SIZE = BUFSIZ * 2;
@@ -237,7 +237,7 @@ namespace dbj::printf {
 		va_end(arg);
 		return length;
 	}
-} // namespace dbj
+} // namespace dbj_samples
 
 #ifdef DBJ_TESTING_ONAIR
 DBJ_TEST_UNIT(" dbj micro printf test ") {

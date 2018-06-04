@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <sstream>
 
-namespace dbj {
+namespace dbj_samples {
 	namespace conv {
 		template <typename T>
 		inline std::wstring	to_wstring(const T & t) {
@@ -27,9 +27,9 @@ namespace dbj {
 		}
 	}
 
-	namespace {
+	namespace inner {
 		/*
-		we have nicked the following form corecrt_wstdio.h
+		we have nicked the following from corecrt_wstdio.h
 		*/
 		template< size_t N>
 		inline int dbj_snwprintf_s
@@ -57,11 +57,11 @@ namespace dbj {
 		size_t buffer_size = dbj::countof(buffer);
 		assert(-1 != dbj_snwprintf_s(buffer, buffer_size - 1, buffer_size - 1, format, (args) ...));
 
-		return std::wstring{ buffer };
+		return { buffer };
 	}
 } // dbj
 
-namespace dbj {
+namespace dbj_samples {
 	namespace treeprint {
 		namespace {
 			constexpr wchar_t doubles[] = { L"║═╚" };
@@ -171,32 +171,9 @@ namespace dbj {
 			BinaryTreePrinter tpf{};
 			return std::wstring( tpf(root_, outwid) );
 		}
-#if 0
-		void test2()
-		{
-		/*
 
-		 http://stackoverflow.com/questions/2492077/output-unicode-strings-in-windows-console-app
-
-		 */
-			static std::wstring doubles = L"║═╚";
-			static std::wstring singles = L"│─└";
-			_setmode(_fileno(stdout), _O_U16TEXT);
-			std::wcout << L"Testing unicode -- English -- Ελληνικά -- Español." << std::endl
-				<< doubles << std::endl
-				<< singles << std::endl;
-
-			/* 
-			  apparently must do this
-			  also make sure NOT to mix cout and wcout in the same executable
-			*/
-			std::wcout << std::flush; 
-			fflush(stdout); 
-			_setmode(_fileno(stdout), _O_TEXT); 
-		}
-#endif
 	} //namespace treeprint 
-} //namespace dbj 
+} //namespace dbj_samples 
 #pragma comment( user, "(c) 2017 by dbj@dbj.org :: " __FILE__ " :: " __DATE__ " :: " __TIME__ ) 
   /*
   Copyright 2017 dbj@dbj.org

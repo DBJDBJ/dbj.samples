@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace dbj::ct {
+namespace dbj_samples::ct {
 
 	namespace  variadic_toolbox
 	{
