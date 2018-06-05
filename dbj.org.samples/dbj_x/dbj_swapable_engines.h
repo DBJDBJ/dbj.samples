@@ -54,11 +54,11 @@ namespace dbj_samples {
 	inline Automobile automobile_factory(engine_tag which_)
 	{
 		// I assume I do not need std::move in here
-		// I could also use std::enble_if and std::is_move_constructible
-		// in return value type to check the Automobile type
-		// or I could just leave it to the CL, the latest 
+		// I could also use std::enable_if and std::is_move_constructible
+		// in return value type to check the Automobile type movability
+		// or I could just leave it to the CL 
 
-		if(engine_tag::next == which_ )
+		if (engine_tag::next == which_ )
 			return Automobile(new inner::next{});
 		if (engine_tag::old == which_)
 			return Automobile(new inner::old{});
