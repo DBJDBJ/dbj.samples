@@ -6,9 +6,6 @@
     <ClCompile Include="tests\any_narf.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="tests\core_tests.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="tests\few_more_nuggets.cpp">
       <Filter>tests</Filter>
     </ClCompile>
@@ -76,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp">
       <Filter>cppwinrt</Filter>
+    </ClInclude>
+    <ClInclude Include="no_copy_no_move.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_swapable_engines.h">
+      <Filter>dbj_x</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

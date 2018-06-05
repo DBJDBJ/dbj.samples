@@ -14,11 +14,38 @@
 #include "../dbj_any/dbj_any_node.h"
 #include "../dbjtree\dbj_tree_tests.h"
 #include "../dbj_x/dbj_timer.h"
+#include "../dbj_x/dbj_swapable_engines.h"
 
 DBJ_TEST_SPACE_OPEN( local_tests )
 
+DBJ_TEST_UNIT(" dbj swappable engines ") {
+
+	using namespace dbj_samples;
+
+	auto f1 = automobile_factory(engine_tag::old);
+	auto r1 = f1.start();
+	auto f2 = automobile_factory(engine_tag::next);
+	auto r2 = f2.start();
+
+	// should be barred
+	// and it is: f1 = f2;
+}
+
 DBJ_TEST_UNIT(" timers ") {
 
+	auto test = [&](dbj_samples::timer_kind which_ ) {
+		auto timer_ = dbj_samples::create_timer(which_) ;
+
+		auto stp = DBJ_TEST_ATOM(timer_.start());
+		dbj_samples::sleep_seconds(1);
+		return DBJ_TEST_ATOM(timer_.elapsed());
+	};
+	dbj::print("\nWIN32 Timer");
+	auto elaps_1 = test(dbj_samples::timer_kind::win32 );
+	dbj::print("\nModern Timer");
+	auto elaps_2 = test(dbj_samples::timer_kind::modern );
+
+	_ASSERTE( elaps_1 == elaps_2 );
 }
 
 	DBJ_TEST_UNIT(": famous dbj console ucrt crash")
