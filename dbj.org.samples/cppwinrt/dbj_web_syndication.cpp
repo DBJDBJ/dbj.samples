@@ -1,4 +1,5 @@
 #pragma once
+#include "../stdafx.h"
 /*
 https://moderncpp.com/2017/11/01/cppwinrt-in-the-windows-sdk/
 https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
@@ -6,8 +7,6 @@ https://kennykerr.ca/2018/03/09/cppwinrt-producing-async-objects/
 #pragma comment(lib, "windowsapp")
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Web.Syndication.h>
-
-#include <dbj_testing.h>
 
 #ifdef CPPWINRT_VERSION
 /// <summary>

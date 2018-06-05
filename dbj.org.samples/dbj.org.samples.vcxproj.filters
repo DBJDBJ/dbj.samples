@@ -3,17 +3,21 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="program.cpp" />
-    <ClCompile Include="core_tests.cpp">
+    <ClCompile Include="tests\any_narf.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="tests.cpp">
+    <ClCompile Include="tests\core_tests.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="quick_local_test.cpp">
+    <ClCompile Include="tests\few_more_nuggets.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="any_narf.cpp" />
-    <ClCompile Include="few_more_nuggets.cpp" />
+    <ClCompile Include="tests\quick_local_test.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\tests.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -43,29 +47,35 @@
     <ClInclude Include="headers\policy_classes.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="msvc_conformance\supports_api.h" />
-    <ClInclude Include="dbj_x\dbj_ctstring.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_x\dbj_fontlist.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_x\dbj_micro_printf.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
-    <ClInclude Include="cppwinrt\dbj_web_syndication.cpp" />
-    <ClInclude Include="dbj_x\dbj_actual_type.h">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_x\dbj_timer.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="headers\dbj_atoms.h">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_actual_type.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_ctstring.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_fontlist.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_micro_printf.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\dbj_timer.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\supports_api.h">
+      <Filter>msvc_conformance</Filter>
+    </ClInclude>
+    <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h">
+      <Filter>msvc_conformance</Filter>
+    </ClInclude>
+    <ClInclude Include="cppwinrt\dbj_web_syndication.cpp">
+      <Filter>cppwinrt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +95,15 @@
     </Filter>
     <Filter Include="tests">
       <UniqueIdentifier>{a4ceaa6d-e9c6-40ce-941c-ac0f3b7e8236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dbj_x">
+      <UniqueIdentifier>{a1c93006-478f-45af-897b-ad2e361d873d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="msvc_conformance">
+      <UniqueIdentifier>{770a1fa9-9bb0-4ea8-977c-57b81a7c62bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cppwinrt">
+      <UniqueIdentifier>{cda90959-480e-4289-b504-3e058502da46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

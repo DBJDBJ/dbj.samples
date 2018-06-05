@@ -1,33 +1,25 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-#include "stdafx.h"
+#include "../stdafx.h"
 
 // testing the various stuff in this project
-// #include "dbj_cl.h"
-#include "headers/dbj_lambda_lists.h"
-#include "dbj_traits.h"
-#include "headers/policy_classes.h"
-#include "headers/no_inheritance.h"
-#include "dbj_util.h"
-#include "headers/dbj_tokenizer.h"
-// #include "dbj_experimental.h"
-#include "dbj_win32.h"
-// #include "dbj_trace.h"
-#include "headers/dbj_atoms.h"
+#include "../headers/dbj_lambda_lists.h"
+#include "../headers/policy_classes.h"
+#include "../headers/no_inheritance.h"
+#include "../headers/dbj_tokenizer.h"
+#include "../headers/dbj_atoms.h"
+#include "../headers/dbj_lambda_lists.h"
+#include "../dbj_any/dbj_any.h"
+#include "../dbj_any/dbj_any_node.h"
+#include "../dbjtree\dbj_tree_tests.h"
+#include "../dbj_x/dbj_timer.h"
 
-#if DBJ_MICRO_PRINTF
-#include "dbj_micro_printf.h"
-#endif
+DBJ_TEST_SPACE_OPEN( local_tests )
 
-#include "headers/dbj_lambda_lists.h"
-#include "dbj_any/dbj_any.h"
-#include "dbj_any/dbj_any_node.h"
-// #include "dbj_traits_test.h"
-#include "dbjtree\dbj_tree_tests.h"
+DBJ_TEST_UNIT(" timers ") {
 
-
-namespace inner_tests {
+}
 
 	DBJ_TEST_UNIT(": famous dbj console ucrt crash")
 	{
@@ -63,7 +55,7 @@ namespace inner_tests {
 	constexpr dbj::c_line<80, '='> L80;
 	}
 
-	DBJ_TEST_UNIT("dbj inheritance") {
+	DBJ_TEST_UNIT(": inheritance") {
 
 		constexpr dbj::c_line<80, '-'> Line80; // compile time
 
@@ -92,7 +84,7 @@ namespace inner_tests {
 		measure(hello2);
 	};
 
-	DBJ_TEST_UNIT("dbj documents") {
+	DBJ_TEST_UNIT(": documents") {
 
 		using IOperation = dbj_samples::docops::IOperation;
 		/* OPTIONAL: configure the docops to use online operations
@@ -102,7 +94,7 @@ namespace inner_tests {
 		dbj_samples::documents::opendoc(text, "world oyster");
 	}
 
-	DBJ_TEST_UNIT("dbj tokenizer_test") {
+	DBJ_TEST_UNIT(": tokenizer_test") {
 
 		const char * sentence = "abra % ka % dabra";
 		dbj_samples::fm::tokenizer tok(sentence, "%");
@@ -112,7 +104,5 @@ namespace inner_tests {
 		}
 		dbj::print("\n");
 	}
-#pragma endregion
 
-}
-// EOF
+DBJ_TEST_SPACE_CLOSE(local_tests)
