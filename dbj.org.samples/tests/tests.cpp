@@ -20,12 +20,19 @@ DBJ_TEST_SPACE_OPEN( local_tests )
 
 DBJ_TEST_UNIT(" dbj swappable engines ") {
 
-	using namespace dbj_samples;
+	using namespace car_factory;
 
-	auto f1 = automobile_factory(engine_tag::old);
-	auto r1 = f1.start();
-	auto f2 = automobile_factory(engine_tag::next);
-	auto r2 = f2.start();
+	auto car_1 = 
+	 assembly_line(
+		engine_tag::old	);
+
+	car_1.start();
+
+	auto car_2 = 
+	  assembly_line(
+		engine_tag::next );
+
+	car_2.start();
 
 	// should be barred
 	// and it is: f1 = f2;
