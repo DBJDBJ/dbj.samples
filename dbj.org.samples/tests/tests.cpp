@@ -18,6 +18,54 @@
 
 DBJ_TEST_SPACE_OPEN( local_tests )
 
+auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr) {
+	char address_str[128]{0};
+	(void)::sprintf_s(address_str, "%p", this_ptr);
+	return dbj::print("\n[", address_str, "]\t", prompt );
+};
+
+DBJ_TEST_UNIT(" dbj fundamental issues ") {
+	struct X {
+		X() noexcept {
+			reporter("X constructed", this);
+		}
+		~X() {
+			reporter("X destructed", this);
+		}
+		X(const X & x) noexcept {
+			reporter("X copy constructed", this);
+			bad = x.bad;
+		}
+		X & operator = (const X & x) {
+			reporter("X copy assigned", this);
+			bad = x.bad;
+			return *this;
+		}
+		X(X && x) noexcept {
+			reporter("X move constructed", this); std::swap(bad, x.bad);
+		}
+		X & operator = (X && x) {
+			reporter("X move assigned", this);
+			std::swap(bad, x.bad);
+			return *this;
+		}
+
+		const char * bad = "INITIAL STATE" ;
+	};
+
+	auto make_invalid_x = []() 
+		-> X & 
+	{   
+		X moved_from;
+		X && survived = std::move(moved_from);
+		return moved_from;
+	};
+
+	X & moved_from = make_invalid_x();
+	X && survived = std::move(moved_from);
+	auto & wot = moved_from.bad;
+}
+
 DBJ_TEST_UNIT(" dbj swappable engines ") {
 
 	using namespace car_factory;
