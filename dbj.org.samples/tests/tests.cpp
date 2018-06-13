@@ -31,7 +31,7 @@ enum class engine_tags : char { legacy = 'L', contemporary = 'C', hybrid = 'H' }
 
 enum class wheel_tags : char { alloy = 'A', chrome_vanadium = 'C', steel = 'S' };
 
-struct car_base final {
+struct car_base_facade final {
 	//the 'start()' message
 	template<typename T>
 	constexpr bool start(const T & engine_) const
@@ -40,7 +40,7 @@ struct car_base final {
 	}
 
 	template<typename W>
-	constexpr bool knobs_required (const W & wheel_) const
+	constexpr int knobs_required (const W & wheel_) const
 	{
 		return wheel_.fix_points();
 	}
@@ -48,8 +48,8 @@ struct car_base final {
 	template<typename W, typename E>
 	constexpr std::string type_tag(const W & wheel_, const E & engine_ ) const
 	{
-		char cartag[]{ (char)engine_.uid(), '-', (char)wheel_.uid() };
-		return cartag;
+		char car_tag[]{ (char)engine_.uid(), '-', (char)wheel_.uid(), (char)0 };
+		return car_tag;
 	}
 
 };
@@ -89,27 +89,68 @@ namespace engines{
 	};
 } // engines
 
-auto car_assembly_line = []( auto engine_, auto wheels_ ) {
-	car_base base{ };
+auto car_assembly_line = []( auto engine_, auto wheels_ ) 
+{
+	// assemble and use the car perhaps this way
+	/*
+	car_facade base{ };
+
 	auto starter   =   [=]() { return base.start(engine_);  };
 	auto identty  =    [=]() { return base.type_tag(wheels_,engine_);  };
 	auto knobs    =    [=]() { return 4 * base.knobs_required(wheels_);  };
 
-	return std::make_tuple( starter, identty,  knobs );
+	auto tuple_of_methods = std::make_tuple( starter, identty,  knobs );
+
+	auto rv1 = std::get< 0 >(tuple_of_methods)();
+	auto rv2 = std::get< 1 >(tuple_of_methods)();
+	auto rv3 = std::get< 2 >(tuple_of_methods)();
+
+	or this way ...
+    */
+	using ET = decltype (engine_);
+	using WT = decltype (wheels_);
+
+	struct finished_car_facade final {
+
+		ET engine;
+		WT wheels;
+
+		car_base_facade base{};
+
+		auto start() { return base.start(engine); }
+		auto tag  () { return base.type_tag(wheels, engine); }
+		auto knobs() { return 4 * base.knobs_required(wheels);  };
+
+		operator std::string() { return this->tag();  }
+	};
+
+	return finished_car_facade{};
 };
 
 DBJ_TEST_UNIT(" polymorph but not inheritor") 
 {
 	// obtain the car
-	auto diesel_car = 
-		car_assembly_line(engines::diesel{}, wheels::alloy{} );
-	auto petrol_car = 
-		car_assembly_line(engines::petrol{}, wheels::chrome_vanadium{} );
+	auto diesel_car = DBJ_TEST_ATOM(
+		car_assembly_line(engines::diesel{}, wheels::alloy{} )
+		);
+	auto petrol_car = DBJ_TEST_ATOM(
+		car_assembly_line(engines::petrol{}, wheels::chrome_vanadium{} )
+		);
 
-	// use the car
-	auto rv1 = std::get< 0 >(diesel_car)();
-	auto rv2 = std::get< 1 >(diesel_car)();
-	auto rv3 = std::get< 2 >(diesel_car)();
+	auto rv1 = DBJ_TEST_ATOM(diesel_car.start());
+	auto rv2 = DBJ_TEST_ATOM(diesel_car.tag());
+	auto rv3 = DBJ_TEST_ATOM(diesel_car.knobs());
+
+	auto rv4 = DBJ_TEST_ATOM(petrol_car.start());
+	auto rv5 = DBJ_TEST_ATOM(petrol_car.tag());
+	auto rv6 = DBJ_TEST_ATOM(petrol_car.knobs());
+
+	auto ht1 = DBJ_TEST_ATOM( typeid(diesel_car).hash_code() );
+	auto ht2 = DBJ_TEST_ATOM( typeid(diesel_car).hash_code() );
+
+	auto same = DBJ_TEST_ATOM(ht1 == ht2);
+
+	// problem? smae facades do represent different cars ;)
 }
 
 // typedef void(*recipe)(void);
