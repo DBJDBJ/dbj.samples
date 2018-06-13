@@ -23,6 +23,7 @@ limitations under the License.
 
 #include <fcntl.h>
 #include <io.h>
+#include <functional>
 
 // dbj++ does not use cout and/or wcout
 // #include <iostream>

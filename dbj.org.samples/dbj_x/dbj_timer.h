@@ -64,7 +64,7 @@ namespace dbj_samples {
 		class  win32_timer_engine final : implements ITimer
 		{
 		public:
-			win32_timer_engine()
+			win32_timer_engine  () noexcept
 				: threadHandle(::GetCurrentThread())
 				, startTime(0)
 			{

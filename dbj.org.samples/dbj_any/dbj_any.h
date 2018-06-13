@@ -35,10 +35,10 @@ namespace dbj_samples {
 */
 	template <typename T>
 	class any_wrapper final 
-		// : public base
 	{
 
-		static_assert(!std::is_reference<T>::value, "[dbj::any_wrapper] Do not use a reference type");
+		static_assert(!std::is_reference<T>::value,
+			"[dbj::any_wrapper] Can not use a reference type");
 
 #if 0		
 		template <typename T>
@@ -74,7 +74,7 @@ namespace dbj_samples {
 		typedef any_wrapper type;
 		typedef T data_type;
 
-		any_wrapper() {	}
+		any_wrapper() noexcept {	}
 
 		// give data
 		any_wrapper( const data_type & ref) noexcept
@@ -93,12 +93,13 @@ namespace dbj_samples {
 			return *this;
 		}
 		// move
-		any_wrapper(any_wrapper && rhs) : any_(move(rhs.any_)) {  }
-		any_wrapper&& operator=(any_wrapper&& x) noexcept {
+		any_wrapper(any_wrapper && rhs) noexcept : any_(move(rhs.any_)) {  }
+
+		any_wrapper& operator=(any_wrapper&& x) noexcept {
 			if ( this != &x ) {
 			this->any_ = move(x.any_); 
 			}
-			return std::forward<any_wrapper>( *this );
+			return *this ;
 		}
 		// destruct
 		~any_wrapper() { this->any_.reset(); }
@@ -164,9 +165,10 @@ namespace dbj_samples {
 
 		template <
 			typename T,
-			typename ANYW = typename dbj_samples::any::any_wrapper< T >
+			typename ANYW = typename any::any_wrapper< T >
 		>
 			inline auto make(T val_)
+			-> ANYW
 		{
 			static_assert(!std::is_same<const char *, T>(),
 				"std::any::make() can not use 'char *' pointer argument");
@@ -181,21 +183,26 @@ namespace dbj_samples {
 			return dbj::any::any_wrapper< const char * >{val_};
 		};
 		*/
-		// returns std::array of any wrappers
-		// of the same type
+		// returns std::array of any_wrapper's
+		// of the same type T
 		template <
 			typename T,
-			std::size_t N,
-			typename ANYW = typename dbj_samples::any::any_wrapper< T >
+			std::size_t N
 		>
-			inline auto range(const T(&arrf)[N])
+		inline auto range(const T(&arrf)[N])
 		{
-			using   any_range = std::array< ANYW, N >;
-			any_range rezult{};
-			size_t j{ 0 };
+			using ANYW = any::any_wrapper< T >;
+			using RETT = std::array< ANYW, N >;
+			using std_arr_t = RETT; 
+			
+			std_arr_t rezult{};
+			std::size_t j{ 0 };
 
-			for (T element : arrf) {
-				rezult[j++] = dbj_samples::any::make(element);
+			for (auto element : arrf) {
+// warning C28020: The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
+// why ?
+// calling the 'operator =' on dbj any_wrapper, so ... ?
+				rezult[j++] = any::make(element);
 			}
 			return rezult;
 		};
@@ -260,7 +267,8 @@ namespace dbj_any_wrapper_testing {
 
 		using namespace dbj_samples;
 		try {
-			auto any_0 = DBJ_TEST_ATOM(dbj_samples::any::range({ 42 }) );
+			int int_arr[]{42};
+			auto any_0 = DBJ_TEST_ATOM( any::range(int_arr) );
 			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
 
 			// yes can do
@@ -282,9 +290,6 @@ namespace dbj_any_wrapper_testing {
 }
 #endif
 #pragma endregion 
-
-/* standard suffix */
-#pragma comment( user, __FILE__ "(c) 2017 by dbj@dbj.org | Version: " __DATE__ __TIME__ ) 
 /*
 Copyright 2017 by dbj@dbj.org
 

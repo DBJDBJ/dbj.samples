@@ -15,6 +15,7 @@
     <ClCompile Include="tests\tests.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="headers\no_inheritance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -78,6 +79,9 @@
       <Filter>dbj_x</Filter>
     </ClInclude>
     <ClInclude Include="dbj_x\dbj_swapable_engines.h">
+      <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="dbj_polymorph.h">
       <Filter>dbj_x</Filter>
     </ClInclude>
   </ItemGroup>

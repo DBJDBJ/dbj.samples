@@ -15,8 +15,122 @@
 #include "../dbjtree\dbj_tree_tests.h"
 #include "../dbj_x/dbj_timer.h"
 #include "../dbj_x/dbj_swapable_engines.h"
+#include "../dbj_x/dbj_polymorph.h"
 
-DBJ_TEST_SPACE_OPEN( local_tests )
+DBJ_TEST_SPACE_OPEN(local_tests)
+
+// return the default instance of the
+// type obtained at runtime
+auto maker_of = [&](auto && prototype_)
+{
+	using the_type = std::decay_t<decltype(prototype_)>;
+	return  []() -> the_type { return  the_type{}; };
+};
+
+enum class engine_tags : char { legacy = 'L', contemporary = 'C', hybrid = 'H' };
+
+enum class wheel_tags : char { alloy = 'A', chrome_vanadium = 'C', steel = 'S' };
+
+struct car_base final {
+	//the 'start()' message
+	template<typename T>
+	constexpr bool start(const T & engine_) const
+	{
+		return engine_.start(); 
+	}
+
+	template<typename W>
+	constexpr bool knobs_required (const W & wheel_) const
+	{
+		return wheel_.fix_points();
+	}
+
+	template<typename W, typename E>
+	constexpr std::string type_tag(const W & wheel_, const E & engine_ ) const
+	{
+		char cartag[]{ (char)engine_.uid(), '-', (char)wheel_.uid() };
+		return cartag;
+	}
+
+};
+namespace wheels {
+	// wheels
+	struct alloy final {
+		constexpr wheel_tags uid() const { return wheel_tags::alloy; }
+		constexpr int fix_points() const { return 3; }
+	};
+
+	struct chrome_vanadium final {
+		constexpr wheel_tags uid() const { return wheel_tags::chrome_vanadium; }
+		constexpr int fix_points() const { return 6; }
+	};
+
+	struct steel final {
+		constexpr wheel_tags uid() const { return wheel_tags::steel; }
+		constexpr int fix_points() const { return 4; }
+	};
+} // wheels
+
+namespace engines{
+	// engines
+	struct diesel final {
+		constexpr engine_tags uid() const { return engine_tags::legacy; }
+		constexpr bool start() const { return true; }
+	};
+
+	struct petrol final {
+		constexpr engine_tags uid() const { return engine_tags::contemporary; }
+		constexpr bool start() const { return true; }
+	};
+
+	struct hybrid final {
+		constexpr engine_tags uid() const { return engine_tags::hybrid; }
+		constexpr bool start() const { return true; }
+	};
+} // engines
+
+auto car_assembly_line = []( auto engine_, auto wheels_ ) {
+	car_base base{ };
+	auto starter   =   [=]() { return base.start(engine_);  };
+	auto identty  =    [=]() { return base.type_tag(wheels_,engine_);  };
+	auto knobs    =    [=]() { return 4 * base.knobs_required(wheels_);  };
+
+	return std::make_tuple( starter, identty,  knobs );
+};
+
+DBJ_TEST_UNIT(" polymorph but not inheritor") 
+{
+	// obtain the car
+	auto diesel_car = 
+		car_assembly_line(engines::diesel{}, wheels::alloy{} );
+	auto petrol_car = 
+		car_assembly_line(engines::petrol{}, wheels::chrome_vanadium{} );
+
+	// use the car
+	auto rv1 = std::get< 0 >(diesel_car)();
+	auto rv2 = std::get< 1 >(diesel_car)();
+	auto rv3 = std::get< 2 >(diesel_car)();
+}
+
+// typedef void(*recipe)(void);
+
+
+
+// using full_rcp = std::function< decltype(string_rcp) > ;
+
+DBJ_TEST_UNIT(" Damn! Why I have not thought of this before?! ") {
+
+	using namespace std;
+
+auto recipe_1	= maker_of( vector<int>{1,2,3} );
+auto value_1	= recipe_1() ;
+
+auto check = value_1.size();
+
+	std::any	a1	= recipe_1;
+
+
+}
 
 auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr) {
 	char address_str[128]{0};
@@ -44,7 +158,7 @@ DBJ_TEST_UNIT(" dbj fundamental issues ") {
 		X(X && x) noexcept {
 			reporter("X move constructed", this); std::swap(bad, x.bad);
 		}
-		X & operator = (X && x) {
+		X & operator = (X && x) noexcept {
 			reporter("X move assigned", this);
 			std::swap(bad, x.bad);
 			return *this;
@@ -66,18 +180,19 @@ DBJ_TEST_UNIT(" dbj fundamental issues ") {
 	auto & wot = moved_from.bad;
 }
 
+#if 0
 DBJ_TEST_UNIT(" dbj swappable engines ") {
 
 	using namespace car_factory;
 
 	auto car_1 = 
-	 assembly_line(
+	 car_assembly_line(
 		engine_tag::old	);
 
 	car_1.start();
 
 	auto car_2 = 
-	  assembly_line(
+	  car_assembly_line(
 		engine_tag::next );
 
 	car_2.start();
@@ -85,7 +200,7 @@ DBJ_TEST_UNIT(" dbj swappable engines ") {
 	// should be barred
 	// and it is: f1 = f2;
 }
-
+#endif
 DBJ_TEST_UNIT(" timers ") {
 
 	auto test = [&](dbj_samples::timer_kind which_ ) {
