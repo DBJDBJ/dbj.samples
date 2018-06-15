@@ -17,6 +17,51 @@
 #include "../dbj_x/dbj_swapable_engines.h"
 #include "../dbj_x/dbj_polymorph.h"
 
+DBJ_TEST_SPACE_OPEN(lambada_mixer)
+
+template< typename T>
+inline auto any_mixer ( T specimen_ ) 
+{
+	using specimen_type = T; 
+
+	struct any_front final {
+
+		typedef specimen_type value_type;
+		
+		value_type val() const {
+			return std::any_cast<value_type>(any_);
+		}
+
+		value_type val(value_type new_val_ ) {
+			this->any_ = new_val_;
+			return this->val();
+		}
+
+		// not necessary for the mechanism 
+		operator std::string () const {
+			return { typeid(this->any_).name() };
+		}
+
+	private:
+		std::any any_{};
+	};
+		return any_front{};
+};
+
+DBJ_TEST_UNIT(" lambada mixed any") {
+	auto any_int = any_mixer(42);
+	auto any_str = any_mixer(std::string{"string"} );
+
+	DBJ_TEST_ATOM(any_int);
+	DBJ_TEST_ATOM(any_str);
+
+	DBJ_TEST_ATOM(any_int.val());
+	DBJ_TEST_ATOM(any_str.val());
+
+}
+
+DBJ_TEST_SPACE_CLOSE(lambada_mixer)
+
 DBJ_TEST_SPACE_OPEN(local_tests)
 
 // return the default instance of the
@@ -31,28 +76,33 @@ enum class engine_tags : char { legacy = 'L', contemporary = 'C', hybrid = 'H' }
 
 enum class wheel_tags : char { alloy = 'A', chrome_vanadium = 'C', steel = 'S' };
 
-struct car_base_facade final {
-	//the 'start()' message
-	template<typename T>
-	constexpr bool start(const T & engine_) const
-	{
-		return engine_.start(); 
-	}
+/*
+   care_base_facade -- not good using the term "base" it implies there might be some hiddent inheritance somewhere
+   car_interface -- even worse ;)
+*/
+struct car_front final {
+//the 'start()' message
+template<typename T>
+constexpr bool start(const T & engine_) const
+{
+	return engine_.start(); 
+}
 
-	template<typename W>
-	constexpr int knobs_required (const W & wheel_) const
-	{
-		return wheel_.fix_points();
-	}
+template<typename W>
+constexpr int knobs_required (const W & wheel_) const
+{
+	return wheel_.fix_points();
+}
 
-	template<typename W, typename E>
-	constexpr std::string type_tag(const W & wheel_, const E & engine_ ) const
-	{
-		char car_tag[]{ (char)engine_.uid(), '-', (char)wheel_.uid(), (char)0 };
-		return car_tag;
-	}
+template<typename W, typename E>
+constexpr const char * type_tag(const W & wheel_, const E & engine_ ) const
+{
+	static char car_tag[]{ (char)engine_.uid(), '-', (char)wheel_.uid(), (char)0 };
+	return car_tag;
+}
 
 };
+
 namespace wheels {
 	// wheels
 	struct alloy final {
@@ -89,42 +139,42 @@ namespace engines{
 	};
 } // engines
 
-auto car_assembly_line = []( auto engine_, auto wheels_ ) 
+inline auto car_assembly_line = []( auto engine_, auto wheels_ ) 
 {
-	// assemble and use the car perhaps this way
-	/*
-	car_facade base{ };
+// assemble and use the car perhaps this way
+/*
+car_facade base{ };
 
-	auto starter   =   [=]() { return base.start(engine_);  };
-	auto identty  =    [=]() { return base.type_tag(wheels_,engine_);  };
-	auto knobs    =    [=]() { return 4 * base.knobs_required(wheels_);  };
+auto starter   =   [=]() { return base.start(engine_);  };
+auto identty  =    [=]() { return base.type_tag(wheels_,engine_);  };
+auto knobs    =    [=]() { return 4 * base.knobs_required(wheels_);  };
 
-	auto tuple_of_methods = std::make_tuple( starter, identty,  knobs );
+auto tuple_of_methods = std::make_tuple( starter, identty,  knobs );
 
-	auto rv1 = std::get< 0 >(tuple_of_methods)();
-	auto rv2 = std::get< 1 >(tuple_of_methods)();
-	auto rv3 = std::get< 2 >(tuple_of_methods)();
+auto rv1 = std::get< 0 >(tuple_of_methods)();
+auto rv2 = std::get< 1 >(tuple_of_methods)();
+auto rv3 = std::get< 2 >(tuple_of_methods)();
 
-	or this way ...
-    */
-	using ET = decltype (engine_);
-	using WT = decltype (wheels_);
+or this way ...
+*/
+using ET = decltype (engine_);
+using WT = decltype (wheels_);
 
-	struct finished_car_facade final {
+struct finished_car_ final {
 
-		ET engine;
-		WT wheels;
+	ET engine{};
+	WT wheels{};
 
-		car_base_facade base{};
+	car_front front{};
 
-		auto start() { return base.start(engine); }
-		auto tag  () { return base.type_tag(wheels, engine); }
-		auto knobs() { return 4 * base.knobs_required(wheels);  };
+	auto start() { return front.start(engine); }
+	auto tag  () { return front.type_tag(wheels, engine); }
+	auto knobs() { return 4 * front.knobs_required(wheels);  };
 
-		operator std::string() { return this->tag();  }
-	};
+	operator std::string() { return this->tag();  }
+};
 
-	return finished_car_facade{};
+return finished_car_{};
 };
 
 DBJ_TEST_UNIT(" polymorph but not inheritor") 
@@ -146,11 +196,19 @@ DBJ_TEST_UNIT(" polymorph but not inheritor")
 	auto rv6 = DBJ_TEST_ATOM(petrol_car.knobs());
 
 	auto ht1 = DBJ_TEST_ATOM( typeid(diesel_car).hash_code() );
-	auto ht2 = DBJ_TEST_ATOM( typeid(diesel_car).hash_code() );
+	auto ht2 = DBJ_TEST_ATOM( typeid(petrol_car).hash_code() );
 
 	auto same = DBJ_TEST_ATOM(ht1 == ht2);
 
-	// problem? smae facades do represent different cars ;)
+	dbj::print("\ndiesel and petrol car are ");
+
+	if (! std::is_same_v< decltype(diesel_car), decltype(petrol_car) >) {
+		dbj::print(" NOT ");
+	}
+
+	dbj::print(" the same type...");
+
+	// problem?
 }
 
 // typedef void(*recipe)(void);

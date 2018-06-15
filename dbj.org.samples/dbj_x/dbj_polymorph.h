@@ -110,7 +110,7 @@ namespace dbj_samples {
 		MyConcept(MyConcept const& other)
 			: pimpl(other.pimpl->clone())
 		{}
-		MyConcept(MyConcept && other)
+		MyConcept(MyConcept && other) noexcept
 			: pimpl(std::move(other.pimpl))
 		{}
 
