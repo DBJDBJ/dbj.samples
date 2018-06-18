@@ -116,7 +116,7 @@ namespace fm {
 
 				auto ordered_int_sequence = [](size_t sz_) {
 					IDX_VECTOR rezult;
-					for (auto j = 0; j != sz_; ++j)
+					for (size_t j = 0; j != sz_; ++j)
 						rezult.push_back(j);
 					return rezult;
 				};

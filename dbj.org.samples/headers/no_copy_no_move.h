@@ -7,7 +7,7 @@ namespace dbj_samples {
 	/// no move
 	/// dbj.org created 
 	/// </summary>
-	class no_copy_no_move
+	struct no_copy_no_move
 	{
 	protected:
 		// no copy
@@ -18,6 +18,6 @@ namespace dbj_samples {
 		no_copy_no_move& operator=(no_copy_no_move&&) = delete;
 	public:
 		no_copy_no_move() noexcept {}
-		~no_copy_no_move() {}
+		virtual ~no_copy_no_move() {}
 	};
 } // dbj_samples

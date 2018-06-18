@@ -185,6 +185,7 @@
     <ClInclude Include="headers\dbj_atoms.h" />
     <ClInclude Include="headers\dbj_lambda_lists.h" />
     <ClInclude Include="headers\dbj_tokenizer.h" />
+    <ClInclude Include="headers\no_copy_no_move.h" />
     <ClInclude Include="msvc_conformance\lambda_runtime_retval_test.h" />
     <ClInclude Include="headers\no_inheritance.h" />
     <ClInclude Include="headers\policy_classes.h" />
@@ -212,6 +213,7 @@
     </ClCompile>
     <ClCompile Include="tests\any_narf.cpp" />
     <ClCompile Include="tests\few_more_nuggets.cpp" />
+    <ClCompile Include="tests\lambda_mixer_samples.cpp" />
     <ClCompile Include="tests\quick_local_test.cpp" />
     <ClCompile Include="tests\tests.cpp" />
   </ItemGroup>

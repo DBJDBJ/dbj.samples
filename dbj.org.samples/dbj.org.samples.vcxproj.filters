@@ -16,6 +16,9 @@
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="headers\no_inheritance.cpp" />
+    <ClCompile Include="tests\lambda_mixer_samples.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="dbj_polymorph.h">
       <Filter>dbj_x</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\no_copy_no_move.h">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

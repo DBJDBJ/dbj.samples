@@ -18,23 +18,29 @@ namespace dbj_samples {
 		 interfaces to writing and language policies
 		*/
 		__interface IWriterPolicy {
-			void write(string);
+			void write(const string &) const noexcept ;
 		};
 		__interface ILanguagePolicy {
-			string translate(string);
+			string translate(const string & ) const noexcept ;
 		};
 		// classes to be used
 		// as default policies		
-		struct WideWriterPolicy : implements IWriterPolicy {
-			void write(string msg) { print(" ", msg); }
+		struct WideWriterPolicy 
+			: implements IWriterPolicy {
+			void write(const string & msg) const noexcept 
+			{ print(" ", msg); }
 		};
-		struct LanguagePolicyEnglish : implements ILanguagePolicy {
-			string translate(string msg) { return msg; }
+		struct LanguagePolicyEnglish 
+			: implements ILanguagePolicy {
+			string translate(const string & msg) const noexcept 
+			{ return msg; }
 		};
 		// german is also here as some folks will 
 		// want to make it a default language
-		struct LanguagePolicyGerman : implements ILanguagePolicy {
-			string translate(string msg) { return msg; }
+		struct LanguagePolicyGerman 
+			: implements ILanguagePolicy {
+			string translate(const string & msg) const noexcept 
+			{ return msg; }
 		};
 
 		template <

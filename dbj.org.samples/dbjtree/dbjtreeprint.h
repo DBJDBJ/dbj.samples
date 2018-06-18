@@ -7,9 +7,9 @@
 #include <sstream>
 
 namespace dbj_samples {
-	namespace conv {
+	namespace keep {
 		template <typename T>
-		inline std::wstring	to_wstring(const T & t) {
+		inline std::wstring	to_static_wstring(const T & t) {
 			static std::wstring retval_; // prolong the life of returned value
 			std::wostringstream out ;
 			out << t;
@@ -19,7 +19,7 @@ namespace dbj_samples {
 		}
 
 		template<>
-		inline std::wstring	to_wstring<std::wstring>(const std::wstring & t) {
+		inline std::wstring	to_static_wstring<std::wstring>(const std::wstring & t) {
 			static std::wstring retval_; // prolong the life of returned value
 			retval_.clear();
 			retval_.append(t.data()); //copy

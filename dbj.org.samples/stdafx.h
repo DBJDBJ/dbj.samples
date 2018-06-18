@@ -24,6 +24,7 @@ limitations under the License.
 #include <fcntl.h>
 #include <io.h>
 #include <functional>
+#include <any>
 /*
 The header <typeinfo> must be included before using typeid (if the header is not included, 
 every use of the keyword typeid makes the program ill-formed.)
