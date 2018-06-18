@@ -10,6 +10,17 @@
 
 DBJ_TEST_SPACE_OPEN(lambada_mixer)
 
+DBJ_TEST_UNIT(" dbj micro log test") {
+
+	dbj::log::print(L"\nHello, asre you ok", L"with two, or", " three arguments?");
+	dbj::log::instance().flush();
+	dbj::log::print("\nDBJ")(" micro")(" log!");
+	dbj::log::instance().flush();
+
+	std::byte dumzy[[maybe_unused]]{};
+
+}
+
 template< typename T>
 inline auto any_mixer(T specimen_)
 {
