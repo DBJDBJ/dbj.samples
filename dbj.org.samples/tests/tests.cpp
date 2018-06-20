@@ -40,10 +40,11 @@ auto check = value_1.size();
 
 }
 
-auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr) {
+auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) {
 	char address_str[128]{0};
-	(void)::sprintf_s(address_str, "%p", this_ptr);
-	return dbj::print("\n[", address_str, "]\t", prompt );
+	int retval = std::snprintf(address_str, 128, "%p", this_ptr);
+	_ASSERTE( retval > 0);
+	dbj::print("\n[", address_str, "]\t", prompt );
 };
 
 DBJ_TEST_UNIT(" dbj fundamental issues ") {
@@ -54,6 +55,7 @@ DBJ_TEST_UNIT(" dbj fundamental issues ") {
 		~X() {
 			reporter("X destructed", this);
 		}
+		// copy
 		X(const X & x) noexcept {
 			reporter("X copy constructed", this);
 			bad = x.bad;
@@ -63,6 +65,7 @@ DBJ_TEST_UNIT(" dbj fundamental issues ") {
 			bad = x.bad;
 			return *this;
 		}
+		// move
 		X(X && x) noexcept {
 			reporter("X move constructed", this); std::swap(bad, x.bad);
 		}

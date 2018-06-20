@@ -10,13 +10,13 @@ namespace dbj_samples {
 	namespace any {
 
 		using namespace std;
-
+/*
 		inline auto data_store = [] (const auto * const new_val = 0 ) {
 			static auto last_{ *new_val };
 			if (new_val) last_ = *new_val;
 			return last_;
 		};
-
+*/
 		template <typename T> class any_wrapper;
 /*
 		class base {

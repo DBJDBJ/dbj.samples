@@ -11,10 +11,15 @@ namespace car_factory {
 
 	namespace engine_workshop { // hidden from clients
 	// interface to swapable engines
-		struct IEngine { virtual  engine_tag start() = 0; };
+		struct IEngine 
+		{ 
+			virtual  engine_tag start() = 0; 		
+			virtual ~IEngine() {}
+		};
 		// switchable engines
 		struct old : public IEngine { virtual engine_tag start() override { return engine_tag::old; } };
 		struct next : public IEngine { virtual engine_tag start() override { return engine_tag::next; } };
+
 	} // inner
 
 	// facade of the solution

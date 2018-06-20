@@ -111,7 +111,7 @@ namespace documents {
 		/* a single method to open any kind of a document
 			polymorphic behaviour is OK here
 		*/
-		inline int opendoc(Document & doc, string name) { return doc.open(name); }
+		inline int opendoc(Document & doc, string && name) { return doc.open(name); }
 
 	}
 } // dbj

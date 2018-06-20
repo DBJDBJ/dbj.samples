@@ -78,8 +78,15 @@ namespace dbj_samples {
 DBJ_TEST_UNIT(": dbj lambda lists") {
 
 	using namespace dbj_samples;
-	// usage
-	auto my_list = llist(1, '2', "3", false, 13.0f); // return lambda() internal to list()
+	auto my_list = llist(1, '2', "3", false, 13.0f); 
+	// return lambda() internal to list()
+	// explanation
+	{
+		auto return_first = [&](auto first, auto ... rest) { return first; };
+		auto first = my_list(return_first); // returns 1
+		auto first_as_a_list = llist(my_list(return_first)); // returns (1)
+	}
+	// encapsulated implementation usage
 	auto my_head = ll::head(my_list); // returns list of one element -- list(1)
 	auto my_tail = ll::tail(my_list); // returns list('2', "3", false, 13.0f)
 	/*
@@ -87,10 +94,10 @@ DBJ_TEST_UNIT(": dbj lambda lists") {
 	we use tuple() because dbj::print() knows how to print touples
 	but not lambda lists
 	*/
-	dbj::print("\nlist: ", ll::tuple(my_list));
-	dbj::print("\nhead: ", ll::tuple(my_head));
-	dbj::print("\ntail: ", ll::tuple(my_tail));
+	dbj::print("\nllist    : ", ll::tuple(my_list));
+	dbj::print("\nIt's head: ", ll::tuple(my_head));
+	dbj::print("\nIt's tail: ", ll::tuple(my_tail));
 
-	// dbj::print("\n", DBJ_NV( length(list()) ));
+	 dbj::print("\nLength of llist --> ", DBJ_NV(ll::length(my_list)) );
 }
 #pragma endregion 

@@ -12,7 +12,7 @@ DBJ_TEST_SPACE_OPEN(lambada_mixer)
 
 DBJ_TEST_UNIT(" dbj micro log test") {
 
-	dbj::log::print(L"\nHello, asre you ok", L"with two, or", " three arguments?");
+	dbj::log::print(L"\nHello, are you ok", L"with two, or", " three arguments?");
 	dbj::log::instance().flush();
 	dbj::log::print("\nDBJ")(" micro")(" log!");
 	dbj::log::instance().flush();
@@ -122,6 +122,7 @@ namespace wheels {
 		constexpr wheel_tags uid() const { return wheel_tags::steel; }
 		constexpr int fix_points() const { return 4; }
 	};
+
 } // wheels
 
 namespace engines {

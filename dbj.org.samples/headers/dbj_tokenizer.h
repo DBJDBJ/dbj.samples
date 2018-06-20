@@ -212,10 +212,10 @@ namespace fm {
 
 			friend auto swap(tokenizerT & left, tokenizerT & right) {
 				using std::swap;
-				swap(vector_of_begins, right.vector_of_begins);
-				swap(vector_of_ends, right.vector_of_ends);
-				swap(src_, right.src_);
-				swap(tag_, right.tag_);
+				swap(left.vector_of_begins, right.vector_of_begins);
+				swap(left.vector_of_ends, right.vector_of_ends);
+				swap(left.src_, right.src_);
+				swap(left.tag_, right.tag_);
 				indices(true);
 			}
 
