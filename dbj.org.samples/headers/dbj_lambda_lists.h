@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #pragma region LAMBDA LISP
 
 namespace dbj_samples {
@@ -99,5 +101,11 @@ DBJ_TEST_UNIT(": dbj lambda lists") {
 	dbj::print("\nIt's tail: ", ll::tuple(my_tail));
 
 	 dbj::print("\nLength of llist --> ", DBJ_NV(ll::length(my_list)) );
+
+	 dbj::print("\n\ndbj::print can print pairs too, here is one: ");
+
+	 auto pofs = DBJ_TEST_ATOM (
+		 std::make_pair("Pair of ", " strings ")
+	 );
 }
 #pragma endregion 
