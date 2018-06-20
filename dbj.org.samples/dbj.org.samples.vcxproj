@@ -169,13 +169,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="dbj_polymorph.h" />
     <ClInclude Include="dbj_x\dbj_actual_type.h" />
     <ClInclude Include="dbj_x\dbj_ctstring.h" />
     <ClInclude Include="dbj_x\dbj_fontlist.h" />
     <ClInclude Include="dbj_x\dbj_micro_printf.h" />
+    <ClInclude Include="dbj_x\dbj_polymorph.h" />
     <ClInclude Include="dbj_x\dbj_swapable_engines.h" />
     <ClInclude Include="dbj_x\dbj_timer.h" />
+    <ClInclude Include="dbj_x\no_copy_no_move.h" />
     <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h" />
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp" />
     <ClInclude Include="dbjtree\dbjtree.h" />
@@ -190,7 +191,6 @@
     <ClInclude Include="headers\no_inheritance.h" />
     <ClInclude Include="headers\policy_classes.h" />
     <ClInclude Include="msvc_conformance\supports_api.h" />
-    <ClInclude Include="no_copy_no_move.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +220,7 @@
   <ItemGroup>
     <None Include="..\cpp.hint" />
     <None Include="cpp.hint" />
+    <None Include="headers\cpp.hint" />
     <None Include="readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

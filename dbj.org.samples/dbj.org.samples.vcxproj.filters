@@ -78,23 +78,20 @@
     <ClInclude Include="cppwinrt\dbj_web_syndication.cpp">
       <Filter>cppwinrt</Filter>
     </ClInclude>
-    <ClInclude Include="no_copy_no_move.h">
-      <Filter>dbj_x</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_x\dbj_swapable_engines.h">
-      <Filter>dbj_x</Filter>
-    </ClInclude>
-    <ClInclude Include="dbj_polymorph.h">
       <Filter>dbj_x</Filter>
     </ClInclude>
     <ClInclude Include="headers\no_copy_no_move.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="dbj_x\dbj_polymorph.h" />
+    <ClInclude Include="dbj_x\no_copy_no_move.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
     <None Include="..\cpp.hint" />
     <None Include="cpp.hint" />
+    <None Include="headers\cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dbjtree">
