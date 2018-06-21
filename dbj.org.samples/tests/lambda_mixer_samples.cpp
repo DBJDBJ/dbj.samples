@@ -12,6 +12,17 @@ DBJ_TEST_SPACE_OPEN(lambada_mixer)
 
 DBJ_TEST_UNIT(" dbj micro log test") {
 
+	// capacity and size of os1 is 255
+	// it will not do any heap alloc / de-alloc
+	// for size < 255
+	auto os1 = DBJ_TEST_ATOM( dbj::str::optimal<char>() );
+
+	auto os2 = DBJ_TEST_ATOM(dbj::str::optimal<wchar_t>( 1024 ));
+
+	auto os3 = DBJ_TEST_ATOM(dbj::str::optimal<char16_t>( 512 , u'='));
+
+	auto os4 = DBJ_TEST_ATOM(dbj::str::optimal<char32_t>( 128 , U'+' ));
+
 	dbj::log::print(L"\nHello, are you ok", L"with two, or", " three arguments?");
 	dbj::log::instance().flush();
 	dbj::log::print("\nDBJ")(" micro")(" log!");
