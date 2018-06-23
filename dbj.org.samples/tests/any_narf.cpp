@@ -13,6 +13,6 @@ DBJ_TEST_UNIT("dbj narf")
 			{ 1,2,3 }
 		)
 	);
-};
+}
 
 DBJ_TEST_SPACE_CLOSE(narf)
