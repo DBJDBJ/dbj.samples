@@ -22,19 +22,6 @@ DBJ_TEST_UNIT(" dbj basic traits tests") {
 	DBJ_TEST_ATOM(Object(42.0f));
 }
 
-//-----------------------------------------------------------------------------
-// RC == micro Range and Container
-// I like it. A lot.
-template< typename T, std::size_t N>
-struct range_container final {
-using data_ref = T(&)[N];
-T data_[N]{};
-T * begin() { return data_; }
-T * end() { return data_ + N; }
-size_t size() const { return N; }
-data_ref data() const { return data_; }
-};
-
 DBJ_TEST_UNIT(" dbj container traits tests")
 {
 	using namespace std;
@@ -51,9 +38,14 @@ DBJ_TEST_UNIT(" dbj container traits tests")
 	DBJ_TEST_ATOM(dbj::is_range_v<ia3>);
 	DBJ_TEST_ATOM(dbj::is_range_v<vi>);
 
-	auto is_it_range = dbj::inner::is_range< range_container<int, 3> >::value ;
 	// bellow wont work because comma operator screws macros in a royal way
 	// DBJ_TEST_ATOM(dbj::inner::is_range<range_container<int,3>>::value);
+	// it actually screws the whole closure it is in
+	// https://stackoverflow.com/questions/13842468/comma-in-c-c-macro
+	// ditto ...
+
+	using rci3 = dbj::util::rac<int, 3>;
+	DBJ_TEST_ATOM(dbj::is_range_v<rci3>);
 }
 
 
