@@ -19,6 +19,7 @@
     <ClCompile Include="tests\lambda_mixer_samples.cpp">
       <Filter>tests</Filter>
     </ClCompile>
+    <ClCompile Include="tests\dbj_traits_testing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">

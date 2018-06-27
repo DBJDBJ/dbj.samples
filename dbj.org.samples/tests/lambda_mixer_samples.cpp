@@ -7,44 +7,6 @@
 #include "../dbj_x/dbj_polymorph.h"
 #include "../dbj_any/dbj_any.h"
 
-DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
-	auto vof = [](auto t) {
-		using T = std::decay_t< decltype(t) >;
-		if constexpr (std::is_pointer_v<T>)	{
-			return *t;
-		} else {
-			return t;
-		}
-	};
-
-	auto narf_ = dbj::narf::make({"A B C NARF"});
-	decltype(auto) narf_arf_ = dbj::narf::data(narf_);
-	
-	using CARH = dbj::arr::ARH<char, 255>;
-
-	//CARH::ARR narf_to_arh
-	//	= CARH::to_std_array( narf_arf_ );
-
-	CARH::ARF native_arr_reference
-		= CARH::to_arf(std::array<char, CARH::size>{ "CHAR ARR" });
-
-	CARH::ARR std_aray 
-		= CARH::to_std_array(CARH::to_arf({ "CHAR ARR RIGHT SIZED" }));
-
-	CARH::ARF literal_to_native_arr_reference 
-		= CARH::to_arf({ "CHAR ARR RIGHT SIZED" } );
-}
-
-DBJ_TEST_UNIT(" dbj str optimal") {
-
-	// capacity and size of os1 is 255
-	// it will not do any heap alloc / de-alloc
-	// for size < 255
-	auto os1 = DBJ_TEST_ATOM(dbj::str::optimal<char>());
-	auto os2 = DBJ_TEST_ATOM(dbj::str::optimal<wchar_t>(1024));
-	auto os3 = DBJ_TEST_ATOM(dbj::str::optimal<char16_t>(512, u'='));
-	auto os4 = DBJ_TEST_ATOM(dbj::str::optimal<char32_t>(128, U'+'));
-}
 
 DBJ_TEST_SPACE_OPEN(lambada_mixer)
 

@@ -15,4 +15,34 @@ DBJ_TEST_UNIT("dbj narf")
 	);
 }
 
+DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
+	auto vof = [](auto t) {
+		using T = std::decay_t< decltype(t) >;
+		if constexpr (std::is_pointer_v<T>) {
+			return *t;
+		}
+		else {
+			return t;
+		}
+	};
+
+	auto narf_ = dbj::narf::make({ "A B C NARF" });
+	decltype(auto) narf_arf_ = dbj::narf::data(narf_);
+
+	using CARH = dbj::arr::ARH<char, 255>;
+
+	//CARH::ARR narf_to_arh
+	//	= CARH::to_std_array( narf_arf_ );
+
+	CARH::ARF native_arr_reference
+		= CARH::to_arf(std::array<char, CARH::size>{ "CHAR ARR" });
+
+	CARH::ARR std_aray
+		= CARH::to_std_array(CARH::to_arf({ "CHAR ARR RIGHT SIZED" }));
+
+	CARH::ARF literal_to_native_arr_reference
+		= CARH::to_arf({ "CHAR ARR RIGHT SIZED" });
+}
+
+
 DBJ_TEST_SPACE_CLOSE(narf)
