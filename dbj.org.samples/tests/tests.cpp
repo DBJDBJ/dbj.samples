@@ -18,6 +18,15 @@
 
 DBJ_TEST_SPACE_OPEN(local_tests)
 
+DBJ_TEST_UNIT(" GetGeoInfoEx")
+{
+	auto DBJ_UNUSED(us_data) = dbj::win32::geo_info(L"US");
+	auto DBJ_UNUSED(rs_data) = dbj::win32::geo_info(L"RS");
+
+	dbj::print(us_data);
+	dbj::print(rs_data);
+}
+
 // return the default instance of the
 // type obtained at runtime
 auto maker_of = [&](auto && prototype_)
@@ -109,12 +118,26 @@ DBJ_TEST_UNIT(" timers ") {
 	_ASSERTE( elaps_1 == elaps_2 );
 }
 
+typedef enum class CODE : UINT {
+	page_1252 = 1252u,   // western european windows
+	page_65001 = 65001u // utf8
+	// page_1200 = 1200,  // utf16?
+	// page_1201 = 1201   // utf16 big endian?
+} CODE_PAGE;
+
 	DBJ_TEST_UNIT(": famous dbj console ucrt crash")
 	{
 		// кошка 日本
 		constexpr wchar_t specimen[] =
 		{ L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd" };
+
 		dbj::print("\n", specimen, "\n");
+
+		// 1252u or 65001u
+		if (::IsValidCodePage(65001u)) {
+			auto scocp_rezult = ::SetConsoleOutputCP(65001u);
+			_ASSERTE(scocp_rezult != 0);
+		}
 		/*
 		<fcntl.h>
 		_O_U16TEXT, _O_U8TEXT, or _O_WTEXT
@@ -122,16 +145,16 @@ DBJ_TEST_UNIT(" timers ") {
 		_O_TEXT to "translated mode" aka ANSI
 		_O_BINARY sets binary (untranslated) mode,
 		*/
-		int result = _setmode(_fileno(stdout), _O_U16TEXT);
-		if (result == -1)
-			perror("Cannot set mode to:" DBJ_STRINGIFY(_O_U16TEXT));
-		// both should display: кошка 日本
-		// for any mode the second word is not displayed
-		wprintf(L"\nwprintf() result: %s\n", specimen);
-		// for any mode the following crashes the UCRT (aka Universal CRT)
-		// printf("\nprintf() result: %S\n",specimen);
-	}
+		int result = _setmode(_fileno(stdout), _O_U8TEXT);
+		_ASSERTE(result != -1);
 
+		// should display: кошка 日本
+		// for any mode the second word is not displayed ?
+		auto fwp_rezult = fwprintf( stdout, L"\nwfprintf() displays: %s\n", specimen);
+		// for any mode the following crashes the UCRT (aka Universal CRT)
+		// fprintf( stdout, "\nprintf() result: %S\n",specimen);
+	}
+#if 0
 	DBJ_TEST_UNIT(": constexpr strings") {
 	// this all happens at compile time
 	constexpr dbj::str_const my_string = "Hello, world!";
@@ -142,6 +165,7 @@ DBJ_TEST_UNIT(" timers ") {
 
 	constexpr dbj::c_line<80, '='> L80;
 	}
+#endif
 
 	DBJ_TEST_UNIT(": inheritance") {
 

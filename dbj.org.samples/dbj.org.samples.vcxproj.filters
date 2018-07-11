@@ -20,6 +20,7 @@
       <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\dbj_traits_testing.cpp" />
+    <ClCompile Include="tests\string_transformations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">

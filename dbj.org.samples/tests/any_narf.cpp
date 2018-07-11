@@ -17,13 +17,8 @@ DBJ_TEST_UNIT("dbj narf")
 
 DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
 	auto vof = [](auto t) {
-		using T = std::decay_t< decltype(t) >;
-		if constexpr (std::is_pointer_v<T>) {
-			return *t;
-		}
-		else {
-			return t;
-		}
+		using actual_type = std::decay_t< std::remove_pointer_t< decltype(t) > >;
+		return static_cast<actual_type>(t);
 	};
 
 	auto narf_ = dbj::narf::make({ "A B C NARF" });
