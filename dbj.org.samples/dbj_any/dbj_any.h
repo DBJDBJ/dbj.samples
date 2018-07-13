@@ -4,69 +4,20 @@
 #include <variant>
 #include <dbj_testing.h>
 
-#pragma region dbj any with identity
-namespace dbj_samples {
+
+namespace dbj::samples {
 	
 	namespace any {
 
 		using namespace std;
-/*
-		inline auto data_store = [] (const auto * const new_val = 0 ) {
-			static auto last_{ *new_val };
-			if (new_val) last_ = *new_val;
-			return last_;
-		};
-*/
 		template <typename T> class any_wrapper;
-/*
-		class base {
-		public:
-			// base of all visitors 
-			class visitor {};
-			// entrance for the visitor
-			virtual void enter( visitor && ) const = 0 ;
-		};
 
-		class null_wrapper final
-			: public base
-		{
-			void enter(visitor &&) const {}
-		};
-*/
 	template <typename T>
 	class any_wrapper final 
 	{
-
 		static_assert(!std::is_reference<T>::value,
 			"[dbj::any_wrapper] Can not use a reference type");
 
-#if 0		
-		template <typename T>
-		struct data {
-			typedef T data_type;
-			static_assert(!std::is_reference<T>::value, "[dbj::any_wrapper] Do not use a reference type");
-			mutable std::any any_{};
-			T & get() const noexcept { return std::any_cast<data_type>(this->any_); }
-		};
-
-		template<typename T>
-		auto data_store (const std::optional<T> new_val = std::nullopt ) {
-			static data<T> last_{ new_val };
-			if (new_val) last_.any_ = *new_val;
-			return last_;
-		};
-
-		// with data
-		template <typename T>
-		any_wrapper(const T & ref) noexcept {
-			data_store<T>(ref);
-		}
-
-		template <typename T>
-		any_wrapper(T && ref) noexcept {
-			data_store<T>(move(ref));
-		}
-#endif
 		std::any any_{};
 
 	public:
@@ -147,11 +98,11 @@ namespace dbj_samples {
 #pragma warning( push )
 #pragma warning( disable: 4312 )
 			return { reinterpret_cast<const char *>(val_) };
-#pragma message("### DBJ --> Warning 4312 disabled in file: " __FILE__ ) 
+// #pragma message("### DBJ --> Warning 4312 disabled in file: " __FILE__ ) 
 #pragma warning( pop )
 		}
 
-		operator const std::string () const  {
+		operator std::string () const  {
 			return
 				std::string{ "dbj::any::any_wrapper<" }
 			.append(typeid(T).name())
@@ -175,14 +126,7 @@ namespace dbj_samples {
 
 			return ANYW{val_};
 		};
-		/*
-		inline auto make( const char * val_)
-		{
-			static_assert(! std::is_pointer<char *>(),
-				"std::any::make() can not use 'char *' pointer argument");
-			return dbj::any::any_wrapper< const char * >{val_};
-		};
-		*/
+
 		// returns std::array of any_wrapper's
 		// of the same type T
 		template <
@@ -208,64 +152,13 @@ namespace dbj_samples {
 		};
 
 	} // any
-} // dbj
+} // dbj::samples
 
-#if 0
-namespace dbj_samples {
-	// hiden implementation
-	namespace {
-		/* this in essence makes std::any a real usefull container of anything */
-		template <typename T>
-		class Any final {
-			static_assert(!std::is_reference<T>::value, "Do not use a reference type");
-			mutable std::any value{};
-		public:
-			typedef T data_type;
-			typedef Any type ;
+DBJ_TEST_SPACE_OPEN( dbj_any_wrapper_testing )
 
-			Any() {};
-
-			Any(data_type data) : value(data) {	}
-
-			data_type val() const {
-				try {
-					return std::any_cast<data_type>(this->value);
-				}
-				catch (std::bad_any_cast & x) {
-					dbj::trace("function: %s. Exception at %s(%d) [%s]", __FUNCSIG__, __FILE__, __LINE__, x.what());
-					throw dbj::Exception(x.what());
-				}
-			}
-
-			bool empty() const {
-				return !(this->value).has_value();
-			}
-
-		}; // Any
-	} // nspace
-	// the interface is two lambdas
-} // dbj
-#endif
-#ifdef DBJ_TESTING_ONAIR
-namespace dbj_any_wrapper_testing {
-
-	/*
-	template< typename lambada_type >
-	inline auto test_lambada ( const char * expression , lambada_type && lambada )
-	{
-		auto anything = lambada();
-		dbj::print( 
-			"\n- expression -> ", expression, 
-			"\n\t- rezult type-> ", typeid(anything).name(), 
-			"\n\t\t- value -> ", anything);
-		return anything;
-	};
-
-#define DBJ_TEST_ATOM(x) test_lambada( DBJ_EXPAND(x), [&] { return (x);} ) 
-*/
 	DBJ_TEST_UNIT(": dbj any wrapper ") {
 
-		using namespace dbj_samples;
+		using namespace dbj::samples;
 		try {
 			int int_arr[]{42};
 			auto any_0 = DBJ_TEST_ATOM( any::range(int_arr) );
@@ -273,23 +166,19 @@ namespace dbj_any_wrapper_testing {
 
 			// yes can do
 			char word_[] = "Hallo bre!";
-			auto    any_2 = DBJ_TEST_ATOM(dbj_samples::any::make( word_) ) ;
+			auto    any_2 = DBJ_TEST_ATOM(any::make( word_) ) ;
 			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
 
 			auto  v1 = any_2; // copy wrapper to wrapper
 			auto  v2 = DBJ_TEST_ATOM( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
-			using namespace dbj::win::con;
-			dbj::print(
-				painter_command::bright_red,
-				__FUNCSIG__ "  Unknown exception caught! ",
-				painter_command::text_color_reset
-				);
+			dbj::print( dbj::Exception(
+				__FUNCSIG__ "  Unknown exception caught! "
+				));
 		}
 	}
-}
-#endif
-#pragma endregion 
+DBJ_TEST_SPACE_CLOSE(dbj_any_wrapper_testing)
+
 /*
 Copyright 2017 by dbj@dbj.org
 

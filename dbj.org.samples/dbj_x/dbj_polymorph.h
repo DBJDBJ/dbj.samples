@@ -92,7 +92,7 @@ namespace sean_parent {
 			draw(document, cout, 0);     
 		});     
 		current(h)[1] = string("World");     
-		current(h).emplace_back(current(h));     
+		current(h).emplace_back(current(h)[1]);     
 		current(h).emplace_back(my_class_t());
 	}
 	

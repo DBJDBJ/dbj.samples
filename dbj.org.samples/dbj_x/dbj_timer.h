@@ -175,7 +175,7 @@ namespace dbj_samples {
 		
 		the_timer(itimer_pointer engine_)
 	    {
-			imp_ = engine_;
+			imp_ = std::move(engine_);
 		}
 
 		the_timer() = default;

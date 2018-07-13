@@ -5,6 +5,12 @@
 
 DBJ_TEST_SPACE_OPEN(narf)
 
+template<typename T>
+struct actual final {
+	using type = std::decay_t< std::remove_pointer_t< T > >;
+	constexpr static T value{};
+};
+
 DBJ_TEST_UNIT("dbj narf")
 {
  auto DBJ_UNUSED(naf) = 
@@ -13,13 +19,13 @@ DBJ_TEST_UNIT("dbj narf")
 			{ 1,2,3 }
 		)
 	);
+
+ DBJ_TEST_ATOM(actual< decltype(naf) >::value);
+
 }
 
 DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
-	auto vof = [](auto t) {
-		using actual_type = std::decay_t< std::remove_pointer_t< decltype(t) > >;
-		return static_cast<actual_type>(t);
-	};
+
 
 	auto narf_ = dbj::narf::make({ "A B C NARF" });
 	decltype(auto) narf_arf_ = dbj::narf::data(narf_);

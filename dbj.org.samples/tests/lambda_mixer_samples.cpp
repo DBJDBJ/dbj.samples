@@ -110,7 +110,7 @@ inline auto car_assembly_line = [](auto engine_, auto wheels_)
 		auto tag() { return front.type_tag(wheels, engine); }
 		auto knobs() { return 4 * front.knobs_required(wheels); };
 
-		operator std::string() { return this->tag(); }
+		operator std::string () { return this->tag(); }
 	};
 
 	return finished_car_{};
@@ -119,10 +119,10 @@ inline auto car_assembly_line = [](auto engine_, auto wheels_)
 DBJ_TEST_UNIT(" polymorph but not inheritor")
 {
 	// obtain the car
-	auto diesel_car = DBJ_TEST_ATOM(
+	auto diesel_car = (
 		car_assembly_line(engines::diesel{}, wheels::alloy{})
 	);
-	auto petrol_car = DBJ_TEST_ATOM(
+	auto petrol_car = (
 		car_assembly_line(engines::petrol{}, wheels::chrome_vanadium{})
 	);
 
