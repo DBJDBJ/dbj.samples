@@ -16,7 +16,7 @@ namespace dbj_samples::nuclear {
 
 		template<typename T>
 		auto  nested_init_list_args ( const std::initializer_list< std::initializer_list< T >> & arg ) {
-			dbj::print("\n", __func__);
+			dbj::console::print("\n", __func__);
 			// DBJ_TEST_ATOM(arg);
 		};
 

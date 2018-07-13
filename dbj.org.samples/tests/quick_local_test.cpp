@@ -80,7 +80,7 @@ namespace {
 		max4 = maxArray(array2[0], 6);
 		max5 = maxArray(array1, -4);
 
-		dbj::print("\nMaximums are ", max1, ", ", max2, ", ", max3
+		dbj::console::print("\nMaximums are ", max1, ", ", max2, ", ", max3
 			, ", ", max4, ", ", max5);
 
 		return 0;
@@ -151,7 +151,7 @@ namespace {
 
 	inline auto tv = [](const char prompt[] = "", const auto & value) -> void {
 		// std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
-		dbj::print(prompt);  
+		dbj::console::print(prompt);  
 		auto rez[[maybe_unused]] = DBJ_TEST_ATOM(value);
 	};
 

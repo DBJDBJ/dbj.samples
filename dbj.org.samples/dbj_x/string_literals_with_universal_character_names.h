@@ -8,7 +8,7 @@ namespace {
 
 	auto out = [&]( auto s_) {
 		// std::cout << std::endl << s_ << std::endl;
-		dbj::print("\n", s_ , "\n");
+		dbj::console::print("\n", s_ , "\n");
 		return out ;
 	};
 	/* */

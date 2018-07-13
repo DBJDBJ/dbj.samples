@@ -31,7 +31,7 @@ int main(int argc, char* argv[], char *envp[])
 		program_start(argc, argv, envp);
 	} catch (...) {
 		using namespace dbj::win::con;
-		dbj::print(
+		dbj::console::print(
 		painter_command::bright_red,
 		__FUNCSIG__ "  Unknown exception caught! ",
 		painter_command::text_color_reset
@@ -61,7 +61,7 @@ static bool fundamental(
 		size_t j{ 0 };
 		for (auto && e : x)
 		{
-			dbj::print("\n [", j++, L"] : ", e);
+			dbj::console::print("\n [", j++, L"] : ", e);
 		}
 		return "done";
 	};

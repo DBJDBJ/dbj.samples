@@ -172,7 +172,7 @@ DBJ_TEST_SPACE_OPEN( dbj_any_wrapper_testing )
 			auto  v1 = any_2; // copy wrapper to wrapper
 			auto  v2 = DBJ_TEST_ATOM( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
-			dbj::print( dbj::Exception(
+			dbj::console::print( dbj::Exception(
 				__FUNCSIG__ "  Unknown exception caught! "
 				));
 		}
