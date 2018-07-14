@@ -169,7 +169,7 @@ typedef enum class CODE : UINT {
 
 	DBJ_TEST_UNIT(": inheritance") {
 
-		constexpr dbj::c_line<80, '-'> Line80; // compile time
+		const dbj::c_line<80, '-'> Line80; // compile time
 
 		auto measure = [&Line80](auto object, const char * msg = "") -> void {
 			dbj::console::print("\n", Line80,
