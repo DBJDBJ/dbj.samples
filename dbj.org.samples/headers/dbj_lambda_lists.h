@@ -93,16 +93,16 @@ DBJ_TEST_UNIT(": dbj lambda lists") {
 	auto my_tail = ll::tail(my_list); // returns list('2', "3", false, 13.0f)
 	/*
 	after playing with lambda lists we print what we need to print
-	we use tuple() because dbj::console::print() knows how to print touples
+	we use tuple() because dbj::log::print() knows how to print touples
 	but not lambda lists
 	*/
-	dbj::console::print("\nllist    : ", ll::tuple(my_list));
-	dbj::console::print("\nIt's head: ", ll::tuple(my_head));
-	dbj::console::print("\nIt's tail: ", ll::tuple(my_tail));
+	dbj::log::print("\nllist    : ", ll::tuple(my_list));
+	dbj::log::print("\nIt's head: ", ll::tuple(my_head));
+	dbj::log::print("\nIt's tail: ", ll::tuple(my_tail));
 
-	 dbj::console::print("\nLength of llist --> ", DBJ_NV(ll::length(my_list)) );
+	 dbj::log::print("\nLength of llist --> ", DBJ_NV(ll::length(my_list)) );
 
-	 dbj::console::print("\n\ndbj::print can print pairs too, here is one: ");
+	 dbj::log::print("\n\ndbj::print can print pairs too, here is one: ");
 
 	 auto pofs = DBJ_TEST_ATOM (
 		 std::make_pair("Pair of ", " strings ")

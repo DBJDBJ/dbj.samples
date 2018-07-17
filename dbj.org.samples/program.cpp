@@ -29,55 +29,17 @@ int main(int argc, char* argv[], char *envp[])
 {
 	try {
 		program_start(argc, argv, envp);
-	} catch (...) {
-		using namespace dbj::win::con;
-		dbj::console::print(
-		painter_command::bright_red,
-		__FUNCSIG__ "  Unknown exception caught! ",
-		painter_command::text_color_reset
+	}
+	catch (...) {
+		using namespace dbj::console;
+		dbj::log::print(
+			painter_command::bright_red,
+			__FUNCSIG__ "  Unknown exception caught! ",
+			painter_command::text_color_reset
 		);
 	}
+		dbj::log::instance().flush();
 	return  EXIT_SUCCESS;
 }
 
 #pragma warning( pop ) // 4100
-
-#if 0
-
-static dbj::c_line<80, '-'> L80;
-
-static bool fundamental(
-	const int argc, const wchar_t *argv[], const wchar_t *envp[])
-{
-	using namespace std;
-
-	auto print = [&](auto & x)
-	{
-		DBJ_TEST_ATOM(x);
-		using x_type = remove_reference_t< decltype(x) >;
-		static_assert(
-			is_array<x_type>(), "argument must be an native array reference"
-			);
-		size_t j{ 0 };
-		for (auto && e : x)
-		{
-			dbj::console::print("\n [", j++, L"] : ", e);
-		}
-		return "done";
-	};
-
-	DBJ_TEST_ATOM(argv[0]);
-	// pointer to array
-	typedef  const wchar_t *(*ARP)[1];
-	// ref to array
-	typedef  const wchar_t *(&ARF)[1];
-	// output is 
-	// just the first letter of the
-	// full path
-	DBJ_TEST_ATOM(print(*(ARP)(argv)));
-	// output is 
-	// garbage
-	DBJ_TEST_ATOM(print((ARF)(argv)));
-	return true;
-}
-#endif

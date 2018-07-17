@@ -80,7 +80,7 @@ namespace {
 		max4 = maxArray(array2[0], 6);
 		max5 = maxArray(array1, -4);
 
-		dbj::console::print("\nMaximums are ", max1, ", ", max2, ", ", max3
+		dbj::log::print("\nMaximums are ", max1, ", ", max2, ", ", max3
 			, ", ", max4, ", ", max5);
 
 		return 0;
@@ -136,7 +136,7 @@ namespace {
 		inline auto  is_required_type = [](const auto & v_ = 0) constexpr -> bool
 		{
 			using T = std::decay_t< decltype(v_) >;
-			return std::is_same<T, RQ>() ;
+			return std::is_same<T, RQ>();
 		};
 
 
@@ -151,7 +151,7 @@ namespace {
 
 	inline auto tv = [](const char prompt[] = "", const auto & value) -> void {
 		// std::cout << prompt << "\ntype:\t" << typeid(decltype(value)).name() << "\nvalue:\t" << value;
-		dbj::console::print(prompt);  
+		dbj::log::print(prompt);
 		auto rez[[maybe_unused]] = DBJ_TEST_ATOM(value);
 	};
 
@@ -256,35 +256,8 @@ namespace {
 		auto[x, y] = mid_.data();
 	}
 
-#ifdef DBJ_TESTING_ONAIR
-	static void quick_local_tests()
-	{
-		limit_on_type();
+#if 0
 
-		// call with 'llegal' type
-		std::uint64_t u42 = 42u;
-		auto double_value_2 = DBJ_TEST_ATOM( make_double_value(u42) );
-
-		// call with 'illegal' types
-		auto double_value = DBJ_TEST_ATOM( make_double_value(42u) );
-
-		std::string one{ "--ONE--" };
-		auto double_value_3 = DBJ_TEST_ATOM( make_double_value(one) );
-
-		test_vector_to_touple();
-
-		auto r1 = DBJ_TEST_ATOM(dbj::sign(+2.0f));
-		auto r2 = DBJ_TEST_ATOM(dbj::sign(-2.0f));
-		auto r3 = DBJ_TEST_ATOM(dbj::sign(0.0f));
-		auto r4 = DBJ_TEST_ATOM(std::signbit(+42.0f));
-
-		// int I = magic_int_float_transformation(42.42f);
-		// Illustrating_the_use_of_Arrays_and_Functions();
-	}
-
-	DBJ_TEST_UNIT(": quick local tests ") {
-		quick_local_tests();
-	}
-
-} // namespace
 #endif
+
+}

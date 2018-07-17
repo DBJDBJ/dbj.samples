@@ -178,7 +178,7 @@ DBJ_TEST_UNIT(": dbj any wrapper ") {
 	display_thingy(Thingy2());
 }
 
-DBJ_TEST_SPACE_CLOSE(dbj_polymorph)
+DBJ_TEST_SPACE_CLOSE
 
 #endif
 

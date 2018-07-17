@@ -236,7 +236,7 @@ namespace tree_testing {
 		Transformer<const char *> node_data;
 
 		auto printer = [&node_data](auto & n) -> bool {
-			dbj::console::print("\n(name: '", n.name, "', \tuid:", n.uid, ", \tdata: ", node_data(n.data) , ")");
+			dbj::log::print("\n(name: '", n.name, "', \tuid:", n.uid, ", \tdata: ", node_data(n.data) , ")");
 			return true;
 		};
 
@@ -247,11 +247,11 @@ namespace tree_testing {
 
 			dbj::preorder(root, to_right );
 
-			 dbj::console::print("\n\nPreorder");
+			 dbj::log::print("\n\nPreorder");
 			 dbj::preorder(root, printer );
-			 dbj::console::print("\n\nInorder");
+			 dbj::log::print("\n\nInorder");
 			 dbj::inorder(root, printer);
-			 dbj::console::print("\n\nPostorder");
+			 dbj::log::print("\n\nPostorder");
 			 dbj::postorder(root, printer);
 	}
 }

@@ -2,7 +2,7 @@
 
 #include <any>
 #include <variant>
-#include <dbj_testing.h>
+#include <dbj++.h>
 
 
 namespace dbj::samples {
@@ -161,23 +161,23 @@ DBJ_TEST_SPACE_OPEN( dbj_any_wrapper_testing )
 		using namespace dbj::samples;
 		try {
 			int int_arr[]{42};
-			auto any_0 = DBJ_TEST_ATOM( any::range(int_arr) );
+			auto any_0 = ( any::range(int_arr) );
 			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
 
 			// yes can do
 			char word_[] = "Hallo bre!";
-			auto    any_2 = DBJ_TEST_ATOM(any::make( word_) ) ;
+			auto    any_2 = ( any::make( word_) ) ;
 			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
 
 			auto  v1 = any_2; // copy wrapper to wrapper
-			auto  v2 = DBJ_TEST_ATOM( v1.get() ); // wrapper to value and so on
+			auto  v2 = ( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
-			dbj::console::print( dbj::Exception(
+			dbj::log::print( dbj::Exception(
 				__FUNCSIG__ "  Unknown exception caught! "
 				));
 		}
 	}
-DBJ_TEST_SPACE_CLOSE(dbj_any_wrapper_testing)
+DBJ_TEST_SPACE_CLOSE
 
 /*
 Copyright 2017 by dbj@dbj.org

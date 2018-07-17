@@ -46,4 +46,4 @@ DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
 }
 
 
-DBJ_TEST_SPACE_CLOSE(narf)
+DBJ_TEST_SPACE_CLOSE

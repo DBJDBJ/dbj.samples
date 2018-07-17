@@ -49,5 +49,5 @@ DBJ_TEST_UNIT(" dbj container traits tests")
 }
 
 
-DBJ_TEST_SPACE_CLOSE(dbj_traits_testing)
+DBJ_TEST_SPACE_CLOSE
 

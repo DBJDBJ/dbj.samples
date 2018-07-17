@@ -139,13 +139,13 @@ DBJ_TEST_UNIT(" polymorph but not inheritor")
 
 	auto same = DBJ_TEST_ATOM(ht1 == ht2);
 
-	dbj::console::print("\ndiesel and petrol car are ");
+	dbj::log::print("\ndiesel and petrol car are ");
 
 	if (!std::is_same_v< decltype(diesel_car), decltype(petrol_car) >) {
-		dbj::console::print(" NOT ");
+		dbj::log::print(" NOT ");
 	}
 
-	dbj::console::print(" the same type...");
+	dbj::log::print(" the same type...");
 
 	// problem?
 }
@@ -168,4 +168,4 @@ DBJ_TEST_UNIT(" dbj swappable engines ") {
 	// and it is: f1 = f2;
 }
 
-DBJ_TEST_SPACE_CLOSE(lambada_mixer)
+DBJ_TEST_SPACE_CLOSE

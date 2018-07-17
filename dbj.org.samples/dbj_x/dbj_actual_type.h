@@ -83,16 +83,16 @@ namespace {
 
 	auto lambada = []( auto arg ) {
 		using naive_type = decltype(arg);
-		dbj::console::print("\nNaive\n", dbj::show_actual_type<naive_type>());
+		dbj::log::print("\nNaive\n", dbj::show_actual_type<naive_type>());
 		using the_type = dbj::actual_type_t< naive_type >;
-		dbj::console::print("\nActual\n", dbj::show_actual_type<the_type>());
+		dbj::log::print("\nActual\n", dbj::show_actual_type<the_type>());
 	};
 
 	auto lambada_complicada = []( const auto & arg) {
 		using naive_type = decltype(arg);
-		dbj::console::print("\nNaive\n", dbj::show_actual_type<naive_type>());
+		dbj::log::print("\nNaive\n", dbj::show_actual_type<naive_type>());
 		using the_type = dbj::actual_type_t< naive_type >;
-		dbj::console::print("\nActual\n", dbj::show_actual_type<the_type>());
+		dbj::log::print("\nActual\n", dbj::show_actual_type<the_type>());
 	};
 
 
@@ -100,13 +100,13 @@ namespace {
 
 		const char * argv[]{ "ONE", "TWO", "THREE" };
 
-		dbj::console::print("\n\n---------------------------------\nNow Calling lambada\n");
+		dbj::log::print("\n\n---------------------------------\nNow Calling lambada\n");
 		lambada(argv);
-		dbj::console::print("\n");
+		dbj::log::print("\n");
 
-		dbj::console::print("\n\n---------------------------------\nNow Calling lambada complicada\n");
+		dbj::log::print("\n\n---------------------------------\nNow Calling lambada complicada\n");
 		lambada_complicada(argv);
-		dbj::console::print("\n");
+		dbj::log::print("\n");
 
 	}
 }

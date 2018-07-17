@@ -13,7 +13,7 @@ explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 namespace dbj_samples {
 	namespace philology {
 		using std::string;
-		using dbj::console::print;
+		using dbj::log::print;
 		/*
 		 interfaces to writing and language policies
 		*/

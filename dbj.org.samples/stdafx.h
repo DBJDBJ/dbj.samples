@@ -15,8 +15,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-#define DBJ_TESTING_ONAIR
+// #define DBJ_TESTING_ONAIR
 #include <dbj++.h> 
+
 #ifdef DBJ_TESTING_ONAIR
 #include <dbj++tests.h> 
 #endif

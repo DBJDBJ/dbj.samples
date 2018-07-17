@@ -68,14 +68,14 @@ namespace dbj_samples::ct {
 
 		const char* concat = (str_hello + str_world).chars;
 
-		dbj::console::print("runtime concat: " , str_hello.chars , str_world.chars , "\n <=> \n",
+		dbj::log::print("runtime concat: " , str_hello.chars , str_world.chars , "\n <=> \n",
 		"compile concat: " , concat , "\n");
 
 		using namespace std::literals::string_literals;
 
 		auto process = []( auto arg ) {
 
-			dbj::console::print("\n",__func__, "\nreceived one argument of type: ", typeid(arg).name());
+			dbj::log::print("\n",__func__, "\nreceived one argument of type: ", typeid(arg).name());
 		};
 
 

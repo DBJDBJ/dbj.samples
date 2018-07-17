@@ -23,8 +23,8 @@ DBJ_TEST_UNIT(" GetGeoInfoEx")
 	auto DBJ_UNUSED(us_data) = dbj::win32::geo_info(L"US");
 	auto DBJ_UNUSED(rs_data) = dbj::win32::geo_info(L"RS");
 
-	dbj::console::print(us_data);
-	dbj::console::print(rs_data);
+	dbj::log::print(us_data);
+	dbj::log::print(rs_data);
 }
 
 // return the default instance of the
@@ -53,7 +53,7 @@ auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) 
 	char address_str[128]{0};
 	int retval = std::snprintf(address_str, 128, "%p", this_ptr);
 	_ASSERTE( retval > 0);
-	dbj::console::print("\n[", address_str, "]\t", prompt );
+	dbj::log::print("\n[", address_str, "]\t", prompt );
 };
 
 DBJ_TEST_UNIT(" dbj fundamental issues ") {
@@ -110,9 +110,9 @@ DBJ_TEST_UNIT(" timers ") {
 		dbj_samples::sleep_seconds(1);
 		return DBJ_TEST_ATOM(timer_.elapsed());
 	};
-	dbj::console::print("\nWIN32 Timer");
+	dbj::log::print("\nWIN32 Timer");
 	auto elaps_1 = test(dbj_samples::timer_kind::win32 );
-	dbj::console::print("\nModern Timer");
+	dbj::log::print("\nModern Timer");
 	auto elaps_2 = test(dbj_samples::timer_kind::modern );
 
 	_ASSERTE( elaps_1 == elaps_2 );
@@ -131,7 +131,7 @@ typedef enum class CODE : UINT {
 		constexpr wchar_t specimen[] =
 		{ L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd" };
 
-		dbj::console::print("\n", specimen, "\n");
+		dbj::log::print("\n", specimen, "\n");
 
 		// 1252u or 65001u
 		if (::IsValidCodePage(65001u)) {
@@ -169,10 +169,10 @@ typedef enum class CODE : UINT {
 
 	DBJ_TEST_UNIT(": inheritance") {
 
-		const dbj::c_line<80, '-'> Line80; // compile time
+		static  dbj::c_line<80, '-'> Line80; // compile time
 
-		auto measure = [&Line80](auto object, const char * msg = "") -> void {
-			dbj::console::print("\n", Line80,
+		auto measure = [&](auto object, const char * msg = "") -> void {
+			dbj::log::print("\n", Line80,
 				"\n", msg, "\nType name:\t", typeid(object).name(),
 				"\nSpace requirements in bytes",
 				"\nType:\t\t", sizeof(decltype(object)),
@@ -184,14 +184,14 @@ typedef enum class CODE : UINT {
 		dbj_samples::philology::HelloWorld<> hello{};
 		dbj_samples::philology::HelloWorld2<> hello2{};
 
-		dbj::console::print("\nBEFORE RUN\n");
+		dbj::log::print("\nBEFORE RUN\n");
 		measure(hello);
 		measure(hello2);
-		dbj::console::print("\n", Line80);
+		dbj::log::print("\n", Line80);
 		hello.run("\nHelloWorld -- Default policies");
 		hello2.run("\nHelloWorld2 -- No inheritance");
-		dbj::console::print("\n", Line80);
-		dbj::console::print("\nAFTER RUN\n");
+		dbj::log::print("\n", Line80);
+		dbj::log::print("\nAFTER RUN\n");
 		measure(hello);
 		measure(hello2);
 	};
@@ -208,13 +208,14 @@ typedef enum class CODE : UINT {
 
 	DBJ_TEST_UNIT(": tokenizer_test") {
 
+		using dbj::log::print;
 		const char * sentence = "abra % ka % dabra";
-		dbj_samples::fm::tokenizer tok(sentence, "%");
-		dbj::console::print("Input sentence: ", sentence);
-		for (auto w : tok) {
-			dbj::console::print("\ntok[", w, "] = [", tok[w], "]");
-		}
-		dbj::console::print("\n");
+		//dbj_samples::fm::tokenizer tok(sentence, "%");
+		print("Input sentence: ", sentence);
+		//for (auto w : tok) {
+		//	print("\ntok[", w, "] = [", tok[w], "]");
+		//}
+		print("\n");
 	}
 
-DBJ_TEST_SPACE_CLOSE(local_tests)
+DBJ_TEST_SPACE_CLOSE
