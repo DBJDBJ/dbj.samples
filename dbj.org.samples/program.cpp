@@ -18,6 +18,7 @@ static void program_start (
 	const wchar_t *envp[]
 ) {
 	dbj::testing::execute(argc, argv, envp);
+	dbj::log::flush();
 }
 
 #ifdef UNICODE
@@ -38,7 +39,6 @@ int main(int argc, char* argv[], char *envp[])
 			painter_command::text_color_reset
 		);
 	}
-		dbj::log::instance().flush();
 	return  EXIT_SUCCESS;
 }
 

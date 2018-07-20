@@ -18,6 +18,31 @@
 
 DBJ_TEST_SPACE_OPEN(local_tests)
 
+DBJ_TEST_UNIT(" array stays array")
+{
+	auto array_analyzer = []( auto specimen ) {
+
+		using T = decltype(specimen);
+		
+		auto name = typeid(T).name();
+		auto is_array = std::is_array_v<T>;
+		auto number_of_dimension = std::rank_v<T>;
+		auto first_extent = std::extent_v<T>;
+
+		std::printf("\n%s is %s", name, (is_array ? "Array" : "Not an Array"));
+
+		if (is_array == true) {
+			std::printf("\n%-20s number of dimension is %zu", name, number_of_dimension );
+			std::printf("\n%-20s size along the first dimension is %zu", name, first_extent);
+		}
+	};
+
+	int ia[]{ 1,2,3,4,5,6,7,8,9,0 };
+
+		array_analyzer(ia);
+		array_analyzer(42);
+}
+
 DBJ_TEST_UNIT(" GetGeoInfoEx")
 {
 	auto DBJ_UNUSED(us_data) = dbj::win32::geo_info(L"US");
