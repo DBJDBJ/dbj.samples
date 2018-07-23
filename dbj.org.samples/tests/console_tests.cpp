@@ -3,76 +3,100 @@
 
 #include "../stdafx.h"
 
-static char space[]{ " " };
-static char line[]{ "------------------------------------------------------------" };
-
-
-template< typename T> 
-struct dbj_type final 
-{
-	template< typename TT>
-	struct descriptor final 
-	{
-		using type = TT;
-		constexpr   static inline const bool	is_pointer = std::is_pointer_v<TT>;
-		constexpr 	static inline const bool	is_array = std::is_array_v<TT>;
-		constexpr 	static inline const size_t  number_of_dimension = std::rank_v<TT>;
-		constexpr 	static inline const size_t  first_extent = std::extent_v<TT>;
-	};
-
-	using def_type = descriptor<T>;
-	using actual_type = descriptor<std::remove_cv_t< std::remove_pointer_t<T> >>;
-	using under_type = descriptor<typename std::remove_all_extents<T>::type>;
-
-	template<typename dbj_type>
-	static std::string to_string( void ) noexcept
-	{
-		return 
-		std::string{ "\ndefault type" } + 
-		std::string { dbj_type::descriptor_to_string<dbj_type::def_type>( ) } +
-		std::string{ "\nactual type" } +
-		std::string { dbj_type::descriptor_to_string<dbj_type::actual_type>() } +
-		std::string{ "\nunderlying type" } +
-		std::string { dbj_type::descriptor_to_string<dbj_type::under_type>() };
-	}
-
-	template< typename descriptor >
-	static std::string descriptor_to_string() noexcept
-	{
-		return DBJ::printf_to_buffer(
-			"\n%-20s" 
-			"\n%-20s : %s / %s"
-			"\n%-20s : %s -- %zu"
-			"\n%-20s : %s -- %zu",
-			DBJ_TYPENAME(descriptor::type),
-			space, (descriptor::is_pointer ? "Pointer" : "NOT Pointer"), (descriptor::is_array ? "Array" : "NOT Array"),
-			space, "dimensions if array", descriptor::number_of_dimension,
-			space, "dimension[0] size if array", descriptor::first_extent
-		);
-	}
-};
-
-#define DBJ_TYPE_REPORT_FUNCSIG(CON) \
-		printf_to_console(CON, "\n%-20s : %s", "Function", __FUNCSIG__);\
-
-template<typename T>
-auto  dbj_type_report = []( dbj::console::IConsole * CON = nullptr )
-{ 
-		printf_to_console(CON, "\n%s", T::to_string<T>().c_str() );
-};
-
 /// <summary>
 /// out overloads for outputing to IConsole instance
 /// </summary>
 namespace dbj::console {
-	/*	the one and only, only the lonely ...etc ...	*/
+
+inline Printer printer{ & console_ };
+
+#ifdef DBJ_TYPE_INSTRUMENTS
+#define DBJ_TYPE_REPORT_FUNCSIG	dbj::console::printer.printf("\n\n%-20s : %s\n%-20s :-> ", "Function", __FUNCSIG__, " ")
+#else
+#define DBJ_TYPE_REPORT_FUNCSIG __noop
+#endif
+template<typename T>
+auto  dbj_type_report = []( )
+{ 
+	using namespace dbj::tt;
+	printer.printf("\n%s", T::to_string<T>().c_str() );
+};
+
+/// <summary>
+/// in here we essentially mimic the standard C++ 
+/// type hierarchy as described in here
+/// https://en.cppreference.com/w/cpp/language/type
+/// 
+/// the one and only, only the lonely ...etc ...
+/// </summary>
 template <typename T>
 void out(T specimen)
 { 
-	using argument_type = dbj_type<T> ;
-	printf_to_console(&console_, "\n%s", line);
-	DBJ_TYPE_REPORT_FUNCSIG(&console_);
-	dbj_type_report<argument_type>( &console_ );
+	using actual = dbj::tt::actual<T>;
+	// using namespace dbj::tt;
+	// using argument_instrument = dbj::tt::instrument<T> ;
+#ifdef DBJ_TYPE_INSTRUMENTS
+	printer.printf("\n%-20s", "Master dispatcher");
+	DBJ_TYPE_REPORT_FUNCSIG ;
+#endif
+	// dbj_type_report<argument_type>( &console_ );
+
+	if constexpr( std::is_fundamental_v< actual::unqualified_type > ) {
+
+		if constexpr(std::is_arithmetic_v< actual::unqualified_type > ) {
+			 if constexpr(std::is_floating_point_v< actual::unqualified_type >) {
+					printer.printf("\nunhandled floating point type of argument?");
+			} else if constexpr(std::is_integral_v< actual::unqualified_type >) {
+				printer.printf("\nunhandled integral type of argument?");
+			}
+		}
+		else {
+			printer.printf("\nunhandled fundamental type of argument?");
+		}
+	} 
+	else if constexpr ( std::is_compound_v< actual::unqualified_type > ) {
+
+		if constexpr (std::is_pointer_v< actual::unqualified_type >) {
+
+			if constexpr (dbj::is_std_char_v<actual::not_ptr_type>) {
+				// pointer to std char, aka string literal
+				if constexpr (dbj::is_same_v<actual::not_ptr_type, char >) { printer.printf("%s", specimen ) ; }
+				else
+				if constexpr (dbj::is_same_v<actual::not_ptr_type, wchar_t >) { printer.printf(L"%s", specimen); }
+				else { printer.printf("unhandled string literal character type", specimen); }
+			}
+			else {
+				// just a pointer, so print it's address
+				printer.printf("%p", specimen );
+			}
+		}
+		else if constexpr (std::is_member_pointer_v< actual::unqualified_type >) {
+			// std::is_member_object_pointer
+			// std::is_member_function_pointer
+			printer.printf("%p", specimen);
+		}
+		else if constexpr (std::is_array_v< actual::unqualified_type >) {
+			printer.printf("\nunhandled array type");
+		}
+		else if constexpr (std::is_function_v< actual::unqualified_type >) {
+			printer.printf("\nunhandled function type");
+		}
+		else if constexpr (std::is_enum_v< actual::unqualified_type >) {
+			printer.printf("\nunhandled enum type");
+		}
+		else if constexpr (std::is_class_v< actual::unqualified_type >) {
+			printer.printf("\nunhandled class type");
+		}
+		else if constexpr (std::is_union_v< actual::unqualified_type >) {
+			printer.printf("\nunhandled union type");
+		}
+		else {
+			printer.printf("\nunhandled compound type?");
+		}
+	}
+	else {
+		printer.printf("\nunhandled argument type?");
+	}
 }
 
 // template <typename T> void out( const T * specimen){	DBJ_TYPE_REPORT(&console_, decltype(specimen)); }
@@ -80,67 +104,206 @@ void out(T specimen)
 	template <typename T, size_t N>
 	void out(T(&native_array)[N])
 	{
-		using argument_type = dbj_type<decltype(native_array)>;
-		printf_to_console(&console_, "\n%s", line);
-		DBJ_TYPE_REPORT_FUNCSIG(&console_);
-		dbj_type_report<argument_type>( &console_);
-		printf_to_console(&console_, "\n");
+		DBJ_TYPE_REPORT_FUNCSIG;
 
 		if constexpr ( std::is_same_v<std::remove_cv_t<T>, char > ) {
-			printf_to_console(&console_, "%-20s : %s", space, native_array);
+			printer.printf("%s", native_array);
 		}
 		else
 		if constexpr (std::is_same_v<std::remove_cv_t<T>, wchar_t >) {
-			printf_to_console(&console_, L"%-20S : %s", space, native_array);
+			printer.printf(L"%s", native_array);
 		}
 		else
 		if constexpr (std::is_integral_v<T>) {
-			printf_to_console(&console_, "%-20s : {", space );
+			printer.printf(" {");
 			for (auto && elem : native_array) {
-				printf_to_console(&console_, " %d ", elem);
+				// printer.printf(" %d ", elem);
+				out(elem);
 			}
-			printf_to_console(&console_, "} ");
+			printer.printf("} ");
 		}
 	}
 
 	template <typename T, size_t N>
-	void out( T(*native_array)[N])
+	inline void out( T(*native_array)[N])
 	{
-		printf_to_console(&console_, "\n%s", line);
-		DBJ_TYPE_REPORT_FUNCSIG(&console_);
+		DBJ_TYPE_REPORT_FUNCSIG;
 		out<T,N>(*native_array);
 	}
+
+	// fundamental types
+
+	template<> inline void out<nullptr_t>(nullptr_t ) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("null");
+	}
+	// fundamental - floating point types
+	template<> inline void out<float>(float fv) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%f", fv);
+	}
+	
+	template<> inline void out<double>(double fv) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%f", fv);
+	}
+
+	template<> inline void out<long double>(long double fv) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%f", fv);
+	}
+
+	// fundamental - integral types
+	template<> inline void out<bool>(bool bv) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%s", (bv ? "true" : "false"));
+	}
+
+	// char types are integral types too
+	template<> inline void out<char>(char val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+	template<> inline void out<signed char>(signed char val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+	template<> inline void out<unsigned char>(unsigned char val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+	template<> inline void out<wchar_t>(wchar_t val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+	template<> inline void out<char16_t>(char16_t val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+	template<> inline void out<char32_t>(char32_t val) {
+		DBJ_TYPE_REPORT_FUNCSIG;
+		printer.printf("%c", val);
+	}
+
+/// <summary>
+/// signed integer types (short int, int, long int, long long int);
+/// </summary>
+	template<> inline void out<int>(int val) {	DBJ_TYPE_REPORT_FUNCSIG;	printer.printf("%d", val);	}
+	template<> inline void out<short int>(short int val) {	DBJ_TYPE_REPORT_FUNCSIG;	printer.printf("%d", val);	}
+	template<> inline void out<long int>(long int val) {	DBJ_TYPE_REPORT_FUNCSIG;	printer.printf("%d", val);	}
+	template<> inline void out<long long int>(long long int val) {	DBJ_TYPE_REPORT_FUNCSIG;	printer.printf("%d", val);	}
+
+/// <summary>
+/// unsigned integer types (unsigned short int, unsigned int, unsigned long int, unsigned long long int);
+/// </summary>
+	template<> inline void out<unsigned short int>(unsigned short int val) { DBJ_TYPE_REPORT_FUNCSIG; printer.printf("%X", val); }
+	template<> inline void out<unsigned int>(unsigned int val) { DBJ_TYPE_REPORT_FUNCSIG; printer.printf("%X", val); }
+	template<> inline void out<unsigned long int>(unsigned long int val) { DBJ_TYPE_REPORT_FUNCSIG; printer.printf("%X", val); }
+	template<> inline void out<unsigned long long int>(unsigned long long int val) { DBJ_TYPE_REPORT_FUNCSIG; printer.printf("%X", val); }
 
 }
 
 // DBJ_TEST_SPACE_OPEN(console)
 
-template<typename T>
-struct actual final {
-	using type = std::remove_cv_t< std::remove_pointer_t< T > >;
-	constexpr inline static const type value{};
-};
+/// <summary>
+/// https://en.cppreference.com/w/cpp/language/types
+/// </summary>
+void fundamental_types_to_console()
+{
+	using dbj::console::out;
+	using namespace std;
+
+	dbj::console::printer.printf("\n");
+	out((nullptr_t) nullptr);
+	dbj::console::printer.printf("\n");
+	out(true);
+
+	// std chars
+	dbj::console::printer.printf("\n");
+	out((signed char) 'X');
+	dbj::console::printer.printf("\n");
+	out((unsigned char) 'X');
+	dbj::console::printer.printf("\n");
+	out((char) 'X');
+	dbj::console::printer.printf("\n");
+	out((wchar_t) 'X');
+	dbj::console::printer.printf("\n");
+	out((char16_t) 'X');
+	dbj::console::printer.printf("\n");
+	out((char32_t) 'X');
+	// integer types
+	dbj::console::printer.printf("\n");
+	out((short    int) 'X');
+	dbj::console::printer.printf("\n");
+	out((unsigned short int) 'X');
+	dbj::console::printer.printf("\n");
+	out((int) 'X');
+	dbj::console::printer.printf("\n");
+	out((unsigned       int) 'X');
+	dbj::console::printer.printf("\n");
+	out((long    int) 'X');
+	dbj::console::printer.printf("\n");
+	out((unsigned long  int) 'X');
+	dbj::console::printer.printf("\n");
+	out((long     long  int) 'X');
+	dbj::console::printer.printf("\n");
+	out((unsigned long  long  int) 'X');
+	// float types
+	dbj::console::printer.printf("\n");
+	out((float) 42.99);
+	dbj::console::printer.printf("\n");
+	out((double) 42.99);
+	dbj::console::printer.printf("\n");
+	out((long double) 42.99);
+	// nan float's
+	dbj::console::printer.printf("\n");
+	out((float)			nanf("1"));
+	dbj::console::printer.printf("\n");
+	out((double)		nan ("1"));
+	dbj::console::printer.printf("\n");
+	out((long double)	nanl ("1"));
+}
+
 
 // DBJ_TEST_UNIT("console")
 void dbj_test_console()
 {
+	fundamental_types_to_console();
+
 	using dbj::console::out;
 
 	using A9 = dbj::arr::ARH<int, 9>;
 
-	// native arrays out
+	dbj::console::printer.printf("\n");
 	out(A9::ARR{ { 1,2,3,4,5,6,7,8,9 } });
+	// native arrays out
+	dbj::console::printer.printf("\n");
 	out(A9::to_arp(A9::ARR{ { 1,2,3,4,5,6,7,8,9 } }));
+	dbj::console::printer.printf("\n");
 	out(A9::to_arf(A9::ARR{ { 1,2,3,4,5,6,7,8,9 } }));
 
 	// pointers out
+	dbj::console::printer.printf("\n");
 	out("R/O string literal");
+	dbj::console::printer.printf("\n");
 	out(std::addressof(dbj::console::out<int>));
 
-	const wchar_t(&& buf)[] { L"ABCDEFGHIJKLMNOPQR" };
+	using wbuff = wchar_t(&&)[];
+
+	const wbuff buf{ L"ABCDEFGHIJKLMNOPQR" };
+
+	dbj::console::printer.printf("\n");
 	out(buf);
+	dbj::console::printer.printf("\n");
 	out(buf[0]);
+	dbj::console::printer.printf("\n");
 	out(&buf[0]);
+	dbj::console::printer.printf("\n");
 	out(*buf);
 
 	// out(dbj::range_to_string(buf));

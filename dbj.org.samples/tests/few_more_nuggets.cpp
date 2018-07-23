@@ -52,7 +52,7 @@ namespace {
 	template<typename T>
 	auto compute( const T & x) {
 		
-		const auto name = dbj::name<T>() ;
+		std::string name{ DBJ_TYPENAME(T) };
 		
 		if constexpr(
 			supportsAPI<T>()
