@@ -116,7 +116,7 @@ inline auto car_assembly_line = [](auto engine_, auto wheels_)
 	return finished_car_{};
 };
 
-DBJ_TEST_UNIT(" polymorph but not inheritor")
+DBJ_TEST_UNIT(_polymorph_but_not_inheritor )
 {
 	// obtain the car
 	auto diesel_car = (
@@ -150,7 +150,7 @@ DBJ_TEST_UNIT(" polymorph but not inheritor")
 	// problem?
 }
 
-DBJ_TEST_UNIT(" dbj swappable engines ") {
+DBJ_TEST_UNIT(_dbj_swappable_engines_) {
 
 	auto car_1 =
 		car_factory::assembly_line(

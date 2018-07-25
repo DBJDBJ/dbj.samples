@@ -77,7 +77,7 @@ namespace dbj_samples {
 } // list 
 } // dbj_samples
 
-DBJ_TEST_UNIT(": dbj lambda lists") {
+DBJ_TEST_UNIT(_dbj_lambda_lists_) {
 
 	using namespace dbj_samples;
 	auto my_list = llist(1, '2', "3", false, 13.0f); 

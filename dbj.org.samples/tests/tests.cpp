@@ -18,7 +18,7 @@
 
 DBJ_TEST_SPACE_OPEN(local_tests)
 
-DBJ_TEST_UNIT(" array stays array")
+DBJ_TEST_UNIT(_array_stays_array)
 {
 	auto array_analyzer = []( auto specimen ) {
 
@@ -43,7 +43,7 @@ DBJ_TEST_UNIT(" array stays array")
 		array_analyzer(42);
 }
 
-DBJ_TEST_UNIT(" GetGeoInfoEx")
+DBJ_TEST_UNIT(_GetGeoInfoEx_)
 {
 	auto DBJ_UNUSED(us_data) = dbj::win32::geo_info(L"US");
 	auto DBJ_UNUSED(rs_data) = dbj::win32::geo_info(L"RS");
@@ -60,7 +60,7 @@ auto maker_of = [&](auto && prototype_)
 	return  []() -> the_type { return  the_type{}; };
 };
 
-DBJ_TEST_UNIT(" Damn! Why I have not thought of this before?! ") {
+DBJ_TEST_UNIT(_Damn_Why_I_have_not_thought_of_this_before_) {
 
 	using namespace std;
 
@@ -81,7 +81,7 @@ auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) 
 	dbj::log::print("\n[", address_str, "]\t", prompt );
 };
 
-DBJ_TEST_UNIT(" dbj fundamental issues ") {
+DBJ_TEST_UNIT(_dbj_fundamental_issues_) {
 	struct X {
 		X() noexcept {
 			reporter("X constructed", this);
@@ -126,7 +126,7 @@ DBJ_TEST_UNIT(" dbj fundamental issues ") {
 }
 
 
-DBJ_TEST_UNIT(" timers ") {
+DBJ_TEST_UNIT(_timers_) {
 
 	auto test = [&](dbj_samples::timer_kind which_ ) {
 		auto timer_ = dbj_samples::create_timer(which_) ;
@@ -150,7 +150,7 @@ typedef enum class CODE : UINT {
 	// page_1201 = 1201   // utf16 big endian?
 } CODE_PAGE;
 
-	DBJ_TEST_UNIT(": famous dbj console ucrt crash")
+	DBJ_TEST_UNIT(_famous_dbj_console_ucrt_crash)
 	{
 		// кошка 日本
 		constexpr wchar_t specimen[] =
@@ -192,7 +192,7 @@ typedef enum class CODE : UINT {
 	}
 #endif
 
-	DBJ_TEST_UNIT(": inheritance") {
+	DBJ_TEST_UNIT(_inheritance_) {
 
 		static  dbj::c_line<80, '-'> Line80; // compile time
 
@@ -221,7 +221,7 @@ typedef enum class CODE : UINT {
 		measure(hello2);
 	};
 
-	DBJ_TEST_UNIT(": documents") {
+	DBJ_TEST_UNIT( _documents_ ) {
 
 		using IOperation = dbj_samples::docops::IOperation;
 		/* OPTIONAL: configure the docops to use online operations
@@ -231,7 +231,7 @@ typedef enum class CODE : UINT {
 		dbj_samples::documents::opendoc(text, "world oyster");
 	}
 
-	DBJ_TEST_UNIT(": tokenizer_test") {
+	DBJ_TEST_UNIT(_tokenizer_test) {
 
 		using dbj::log::print;
 		const char * sentence = "abra % ka % dabra";

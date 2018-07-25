@@ -7,7 +7,7 @@
 
 
 // **********************************************************************************************
-// DBJ_TEST_SPACE_OPEN(console)
+DBJ_TEST_SPACE_OPEN(console_test)
 // **********************************************************************************************
 
 /// <summary>
@@ -88,11 +88,11 @@ void string_tester ( T * init_str_literal)
 		PRN.wchar_to_console(L"\n");
 		out(std_string);
 		PRN.wchar_to_console(L"\n");
-		out(std_string.c_str());
+		out(std_string.data());
 		// straight to the Printer
 		wstring wstr_ = dbj::range_to_wstring(std_string);
 		PRN.wchar_to_console(L"\n");
-		PRN.wchar_to_console(wstr_.c_str());
+		PRN.wchar_to_console(wstr_.data());
 		// straight to the IConsole implementation
 		PRN.wchar_to_console(L"\n");
 		PRN.cons()->out(wstr_.data(), wstr_.data() + wstr_.size());
@@ -100,18 +100,22 @@ void string_tester ( T * init_str_literal)
 
 	if constexpr (dbj::SameTypes<T, char>) {
 		actual_tests(string{ init_str_literal });
+		actual_tests(string_view{ init_str_literal });
 	}
 	else
 		if constexpr (dbj::SameTypes<T, wchar_t>) {
 			actual_tests(wstring{ init_str_literal });
+			actual_tests(wstring_view{ init_str_literal });
 		}
 		else
 			if constexpr (dbj::SameTypes<T, char16_t>) {
 				actual_tests(u16string{ init_str_literal });
+				actual_tests(u16string_view{ init_str_literal });
 			}
 			else
 				if constexpr (dbj::SameTypes<T, char32_t>) {
 					actual_tests(u32string{ init_str_literal });
+					actual_tests(u32string_view{ init_str_literal });
 				}
 				else {
 					DBJ_UNHANDLED_("unknown argument type inside string_tester");
@@ -183,12 +187,13 @@ void compound_types_to_console()
 	PRN.printf("\n");
 	out(std::addressof(out<int>));
 }
-// DBJ_TEST_UNIT("console")
-void dbj_test_console()
+
+DBJ_TEST_UNIT(dbj_console_testing)
+// void dbj_test_console()
 {
 	strings_to_console();
-	// fundamental_types_to_console();
-	// compound_types_to_console();
+	fundamental_types_to_console();
+	compound_types_to_console();
 }
 
-// DBJ_TEST_SPACE_CLOSE
+DBJ_TEST_SPACE_CLOSE

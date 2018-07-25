@@ -8,9 +8,6 @@
 #pragma warning( disable: 4100 )
 // https://msdn.microsoft.com/en-us/library/26kb9fy0.aspx 
 
-extern void dbj_test_console();
-
-
 /// <summary>
 /// just execute all the registered tests
 /// in no particular order
@@ -20,7 +17,6 @@ static void program_start (
 	const wchar_t *argv[], 
 	const wchar_t *envp[]
 ) {
-	dbj_test_console();
 	dbj::testing::execute(argc, argv, envp);
 	dbj::log::flush();
 }

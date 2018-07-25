@@ -156,7 +156,8 @@ namespace dbj::samples {
 
 DBJ_TEST_SPACE_OPEN( dbj_any_wrapper_testing )
 
-	DBJ_TEST_UNIT(": dbj any wrapper ") {
+	DBJ_TEST_UNIT( dbj_any_wrapper) 
+    {
 
 		using namespace dbj::samples;
 		try {

@@ -256,8 +256,4 @@ namespace {
 		auto[x, y] = mid_.data();
 	}
 
-#if 0
-
-#endif
-
 }

@@ -11,7 +11,7 @@ struct actual final {
 	constexpr static T value{};
 };
 
-DBJ_TEST_UNIT("dbj narf")
+DBJ_TEST_UNIT( dbj_narf)
 {
  auto DBJ_UNUSED(naf) = 
     DBJ_TEST_ATOM(
@@ -24,7 +24,7 @@ DBJ_TEST_UNIT("dbj narf")
 
 }
 
-DBJ_TEST_UNIT(" dbj a bit more arh narf dancing") {
+DBJ_TEST_UNIT( a_bit_more_arh_narf_dancing ) {
 
 
 	auto narf_ = dbj::narf::make({ "A B C NARF" });

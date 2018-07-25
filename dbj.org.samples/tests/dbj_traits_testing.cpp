@@ -12,7 +12,7 @@ template<typename T, typename dbj::require_floating<T> = 0>
 inline auto Object(T&& t) { return std::variant<T>(t); }
 
 /*usage*/
-DBJ_TEST_UNIT(" dbj basic traits tests") {
+DBJ_TEST_UNIT(_dbj_basic_traits_tests) {
 
 	DBJ_TEST_ATOM(dbj::is_floating<decltype(42.0f)>());
 	DBJ_TEST_ATOM(dbj::is_integral<decltype(42u)>());
@@ -22,7 +22,7 @@ DBJ_TEST_UNIT(" dbj basic traits tests") {
 	DBJ_TEST_ATOM(Object(42.0f));
 }
 
-DBJ_TEST_UNIT(" dbj container traits tests")
+DBJ_TEST_UNIT( _dbj_container_traits_tests )
 {
 	using namespace std;
 
