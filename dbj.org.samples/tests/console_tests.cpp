@@ -73,8 +73,6 @@ void fundamental_types_to_console()
 template< typename T>
 void string_tester ( T * init_str_literal)
 {
-	using dbj::console::out;
-	using dbj::console::PRN;
 	using namespace std;
 
 	// DBJ_TYPE_REPORT_FUNCSIG;
@@ -84,18 +82,27 @@ void string_tester ( T * init_str_literal)
 		using dbj::console::out;
 		using dbj::console::PRN;
 		using namespace std;
+
+		wstring wstr_ = dbj::range_to_wstring(std_string);
+#if 0 // avoid the print()
 		// print to the out() overloads
 		PRN.wchar_to_console(L"\n");
 		out(std_string);
 		PRN.wchar_to_console(L"\n");
 		out(std_string.data());
 		// straight to the Printer
-		wstring wstr_ = dbj::range_to_wstring(std_string);
+	
 		PRN.wchar_to_console(L"\n");
 		PRN.wchar_to_console(wstr_.data());
 		// straight to the IConsole implementation
 		PRN.wchar_to_console(L"\n");
 		PRN.cons()->out(wstr_.data(), wstr_.data() + wstr_.size());
+#else
+		dbj::console::print( 
+			dbj::console::nl, std_string, dbj::console::nl, std_string.data(), 
+			dbj::console::nl, wstr_.data()
+			);
+#endif
 	};
 
 	if constexpr (dbj::SameTypes<T, char>) {
@@ -154,21 +161,34 @@ void arh_test ( Args ... args)
 	using dbj::console::PRN;
 	using namespace std;
 
-	auto	arg_list = { args ... };
-	using	arg_list_type = decltype(arg_list);
+	if constexpr( 1 > (sizeof... (args))  ) {
+		return;
+	}
+	else 
+	{
+		auto	arg_list = { args ... };
+		using	arg_list_type = decltype(arg_list);
 
-	static_assert(
-		dbj::SameTypes< arh_type::value_type, arg_list_type::value_type >,
-		"dbj::ARH::value_type must be the same to the type of each aggregate init list element"
+		static_assert(
+			dbj::SameTypes< arh_type::value_type, arg_list_type::value_type >,
+			"dbj::ARH::value_type must be the same to the type of each aggregate init list element"
+			);
+#if 0 // avoiding print
+		PRN.char_to_console("\n");
+		out(arh_type::ARR{ { args... } });
+		// native arrays out
+		PRN.char_to_console("\n");
+		out(arh_type::to_arp(arh_type::ARR{ { args... } }));
+		PRN.char_to_console("\n");
+		out(arh_type::to_arf(arh_type::ARR{ { args... } }));
+#else
+		dbj::console::print( 
+			"\n", arh_type::ARR{ { args... } },
+			"\n", arh_type::to_arp(arh_type::ARR{ { args... } }),
+			"\n", arh_type::to_arf(arh_type::ARR{ { args... } })
 		);
-
-	PRN.char_to_console("\n");
-	out(arh_type::ARR{ { args... } });
-	// native arrays out
-	PRN.char_to_console("\n");
-	out(arh_type::to_arp(arh_type::ARR{ { args... } }));
-	PRN.char_to_console("\n");
-	out(arh_type::to_arf(arh_type::ARR{ { args... } }));
+#endif
+	}
 
 };
 
@@ -184,8 +204,7 @@ void compound_types_to_console()
 	// pointers to fundamental types
 	arh_test<const wchar_t *, 3>(L"ONE", L"TWO", L"THREE");
 	// pointers out -- function pointer 
-	PRN.printf("\n");
-	out(std::addressof(out<int>));
+	dbj::console::print("\n", std::addressof( arh_test<int, 9> ));
 }
 
 DBJ_TEST_UNIT(dbj_console_testing)
