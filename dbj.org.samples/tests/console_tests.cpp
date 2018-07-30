@@ -81,6 +81,7 @@ void string_tester ( T * init_str_literal)
 	{
 		using dbj::console::out;
 		using dbj::console::PRN;
+		// using namespace dbj::tt;
 		using namespace std;
 
 		wstring wstr_ = dbj::range_to_wstring(std_string);
@@ -105,22 +106,22 @@ void string_tester ( T * init_str_literal)
 #endif
 	};
 
-	if constexpr (dbj::SameTypes<T, char>) {
+	if constexpr (dbj::tt::same_types <T, char>) {
 		actual_tests(string{ init_str_literal });
 		actual_tests(string_view{ init_str_literal });
 	}
 	else
-		if constexpr (dbj::SameTypes<T, wchar_t>) {
+		if constexpr (dbj::tt::same_types<T, wchar_t>) {
 			actual_tests(wstring{ init_str_literal });
 			actual_tests(wstring_view{ init_str_literal });
 		}
 		else
-			if constexpr (dbj::SameTypes<T, char16_t>) {
+			if constexpr (dbj::tt::same_types<T, char16_t> ) {
 				actual_tests(u16string{ init_str_literal });
 				actual_tests(u16string_view{ init_str_literal });
 			}
 			else
-				if constexpr (dbj::SameTypes<T, char32_t>) {
+				if constexpr (dbj::tt::same_types<T, char32_t>) {
 					actual_tests(u32string{ init_str_literal });
 					actual_tests(u32string_view{ init_str_literal });
 				}
@@ -135,15 +136,10 @@ void string_tester ( T * init_str_literal)
 /// </summary>
 void strings_to_console() 
 {
-	auto narrow = "narrow string" ;
-	auto wide	= L"wide string" ;
-	auto u16	= u"u16string string" ;
-	auto u32	= U"u32string string" ;
-
-	string_tester(narrow);
-	string_tester(wide);
-	string_tester(u16);
-	string_tester(u32);
+	string_tester("narrow string");
+	string_tester(L"wide string");
+	string_tester(u"u16string string");
+	string_tester(U"u32string string");
 
 }
 
@@ -151,8 +147,8 @@ void strings_to_console()
 
 
 template< 
-	typename arh_value_type, size_t N, 
-	typename arh_type = dbj::arr::ARH<arh_value_type, N>,
+	//typename arh_value_type, size_t N, 
+	//typename arh_type = dbj::arr::ARH<arh_value_type, N>,
 	typename ... Args
 >
 void arh_test ( Args ... args)
@@ -169,9 +165,11 @@ void arh_test ( Args ... args)
 		auto	arg_list = { args ... };
 		using	arg_list_type = decltype(arg_list);
 
+		using arh_type = dbj::arr::ARH<arg_list_type::value_type, (sizeof... (args))>;
+
 		static_assert(
-			dbj::SameTypes< arh_type::value_type, arg_list_type::value_type >,
-			"dbj::ARH::value_type must be the same to the type of each aggregate init list element"
+			dbj::tt::same_types< arh_type::value_type, arg_list_type::value_type >,
+			"dbj::ARH::value_type must be the same to the type of each brace init list element"
 			);
 #if 0 // avoiding print
 		PRN.char_to_console("\n");
@@ -198,17 +196,16 @@ void compound_types_to_console()
 	using dbj::console::PRN;
 	using namespace std;
 	// array of fundamental types
-	arh_test<int,9>(1, 2, 3, 4, 5, 6, 7, 8, 9);
+	arh_test(1, 2, 3, 4, 5, 6, 7, 8, 9);
 	// arrays of class types
-	arh_test<string, 3>( string{ "ONE" }, string{ "TWO" }, string{ "THREE" });
+	arh_test( string{ "ONE" }, string{ "TWO" }, string{ "THREE" });
 	// pointers to fundamental types
-	arh_test<const wchar_t *, 3>(L"ONE", L"TWO", L"THREE");
+	arh_test(L"ONE", L"TWO", L"THREE");
 	// pointers out -- function pointer 
-	dbj::console::print("\n", std::addressof( arh_test<int, 9> ));
+	dbj::console::print("\n", std::addressof( arh_test<int> ));
 }
 
 DBJ_TEST_UNIT(dbj_console_testing)
-// void dbj_test_console()
 {
 	strings_to_console();
 	fundamental_types_to_console();

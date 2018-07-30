@@ -48,6 +48,21 @@ DBJ_TEST_UNIT( _dbj_container_traits_tests )
 	DBJ_TEST_ATOM(dbj::is_range_v<rci3>);
 }
 
+DBJ_TEST_UNIT(_dbj_pointer_traits_tests) {
+	using namespace dbj::tt;
+	constexpr const char * holla_ = "Hola!";
+	const char buff[]{ "ABCD" };
+	// OK
+	static_assert(pointer(buff));
+	static_assert(pointer(holla_));
+	static_assert(pointer("ola ola!"));
+	//
+	const std::array<int, 3> iarr{ 1,2,3 };
+	static_assert(pointer(iarr.data()));
+
+	auto n1 = DBJ_TEST_ATOM( dbj::tt::name_<decltype(holla_)>()  );
+	auto n2 = DBJ_TEST_ATOM( dbj::tt::name_<decltype(&holla_)>() );
+}
 
 DBJ_TEST_SPACE_CLOSE
 
