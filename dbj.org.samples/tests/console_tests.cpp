@@ -217,11 +217,22 @@ extern "C" void compound_types_to_console()
 	// pointers to fundamental types
 	arh_test(L"ONE", L"TWO", L"THREE");
 	// pointers out -- function pointer 
-	print("\n", std::addressof( arh_test<int> ));
+	print("\nstd::addressof( arh_test<int> )", std::addressof( arh_test<int> ));
+	// init list
+	auto init_list = {1,2,3,4,5,6,7,8,9,0};
+	print("\ninit list:\t",init_list);
 	//
-	print(dbj::Exception	{ "\nBang!" });
-	print(std::exception	{ "\nBing!" });
-	print(std::runtime_error{ "\nBong!" });
+	print(
+	dbj::Exception	{ "\n\tdbj::Exception" },
+	std::exception	{ "\n\tstd::exception" },
+	std::runtime_error{ "\n\tstd::runtime_error" },
+		"\nstd::vector<int>{1,2,3}:\t",  std::vector<int>{1,2,3} ,
+		"\nstd::array<int, 3>{1,2,3}:\t", std::array<int, 3>{1,2,3},
+		"\nstd::map<bool, int>{ {true,1}, {false,2}, {true,3}}:\t ", std::map<bool, int>{ {true,1}, {false,2}, {true,3}},
+		"\nstd::variant<bool>{true}:\t", std::variant<bool>{true},
+		"\nstd::make_tuple(1,true,42.56):\t", std::make_tuple(1,true,42.56),
+		"\nstd::make_pair(1,2.9):\t", std::make_pair(1,2.9)
+	);
 }
 
 DBJ_TEST_UNIT(dbj_console_testing)
