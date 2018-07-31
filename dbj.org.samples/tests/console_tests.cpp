@@ -10,10 +10,30 @@
 DBJ_TEST_SPACE_OPEN(console_test)
 // **********************************************************************************************
 
+
+extern "C"  void console_painting()
+{ 
+	using namespace dbj;
+
+	constexpr const dbj::c_line<80, '+'> L80{};
+
+	console::print(
+	    console::nl, console::painter_command::nop, "NOP", L80 , 
+		console::nl, console::painter_command::text_color_reset, "RESET", L80 ,
+		console::nl, console::painter_command::white, "WHITE", L80 ,
+		console::nl, console::painter_command::red, "RED", L80 ,
+		console::nl, console::painter_command::green, "GREEN", L80 ,
+		console::nl, console::painter_command::blue, "BLUE", L80 ,
+		console::nl, console::painter_command::bright_red, "BRIGHT_RED", L80 ,
+		console::nl, console::painter_command::bright_blue, "BRIGHT_BLUE", L80 ,
+		console::nl, console::painter_command::text_color_reset, "RESET"
+		);
+}
+
 /// <summary>
 /// https://en.cppreference.com/w/cpp/language/types
 /// </summary>
-void fundamental_types_to_console()
+extern "C"  void fundamental_types_to_console()
 {
 	using dbj::console::out;
 	using dbj::console::PRN ;
@@ -134,7 +154,7 @@ void string_tester ( T * init_str_literal)
 /// C++ has inhertied from C the special status of strings
 /// which is unfortunate
 /// </summary>
-void strings_to_console() 
+extern "C"  void strings_to_console()
 {
 	string_tester("narrow string");
 	string_tester(L"wide string");
@@ -146,11 +166,7 @@ void strings_to_console()
 // **********************************************************************************************
 
 
-template< 
-	//typename arh_value_type, size_t N, 
-	//typename arh_type = dbj::arr::ARH<arh_value_type, N>,
-	typename ... Args
->
+template< typename ... Args >
 void arh_test ( Args ... args)
 {
 	using dbj::console::out;
@@ -190,10 +206,9 @@ void arh_test ( Args ... args)
 
 };
 
-void compound_types_to_console() 
+extern "C" void compound_types_to_console() 
 {
-	using dbj::console::out;
-	using dbj::console::PRN;
+	using namespace dbj::console;
 	using namespace std;
 	// array of fundamental types
 	arh_test(1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -202,11 +217,16 @@ void compound_types_to_console()
 	// pointers to fundamental types
 	arh_test(L"ONE", L"TWO", L"THREE");
 	// pointers out -- function pointer 
-	dbj::console::print("\n", std::addressof( arh_test<int> ));
+	print("\n", std::addressof( arh_test<int> ));
+	//
+	print(dbj::Exception	{ "\nBang!" });
+	print(std::exception	{ "\nBing!" });
+	print(std::runtime_error{ "\nBong!" });
 }
 
 DBJ_TEST_UNIT(dbj_console_testing)
 {
+	console_painting();
 	strings_to_console();
 	fundamental_types_to_console();
 	compound_types_to_console();
