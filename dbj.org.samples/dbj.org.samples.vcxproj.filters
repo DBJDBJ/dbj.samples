@@ -15,7 +15,6 @@
     <ClCompile Include="tests\tests.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="headers\no_inheritance.cpp" />
     <ClCompile Include="tests\lambda_mixer_samples.cpp">
       <Filter>tests</Filter>
     </ClCompile>
@@ -93,7 +92,6 @@
   <ItemGroup>
     <None Include="readme.md" />
     <None Include="..\cpp.hint" />
-    <None Include="cpp.hint" />
     <None Include="headers\cpp.hint" />
   </ItemGroup>
   <ItemGroup>

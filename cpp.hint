@@ -5,3 +5,4 @@ https://docs.microsoft.com/en-us/cpp/ide/hint-files
 */
 
 #define DBJ_TEST_UNIT()
+#define DBJ_TEST_ATOM()

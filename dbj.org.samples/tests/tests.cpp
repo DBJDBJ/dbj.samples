@@ -1,9 +1,7 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-
-#include "../stdafx.h"
-
 // testing the various stuff in this project
+#include "../stdafx.h"
 #include "../headers/dbj_lambda_lists.h"
 #include "../headers/policy_classes.h"
 #include "../headers/no_inheritance.h"
@@ -18,26 +16,27 @@
 
 DBJ_TEST_SPACE_OPEN(local_tests)
 
+template< typename T>
+void array_analyzer (const T & specimen) {
+
+	static char const * name{ dbj::tt::name_<T>() }; //safe?
+	constexpr bool is_array = std::is_array_v<T>;
+	if constexpr (is_array == true)
+	{
+		constexpr size_t number_of_dimension = std::rank_v<T>;
+		constexpr size_t first_extent = std::extent_v<T>;
+		std::printf("\n%s is %s", name, "Array" );
+		std::printf("\n%-20s number of dimension is %zu", name, number_of_dimension);
+		std::printf("\n%-20s size along the first dimension is %zu", name, first_extent);
+	}
+	else {
+		std::printf("\n%s is %s", name, "Not an Array" );
+	}
+};
+
 DBJ_TEST_UNIT(_array_stays_array)
 {
-	auto array_analyzer = []( auto specimen ) {
-
-		using T = decltype(specimen);
-		
-		auto name = typeid(T).name();
-		auto is_array = std::is_array_v<T>;
-		auto number_of_dimension = std::rank_v<T>;
-		auto first_extent = std::extent_v<T>;
-
-		std::printf("\n%s is %s", name, (is_array ? "Array" : "Not an Array"));
-
-		if (is_array == true) {
-			std::printf("\n%-20s number of dimension is %zu", name, number_of_dimension );
-			std::printf("\n%-20s size along the first dimension is %zu", name, first_extent);
-		}
-	};
-
-	int ia[]{ 1,2,3,4,5,6,7,8,9,0 };
+	static int ia[]{ 1,2,3,4,5,6,7,8,9,0 };
 
 		array_analyzer(ia);
 		array_analyzer(42);
