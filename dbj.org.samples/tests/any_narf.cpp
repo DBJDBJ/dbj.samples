@@ -13,11 +13,18 @@ struct actual final {
 
 DBJ_TEST_UNIT( dbj_narf)
 {
+	// no can do --> dbj::narf::make({ 1,2,3 })
+	// as that argument is temporary
+
+	int iar[]{1,2,3};
+
  auto DBJ_UNUSED(naf) = 
     DBJ_TEST_ATOM(
-		dbj::narf::make(
-			{ 1,2,3 }
-		)
+		// yes can do
+		// iar is not temporary 
+		// but only in the scope 
+		//of this function
+		dbj::narf::make( iar )
 	);
 
  DBJ_TEST_ATOM(actual< decltype(naf) >::value);
@@ -27,7 +34,11 @@ DBJ_TEST_UNIT( dbj_narf)
 DBJ_TEST_UNIT( a_bit_more_arh_narf_dancing ) {
 
 
-	auto narf_ = dbj::narf::make({ "A B C NARF" });
+	// narf to temporary
+	// no can do --> auto narf_ = dbj::narf::make({ "A B C NARF" });
+	// so
+	char charr[]{ "A B C NARF" };
+	auto narf_ = dbj::narf::make(charr);
 	decltype(auto) narf_arf_ = dbj::narf::data(narf_);
 
 	using CARH = dbj::arr::ARH<char, 255>;

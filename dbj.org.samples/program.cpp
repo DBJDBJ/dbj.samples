@@ -33,7 +33,7 @@ int main(int argc, char* argv[], char *envp[])
 	}
 	catch (...) {
 		using namespace dbj::console;
-		dbj::log::print(
+		dbj::console::print(
 			painter_command::bright_red,
 			__FUNCSIG__ "  Unknown exception caught! ",
 			painter_command::text_color_reset

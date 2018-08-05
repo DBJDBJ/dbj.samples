@@ -22,6 +22,8 @@ limitations under the License.
 #include <dbj++tests.h> 
 #endif
 
+#include <test/dbj_native_arr_ref_testing.h>
+
 #include <fcntl.h>
 #include <io.h>
 #include <functional>

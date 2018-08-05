@@ -139,13 +139,13 @@ DBJ_TEST_UNIT(_polymorph_but_not_inheritor )
 
 	auto same = DBJ_TEST_ATOM(ht1 == ht2);
 
-	dbj::log::print("\ndiesel and petrol car are ");
+	dbj::console::print("\ndiesel and petrol car are ");
 
 	if (!std::is_same_v< decltype(diesel_car), decltype(petrol_car) >) {
-		dbj::log::print(" NOT ");
+		dbj::console::print(" NOT ");
 	}
 
-	dbj::log::print(" the same type...");
+	dbj::console::print(" the same type...");
 
 	// problem?
 }

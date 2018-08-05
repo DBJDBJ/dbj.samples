@@ -25,12 +25,12 @@ void array_analyzer (const T & specimen) {
 	{
 		constexpr size_t number_of_dimension = std::rank_v<T>;
 		constexpr size_t first_extent = std::extent_v<T>;
-		std::printf("\n%s is %s", name, "Array" );
-		std::printf("\n%-20s number of dimension is %zu", name, number_of_dimension);
-		std::printf("\n%-20s size along the first dimension is %zu", name, first_extent);
+		std::wprintf(L"\n%S is %s", name, L"Array" );
+		std::wprintf(L"\n%-20S number of dimension is %zu", name, number_of_dimension);
+		std::wprintf(L"\n%-20S size along the first dimension is %zu", name, first_extent);
 	}
 	else {
-		std::printf("\n%s is %s", name, "Not an Array" );
+		std::wprintf(L"\n%S is %s", name, L"Not an Array" );
 	}
 };
 
@@ -47,8 +47,8 @@ DBJ_TEST_UNIT(_GetGeoInfoEx_)
 	auto DBJ_UNUSED(us_data) = dbj::win32::geo_info(L"US");
 	auto DBJ_UNUSED(rs_data) = dbj::win32::geo_info(L"RS");
 
-	dbj::log::print(us_data);
-	dbj::log::print(rs_data);
+	dbj::console::print(us_data);
+	dbj::console::print(rs_data);
 }
 
 // return the default instance of the
@@ -77,7 +77,7 @@ auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) 
 	char address_str[128]{0};
 	int retval = std::snprintf(address_str, 128, "%p", this_ptr);
 	_ASSERTE( retval > 0);
-	dbj::log::print("\n[", address_str, "]\t", prompt );
+	dbj::console::print("\n[", address_str, "]\t", prompt );
 };
 
 DBJ_TEST_UNIT(_dbj_fundamental_issues_) {
@@ -134,9 +134,9 @@ DBJ_TEST_UNIT(_timers_) {
 		dbj_samples::sleep_seconds(1);
 		return DBJ_TEST_ATOM(timer_.elapsed());
 	};
-	dbj::log::print("\nWIN32 Timer");
+	dbj::console::print("\nWIN32 Timer");
 	auto elaps_1 = test(dbj_samples::timer_kind::win32 );
-	dbj::log::print("\nModern Timer");
+	dbj::console::print("\nModern Timer");
 	auto elaps_2 = test(dbj_samples::timer_kind::modern );
 
 	_ASSERTE( elaps_1 == elaps_2 );
@@ -155,7 +155,7 @@ typedef enum class CODE : UINT {
 		constexpr wchar_t specimen[] =
 		{ L"\x043a\x043e\x0448\x043a\x0430 \x65e5\x672c\x56fd" };
 
-		dbj::log::print("\n", specimen, "\n");
+		dbj::console::print("\n", specimen, "\n");
 
 		// 1252u or 65001u
 		if (::IsValidCodePage(65001u)) {
@@ -196,7 +196,7 @@ typedef enum class CODE : UINT {
 		static  dbj::c_line<80, '-'> Line80; // compile time
 
 		auto measure = [&](auto object, const char * msg = "") -> void {
-			dbj::log::print("\n", Line80,
+			dbj::console::print("\n", Line80,
 				"\n", msg, "\nType name:\t", typeid(object).name(),
 				"\nSpace requirements in bytes",
 				"\nType:\t\t", sizeof(decltype(object)),
@@ -208,14 +208,14 @@ typedef enum class CODE : UINT {
 		dbj_samples::philology::HelloWorld<> hello{};
 		dbj_samples::philology::HelloWorld2<> hello2{};
 
-		dbj::log::print("\nBEFORE RUN\n");
+		dbj::console::print("\nBEFORE RUN\n");
 		measure(hello);
 		measure(hello2);
-		dbj::log::print("\n", Line80);
+		dbj::console::print("\n", Line80);
 		hello.run("\nHelloWorld -- Default policies");
 		hello2.run("\nHelloWorld2 -- No inheritance");
-		dbj::log::print("\n", Line80);
-		dbj::log::print("\nAFTER RUN\n");
+		dbj::console::print("\n", Line80);
+		dbj::console::print("\nAFTER RUN\n");
 		measure(hello);
 		measure(hello2);
 	};
@@ -232,7 +232,7 @@ typedef enum class CODE : UINT {
 
 	DBJ_TEST_UNIT(_tokenizer_test) {
 
-		using dbj::log::print;
+		using dbj::console::print;
 		const char * sentence = "abra % ka % dabra";
 		//dbj_samples::fm::tokenizer tok(sentence, "%");
 		print("Input sentence: ", sentence);
