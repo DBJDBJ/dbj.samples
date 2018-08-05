@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="program.cpp" />
-    <ClCompile Include="tests\any_narf.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
     <ClCompile Include="tests\few_more_nuggets.cpp">
       <Filter>tests</Filter>
     </ClCompile>

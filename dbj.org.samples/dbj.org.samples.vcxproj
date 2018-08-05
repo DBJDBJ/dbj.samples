@@ -218,7 +218,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/bigobj /await /permissive- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="tests\any_narf.cpp" />
     <ClCompile Include="tests\console_tests.cpp" />
     <ClCompile Include="tests\dbj_traits_testing.cpp" />
     <ClCompile Include="tests\few_more_nuggets.cpp" />
