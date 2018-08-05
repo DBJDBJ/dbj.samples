@@ -178,7 +178,7 @@ void arh_test ( Args ... args)
 		auto	arg_list = { args ... };
 		using	arg_list_type = decltype(arg_list);
 
-		using arh_type = dbj::arr::ARH<arg_list_type::value_type, (sizeof... (args))>;
+		using arh_type = typename dbj::arr::ARH<arg_list_type::value_type, (sizeof... (args))>;
 
 		static_assert(
 			dbj::tt::same_types< arh_type::value_type, arg_list_type::value_type >,
@@ -193,10 +193,13 @@ void arh_test ( Args ... args)
 		PRN.char_to_console("\n");
 		out(arh_type::to_arf(arh_type::ARR{ { args... } }));
 #else
+		// std::array<arg_list_type::value_type, (sizeof... (args))> std_arr{ { args ... } };
+
+		typename arh_type::ARR std_arr{ { args ... } };
 		dbj::console::print( 
-			"\n", arh_type::ARR{ { args... } },
-			"\n", arh_type::to_arp(arh_type::ARR{ { args... } }),
-			"\n", arh_type::to_arf(arh_type::ARR{ { args... } })
+			"\n", std_arr,
+			"\n", arh_type::to_arp(std_arr),
+			"\n", arh_type::to_arf(std_arr)
 		);
 #endif
 	}

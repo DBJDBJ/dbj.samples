@@ -34,8 +34,8 @@ DBJ_TEST_UNIT( dbj_narf)
 DBJ_TEST_UNIT( a_bit_more_arh_narf_dancing ) {
 
 
-	// narf to temporary
-	// no can do --> auto narf_ = dbj::narf::make({ "A B C NARF" });
+	// narf to temporary no can do 
+	// --> auto narf_ = dbj::narf::make({ "A B C NARF" });
 	// so
 	char charr[]{ "A B C NARF" };
 	auto narf_ = dbj::narf::make(charr);
@@ -46,14 +46,16 @@ DBJ_TEST_UNIT( a_bit_more_arh_narf_dancing ) {
 	//CARH::ARR narf_to_arh
 	//	= CARH::to_std_array( narf_arf_ );
 
+	CARH::ARR std_arr{ "CHAR ARR" };
+
 	CARH::ARF native_arr_reference
-		= CARH::to_arf(std::array<char, CARH::size>{ "CHAR ARR" });
+		= CARH::to_arf(std_arr) ;
 
 	CARH::ARR std_aray
-		= CARH::to_std_array(CARH::to_arf({ "CHAR ARR RIGHT SIZED" }));
+		= CARH::to_std_array(native_arr_reference);
 
 	CARH::ARF literal_to_native_arr_reference
-		= CARH::to_arf({ "CHAR ARR RIGHT SIZED" });
+		= CARH::to_arf(std_arr);
 }
 
 
