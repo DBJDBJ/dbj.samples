@@ -15,62 +15,57 @@ namespace dbj::samples {
 	template <typename T>
 	class any_wrapper final 
 	{
-		static_assert(!std::is_reference<T>::value,
+		static_assert(!std::is_reference_v< std::remove_cv_t<T> >,
 			"[dbj::any_wrapper] Can not use a reference type");
+
+		static_assert(!std::is_array_v<std::remove_cv_t<T> >,
+			"[dbj::any_wrapper] Can not use an array type");
 
 		std::any any_{};
 
 	public:
 		// types
 		typedef any_wrapper type;
-		typedef T data_type;
+		typedef std::remove_cv_t<T> data_type;
 
 		any_wrapper() noexcept {	}
 
-		// give data
-		any_wrapper( const data_type & ref) noexcept
-			: any_(ref) 		{
-		}
+		// we take references, pointers and a such ;)
+		any_wrapper(const data_type & ref) noexcept : any_(ref) {}
+		// we take no r-references or values
+		any_wrapper(data_type && ref) noexcept = delete; // : any_(move(ref)) {	}
 
-		any_wrapper(data_type && ref) noexcept 
-			: any_( move(ref))	{
-		}
 		// copy
 		any_wrapper(const any_wrapper& rhs) noexcept : any_ ( rhs.any_ ) { }
 		any_wrapper& operator=(const any_wrapper& x) noexcept {
-			if (this != &x) {
 				this->any_ = x.any_; 
-			}
 			return *this;
 		}
 		// move
-		any_wrapper(any_wrapper && rhs) noexcept : any_(move(rhs.any_)) {  }
+		any_wrapper(any_wrapper && rhs) noexcept 
+		{  
+			std::swap( this->any_ , rhs.any_) ;
+		}
 
-		any_wrapper& operator=(any_wrapper&& x) noexcept {
-			if ( this != &x ) {
-			this->any_ = move(x.any_); 
-			}
+		any_wrapper& operator=(any_wrapper&& rhs) noexcept {
+			std::swap(this->any_, rhs.any_);
 			return *this ;
 		}
 		// destruct
 		~any_wrapper() { this->any_.reset(); }
 
-		// using the stored value in std::any
-		// access
-		operator data_type		 & () const noexcept = delete;
-		operator data_type const & () const noexcept { return move(this->get());  }
-		operator data_type		&& () && noexcept    { return move(this->get()) ; }
-
-		// data_type && get()		const noexcept { return move(any_cast<data_type>(this->any_)); }
-
 		// only if function is stored
-		template< class... ArgTypes >
-		invoke_result_t<T&, ArgTypes...>
+		template< 
+			typename = std::enable_if_t< std::is_function_v< data_type >> ,
+			class... ArgTypes 
+		>
+		invoke_result_t< data_type &, ArgTypes...>
 			operator() (ArgTypes&&... args) const {
 			if (!empty()) {
 				return invoke(get(), forward<ArgTypes>(args)...);
-			} 
-			throw dbj::Exception(" can not call on empty data wrapped ");
+			} else {
+				throw dbj::Exception(" can not call on empty data wrapped ");
+			}
 		}
 
 		constexpr data_type get () const {
@@ -82,96 +77,92 @@ namespace dbj::samples {
 			}
 		}
 
-		bool empty() const {
+		constexpr bool empty() const noexcept {
 			return !(this->any_).has_value();
 		}
 
-		const std::string to_string () const {
-			const auto val_ = this->get();
-			if constexpr( std::is_arithmetic<decltype(val_)>() ) {
-				return { std::to_string(val_) };
-			}
-
-			if constexpr(std::is_integral<decltype(val_)>()) {
-				return { std::to_string(val_) };
-			}
-#pragma warning( push )
-#pragma warning( disable: 4312 )
-			return { reinterpret_cast<const char *>(val_) };
-// #pragma message("### DBJ --> Warning 4312 disabled in file: " __FILE__ ) 
-#pragma warning( pop )
-		}
-
-		operator std::string () const  {
-			return
-				std::string{ "dbj::any::any_wrapper<" }
-			.append(typeid(T).name())
-			.append(" = ")
-			.append(this->to_string())
-			.append(">");
-		}
 	};
 
 		// factory methods ----------------------------------------
 
 		template <
 			typename T,
-			typename ANYW = typename any::any_wrapper< T >
+			typename ANYW = typename any::any_wrapper< std::remove_cv_t<T> >
 		>
-			inline auto make(T val_)
+			inline auto make( T val_)
 			-> ANYW
 		{
-			static_assert(!std::is_same<const char *, T>(),
-				"std::any::make() can not use 'char *' pointer argument");
-
-			return ANYW{val_};
+			// can make only from values
+			//  see the ctor deleted
+			return ANYW{ val_ };
 		};
+
+		// template < typename T >	inline auto make(T && val_) = delete ;
 
 		// returns std::array of any_wrapper's
 		// of the same type T
 		template <
 			typename T,
-			std::size_t N
+			std::size_t N,
+			typename ANYW = any::any_wrapper< T >,
+			typename RETT = std::array< ANYW, N >,
+			typename std_arr_t = RETT
 		>
 		inline auto range(const T(&arrf)[N])
+			-> std_arr_t
 		{
-			using ANYW = any::any_wrapper< T >;
-			using RETT = std::array< ANYW, N >;
-			using std_arr_t = RETT; 
 			
 			std_arr_t rezult{};
 			std::size_t j{ 0 };
 
-			for (auto element : arrf) {
+			for (auto && element : arrf) {
 // warning C28020: The expression '0<=_Param_(1)&&_Param_(1)<=1-1' is not true at this call.
 // why ?
 // calling the 'operator =' on dbj any_wrapper, so ... ?
-				rezult[j++] = any::make(element);
+				rezult[j] = any::make(element);
+				j += 1 ;
 			}
 			return rezult;
 		};
 
+		// r-references to constants/literlas <-- no can do
+		template <
+			typename T,
+			std::size_t N,
+			typename ANYW = any::any_wrapper< T >,
+			typename RETT = std::array< ANYW, N >,
+			typename std_arr_t = RETT
+		>
+			inline auto range(const T(&&arrf)[N]) = delete;
+
+		using dbj::console::out;
+		template<typename T> inline void out(const any_wrapper<T> & anyt_)
+		{
+			out(anyt_.get());
+		}
 	} // any
+
 } // dbj::samples
 
 DBJ_TEST_SPACE_OPEN( dbj_any_wrapper_testing )
 
 	DBJ_TEST_UNIT( dbj_any_wrapper) 
     {
-
 		using namespace dbj::samples;
 		try {
-			int int_arr[]{42};
-			auto any_0 = ( any::range(int_arr) );
-			// NO CAN DO --> auto any_1 = range_test({ "Wot is this?" });
+			const int int_arr[]{1,2,3};
+			// array must be const
+			auto any_0 = DBJ_TEST_ATOM( any::range(int_arr) );
 
-			// yes can do
-			char word_[] = "Hallo bre!";
-			auto    any_2 = ( any::make( word_) ) ;
-			// NO CAN DO --> auto    any_3 = dbj::any::make( "Hallo bre!" );
+			// only values --> auto any_2 = any::make("NO CAN DO!");
 
-			auto  v1 = any_2; // copy wrapper to wrapper
-			auto  v2 = ( v1.get() ); // wrapper to value and so on
+			// no temporaries --> auto any_2 = any::make(std::string{"YES CAN DO"});
+
+			std::string not_a_temporary { "YES CAN DO" };
+			auto any_2 = DBJ_TEST_ATOM( any::make("YES CAN DO"));
+
+			auto  v1 = DBJ_TEST_ATOM( any_2 ); // copy wrapper to wrapper
+			auto  v2 = DBJ_TEST_ATOM( v1.get() ); // wrapper to value and so on
 		}	catch (...) {
 			dbj::console::print( dbj::Exception(
 				__FUNCSIG__ "  Unknown exception caught! "

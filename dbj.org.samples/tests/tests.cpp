@@ -12,8 +12,6 @@
 #include "../dbjtree\dbj_tree_tests.h"
 #include "../dbj_x/dbj_timer.h"
 
-
-
 DBJ_TEST_SPACE_OPEN(local_tests)
 
 template< typename T>

@@ -7,7 +7,6 @@
 #include "../dbj_x/dbj_polymorph.h"
 #include "../dbj_any/dbj_any.h"
 
-
 DBJ_TEST_SPACE_OPEN(lambada_mixer)
 
 enum class engine_tags : char { legacy = 'L', contemporary = 'C', hybrid = 'H' };
