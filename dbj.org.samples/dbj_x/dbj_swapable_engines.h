@@ -10,53 +10,108 @@ namespace car_factory {
 	enum class engine_tag : char { old = 'O', next = 'N' };
 
 	namespace engine_workshop { // hidden from clients
+
+		struct exception : public std::runtime_error {
+			exception(const char * msg) 
+				: std::runtime_error(msg) {}
+		};
+
 	// interface to swapable engines
-		struct IEngine 
+		struct __declspec(novtable) IEngine
 		{ 
-			virtual  engine_tag start() = 0; 		
-			virtual ~IEngine() {}
+			virtual  engine_tag tag() const noexcept = 0;
+			virtual  bool start() const noexcept = 0;
+			virtual ~IEngine() = default;
+
+			IEngine() = default;
+			// by its nature car engine is definitely not copyable 
+			IEngine(const IEngine &) = delete;
+			IEngine & operator = (const IEngine &) = delete;
+			// and perhaps moveable
+			IEngine(IEngine &&) = default;
+			IEngine & operator = (IEngine &&) = default;
 		};
 		// switchable engines
-		struct old : public IEngine { virtual engine_tag start() override { return engine_tag::old; } };
-		struct next : public IEngine { virtual engine_tag start() override { return engine_tag::next; } };
+		struct old final : public IEngine 
+		{ 
+			virtual engine_tag tag() const noexcept override  { return engine_tag::old; }
+			virtual bool start() const noexcept override { return true; }
+		};
+		struct next final : public IEngine 
+		{ 
+			virtual engine_tag tag() const noexcept override { return engine_tag::next; }
+			virtual bool start() const noexcept  override { return true; }
+		};
 
-	} // inner
+		IEngine * make_new_engine( engine_tag tag_ ) {
+			switch (tag_ ) {
+			case engine_tag::old: return new old{};
+			case engine_tag::next: return new next{};
+			};
+			throw exception( __FUNCSIG__ "Unknown engine tag");
+		}
+
+	} // engine_workshop
 
 	// facade of the solution
 	// this is not ABC
-	class Automobile final {
+	class __declspec(novtable) Automobile final {
 
-		using IEngine = typename engine_workshop::IEngine ;
-		// we use the simple native pointer
-		// thus swap idiom is very easy to implement
-		mutable IEngine * engine_{};
+		using engine_type = typename engine_workshop::IEngine ;
+		// car owns the engine
+		// be carefull not to share 
+		mutable engine_type * engine_{};
 		// this ctor is visible to the factory method
 		// we do not want this as a "converting constructor"
 		// ditto we declare it as explicit
-		explicit Automobile( IEngine * use_) : engine_(use_) {}
+		explicit Automobile(engine_type * use_) : engine_(use_)
+		{
+			_ASSERTE(this->engine_);
+		}
 		// no default ctor
 		// no nullptr engine
 		Automobile() = delete;
 		// the factory function declaration
 		friend  Automobile assembly_line(engine_tag);
+		//
+		void insert_new_engine(engine_tag tag_) {
+			engine_type * new_engine
+				= engine_workshop::make_new_engine(tag_);
+
+			if (this->engine_ != nullptr) delete this->engine_;
+			this->engine_ = new_engine;
+		}
 	public:
 		// delegating to the engine
 		// inheritance is evil
-		engine_tag start() const { return engine_->start(); }
+		bool start() const noexcept { return engine_->start(); }
 		// it is easy to manage the pointer lifetime
 		~Automobile() { delete engine_; }
 		/*
-		required move semantics 
-		NOTE: we can not allow for move or copy assignment
-		since this will effectively and quietly
+		NOTE: 
+		We must be very carefull for move or copy assignment
+		since this can effectively and quietly
 		change the engine "mid flight" 
 		*/
-		// no copy
-		Automobile(const Automobile&) = delete;
+		// copy
+		Automobile(const Automobile& rhs_)  
+		{ 
+		_ASSERTE(rhs_.engine_ != nullptr );
+		// two cars can not share the same engine, thus
+		this->insert_new_engine(rhs_.engine_->tag());
+		}
 		Automobile& operator=(const Automobile&) = delete;
 		// move
-		Automobile(Automobile&& other_) noexcept { std::swap(this->engine_, other_.engine_); }
-		Automobile& operator=(Automobile&& other_) = delete;  // noexcept { std::swap(this->engine_, other_.engine_); return *this; }
+		Automobile(Automobile&& other_) noexcept { 
+			_ASSERTE(other_.engine_ != nullptr);
+			// we can not just simply
+			// point to the other_ car engine
+			// since it will be deleted after
+			// we leave here
+			this->insert_new_engine(other_.engine_->tag());
+		}
+		Automobile& operator=(Automobile&& other_) = delete;  
+		// noexcept { std::swap(this->engine_, other_.engine_); return *this; }
 
 	};
 
@@ -64,19 +119,13 @@ namespace car_factory {
 // we do not return ABC so we enjoy the value semantics
 inline Automobile assembly_line (engine_tag which_)
 {
-	// I assume I do not need std::move in here
 	// I could also use std::enable_if and std::is_move_constructible
 	// in return value type to check the Automobile type movability
-	// or I could just leave it to the CL 
+	static_assert( std::is_move_constructible_v<Automobile>  );
 
-	using namespace engine_workshop;
-
-	if (engine_tag::next == which_ )
-		return Automobile(new next{});
-	if (engine_tag::old == which_)
-		return Automobile(new old{});
-		
-	throw std::runtime_error{ __FUNCSIG__ " Unknown engine_tag ordered?"};
+		return Automobile(
+			engine_workshop::make_new_engine(which_)
+		);
 }
 
 }

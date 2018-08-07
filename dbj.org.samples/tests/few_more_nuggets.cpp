@@ -90,12 +90,14 @@ namespace { // beware of anonymous namespace
 	DBJ_TEST_UNIT(param_pack_to_initlist)
 	{
 
-		auto init_list = args_initlist(1, 2, 3);
+		auto init_list =  DBJ_TEST_ATOM( args_initlist(1, 2, 3) );
 
 		// this does not compile, wot now?
 		// args_initlist(1, 2.34, true, L"Abra", " Ka", " Dabra!");
 		//
-		auto tup_ = args_tuple(1, 2.34, true, L"Abra", " Ka", " Dabra!");
+		auto tup_ =  DBJ_TEST_ATOM(
+			args_tuple(1, 2.34, true, L"Abra", " Ka", " Dabra!")
+			) ;
 		auto &&[a, b, c, d, e, f] = tup_;
 	}
 

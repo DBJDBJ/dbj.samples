@@ -152,14 +152,18 @@ DBJ_TEST_UNIT(_polymorph_but_not_inheritor )
 DBJ_TEST_UNIT(_dbj_swappable_engines_) {
 
 	auto car_1 =
+		DBJ_TEST_ATOM(
 		car_factory::assembly_line(
-			car_factory::engine_tag::old);
+			car_factory::engine_tag::old)
+			) ;
 
 	car_1.start();
 
 	auto car_2 =
-		car_factory::assembly_line(
-			car_factory::engine_tag::next);
+		DBJ_TEST_ATOM(
+			car_factory::assembly_line(
+			car_factory::engine_tag::next)
+		);
 
 	car_2.start();
 

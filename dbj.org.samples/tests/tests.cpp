@@ -61,14 +61,10 @@ DBJ_TEST_UNIT(_Damn_Why_I_have_not_thought_of_this_before_) {
 
 	using namespace std;
 
-auto recipe_1	= maker_of( vector<int>{1,2,3} );
-auto value_1	= recipe_1() ;
-
-auto check = value_1.size();
-
-	std::any	a1	= recipe_1;
-
-
+auto recipe_1	= DBJ_TEST_ATOM( maker_of( vector<int>{1,2,3} ) );
+auto value_1	= DBJ_TEST_ATOM( recipe_1() );
+auto check		= DBJ_TEST_ATOM( value_1.size() );
+std::any	a1	= DBJ_TEST_ATOM( recipe_1 );
 }
 
 auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) {
