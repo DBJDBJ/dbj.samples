@@ -32,12 +32,25 @@ void array_analyzer (const T & specimen) {
 	}
 };
 
+#define DBJ_IS_ARR(x) try_array( std::addressof(x) )
+
+template<typename T>
+constexpr auto try_array( T * specimen )  -> size_t {
+	return  std::extent_v< T >  ;
+}
+
+template<typename T>
+constexpr auto probe_array(T specimen)   -> size_t {
+	return  std::extent_v< T >;
+}
+
 DBJ_TEST_UNIT(_array_stays_array)
 {
 	static int ia[]{ 1,2,3,4,5,6,7,8,9,0 };
-
-		array_analyzer(ia);
-		array_analyzer(42);
+	auto s0 = try_array(ia);
+	auto s1 = DBJ_IS_ARR( ia );
+	auto s2 = probe_array(ia);
+	auto s3 = probe_array(std::addressof(ia));
 }
 
 DBJ_TEST_UNIT(_GetGeoInfoEx_)
@@ -48,77 +61,14 @@ DBJ_TEST_UNIT(_GetGeoInfoEx_)
 	dbj::console::print(us_data);
 	dbj::console::print(rs_data);
 }
-
-// return the default instance of the
-// type obtained at runtime
-auto maker_of = [&](auto && prototype_)
-{
-	using the_type = std::decay_t<decltype(prototype_)>;
-	return  []() -> the_type { return  the_type{}; };
-};
-
-DBJ_TEST_UNIT(_Damn_Why_I_have_not_thought_of_this_before_) {
-
-	using namespace std;
-
-auto recipe_1	= DBJ_TEST_ATOM( maker_of( vector<int>{1,2,3} ) );
-auto value_1	= DBJ_TEST_ATOM( recipe_1() );
-auto check		= DBJ_TEST_ATOM( value_1.size() );
-std::any	a1	= DBJ_TEST_ATOM( recipe_1 );
-}
-
+/*
 auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) {
 	char address_str[128]{0};
 	int retval = std::snprintf(address_str, 128, "%p", this_ptr);
 	_ASSERTE( retval > 0);
 	dbj::console::print("\n[", address_str, "]\t", prompt );
 };
-
-DBJ_TEST_UNIT(_dbj_fundamental_issues_) {
-	struct X {
-		X() noexcept {
-			reporter("X constructed", this);
-		}
-		~X() {
-			reporter("X destructed", this);
-		}
-		// copy
-		X(const X & x) noexcept {
-			reporter("X copy constructed", this);
-			bad = x.bad;
-		}
-		X & operator = (const X & x) {
-			reporter("X copy assigned", this);
-			bad = x.bad;
-			return *this;
-		}
-		// move
-		X(X && x) noexcept {
-			reporter("X move constructed", this); std::swap(bad, x.bad);
-		}
-		X & operator = (X && x) noexcept {
-			reporter("X move assigned", this);
-			std::swap(bad, x.bad);
-			return *this;
-		}
-
-		const char * bad = "INITIAL STATE" ;
-	};
-
-	auto make_invalid_x = []() 
-		-> X & 
-	{   
-		X moved_from;
-		X && survived = std::move(moved_from);
-		return moved_from;
-	};
-
-	X & moved_from = make_invalid_x();
-	X && survived = std::move(moved_from);
-	auto & wot = moved_from.bad;
-}
-
-
+*/
 DBJ_TEST_UNIT(_timers_) {
 
 	using namespace dbj::samples;
@@ -137,7 +87,7 @@ DBJ_TEST_UNIT(_timers_) {
 	dbj::console::print("\nModern Timer");
 	auto elaps_2 = test(timer_kind::modern );
 
-	// _ASSERTE( elaps_1 == elaps_2 );
+	_ASSERTE( elaps_1 == elaps_2 );
 }
 
 typedef enum class CODE : UINT {

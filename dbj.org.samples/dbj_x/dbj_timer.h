@@ -21,6 +21,7 @@ namespace dbj::samples {
 	typedef std::uint32_t			time_ticks_type;
 	typedef std::uint32_t			frequency_type;
 #endif
+#if 0
 	/// <summary>
 	/// https://stackoverflow.com/questions/23374153/convert-double-to-int-in-c-without-round-down-errors
 	/// </summary>
@@ -32,6 +33,7 @@ namespace dbj::samples {
 	 round_to_tt_type(T  ull_) {
 		return static_cast<time_ticks_type>(ull_ < 0 ? ull_ - 0.5 : ull_ + 0.5);
 	}
+#endif
 
 	/// <summary>
 	/// same but for integrals
@@ -44,7 +46,6 @@ namespace dbj::samples {
 		round_to_tt_type(T  int_) {
 		return static_cast<time_ticks_type>(int_);
 	}
-
 
 	/// <summary>
 	/// timer engine Interface 
@@ -155,8 +156,6 @@ namespace dbj::samples {
 		};
 
 	} // internal
-
-
 
 	/// <summary>
 	/// the only visible class
