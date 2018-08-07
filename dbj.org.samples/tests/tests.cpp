@@ -121,19 +121,23 @@ DBJ_TEST_UNIT(_dbj_fundamental_issues_) {
 
 DBJ_TEST_UNIT(_timers_) {
 
-	auto test = [&](dbj_samples::timer_kind which_ ) {
-		auto timer_ = dbj_samples::create_timer(which_) ;
+	using namespace dbj::samples;
+
+	auto test = [&]( timer_kind which_ ) {
+		using namespace dbj::samples;
+		auto timer_ = create_timer(which_) ;
 
 		auto stp = DBJ_TEST_ATOM(timer_.start());
-		dbj_samples::sleep_seconds(1);
-		return DBJ_TEST_ATOM(timer_.elapsed());
+		sleep_seconds(1);
+		auto esd = DBJ_TEST_ATOM(timer_.elapsed());
+		return esd;
 	};
 	dbj::console::print("\nWIN32 Timer");
-	auto elaps_1 = test(dbj_samples::timer_kind::win32 );
+	auto elaps_1 = test(timer_kind::win32 );
 	dbj::console::print("\nModern Timer");
-	auto elaps_2 = test(dbj_samples::timer_kind::modern );
+	auto elaps_2 = test(timer_kind::modern );
 
-	_ASSERTE( elaps_1 == elaps_2 );
+	// _ASSERTE( elaps_1 == elaps_2 );
 }
 
 typedef enum class CODE : UINT {
@@ -172,68 +176,49 @@ typedef enum class CODE : UINT {
 		// for any mode the following crashes the UCRT (aka Universal CRT)
 		// fprintf( stdout, "\nprintf() result: %S\n",specimen);
 	}
-#if 0
-	DBJ_TEST_UNIT(": constexpr strings") {
-	// this all happens at compile time
-	constexpr dbj::str_const my_string = "Hello, world!";
-	static_assert(my_string.size() == 13, "");
-	static_assert(my_string[4] == 'o', "");
-	constexpr dbj::str_const my_other_string = my_string;
-	//  constexpr char x = world[5]; // Does not compile because index is out of range!
 
-	constexpr dbj::c_line<80, '='> L80;
-	}
-#endif
 
 	DBJ_TEST_UNIT(_inheritance_) {
 
-		static  dbj::c_line<80, '-'> Line80; // compile time
+		using dbj::console::print;
+		constexpr static  dbj::c_line<80, '-'> Line80; // compile time
 
 		auto measure = [&](auto object, const char * msg = "") -> void {
-			dbj::console::print("\n", Line80,
+			using dbj::console::print;
+			print("\n", Line80,
 				"\n", msg, "\nType name:\t", typeid(object).name(),
 				"\nSpace requirements in bytes",
-				"\nType:\t\t", sizeof(decltype(object)),
-				"\nInstance:\t", sizeof(object),
-				"\nAllocation:\t", alignof(decltype(object))
+				"\nfor Type:\t\t", sizeof(decltype(object)),
+				"\nfor Instance:\t", sizeof(object),
+				"\nfor Allocation:\t", alignof(decltype(object))
 			);
 		};
 
-		dbj_samples::philology::HelloWorld<> hello{};
-		dbj_samples::philology::HelloWorld2<> hello2{};
+		dbj::samples::philology::HelloWorld<> hello{};
+		dbj::samples::philology::HelloWorld2<> hello2{};
 
-		dbj::console::print("\nBEFORE RUN\n");
+		print("\n", Line80);
+		print("\nBEFORE RUN\n");
 		measure(hello);
 		measure(hello2);
-		dbj::console::print("\n", Line80);
+		print("\n", Line80);
 		hello.run("\nHelloWorld -- Default policies");
 		hello2.run("\nHelloWorld2 -- No inheritance");
-		dbj::console::print("\n", Line80);
-		dbj::console::print("\nAFTER RUN\n");
+		print("\n", Line80);
+		print("\nAFTER RUN\n");
 		measure(hello);
 		measure(hello2);
+		print("\n", Line80);
 	};
 
 	DBJ_TEST_UNIT( _documents_ ) {
 
-		using IOperation = dbj_samples::docops::IOperation;
+		using IOperation = dbj::samples::docops::IOperation;
 		/* OPTIONAL: configure the docops to use online operations
 		*/
-		auto ot = dbj_samples::docops::operations_type(IOperation::type::online);
-		dbj_samples::documents::TextDoc text;
-		dbj_samples::documents::opendoc(text, "world oyster");
-	}
-
-	DBJ_TEST_UNIT(_tokenizer_test) {
-
-		using dbj::console::print;
-		const char * sentence = "abra % ka % dabra";
-		//dbj_samples::fm::tokenizer tok(sentence, "%");
-		print("Input sentence: ", sentence);
-		//for (auto w : tok) {
-		//	print("\ntok[", w, "] = [", tok[w], "]");
-		//}
-		print("\n");
+		auto ot = dbj::samples::docops::operations_type(IOperation::type::online);
+		dbj::samples::documents::TextDoc text;
+		dbj::samples::documents::opendoc(text, "world oyster");
 	}
 
 DBJ_TEST_SPACE_CLOSE

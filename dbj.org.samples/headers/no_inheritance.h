@@ -4,7 +4,7 @@
 #define implements public
 #endif
 
-namespace dbj_samples {
+namespace dbj::samples {
 	namespace docops {
 		using string = std::string;
 		/*
@@ -115,55 +115,6 @@ namespace documents {
 
 	}
 } // dbj
-
-namespace inner {
-
-/* 
-use for CRTP and Delegation 
-this is not ABC
-*/
-template<typename T> struct Log_Service 
-{
-	void log_target  ( const T * ) const noexcept  {  }
-};
-
-/* CRTP */
-class App1 : Log_Service<App1> {
-public:
-	App1() noexcept {}
-	void log( const App1 * src  = 0) {
-		// implement the log service 
-		// from the base
-		Log_Service::log_target( this );
-	}
-};
-
-/*	Delegation*/
-class App2 {
-	typedef Log_Service<App2> log_svc_type;
-	friend struct log_svc_type;
-	const log_svc_type & log_svc_;
-public:
-	App2() noexcept : log_svc_(log_svc_type{}) {
-	}
-	void log() noexcept {
-		// delegate to log 
-		// service 
-		log_svc_.log_target(this);
-	}
-};
-
-#ifdef DBJ_TESTING_ONAIR
-	namespace {
-		DBJ_TEST_UNIT(" dbj delegation research") {
-			App2 app_2 ;
-			App1 app_1 ;
-			app_1.log();
-			app_2.log();
-		}
-	}
-#endif
-}
 
   /*
   Copyright 2017 by dbj@dbj.org

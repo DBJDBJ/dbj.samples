@@ -6,7 +6,9 @@
 #include <utility>
 namespace car_factory {
 
-	// interface to swapable engines
+	// engine tag is public
+	// thus clients can also use it
+	// to order a car of particular kind
 	enum class engine_tag : char { old = 'O', next = 'N' };
 
 	namespace engine_workshop { // hidden from clients
@@ -43,6 +45,15 @@ namespace car_factory {
 			virtual bool start() const noexcept  override { return true; }
 		};
 
+		/*
+		   bellow is a proof of concept
+		   in reality making a new engine is long process
+		   thus we should have engine production plant work on a separate thread
+		   produce the engines at some predefined interval and place them on
+		   the properly tagged shelves in the output warehouse
+		   ordering method bellow should go to this warehouse, and wait only if there
+		   are no new engines ready
+		*/
 		IEngine * make_new_engine( engine_tag tag_ ) {
 			switch (tag_ ) {
 			case engine_tag::old: return new old{};

@@ -10,13 +10,9 @@ This is WIN32 implementation
 #endif
 #include <cstdint>
 #include <chrono>
-#include "no_copy_no_move.h"
+// #include "no_copy_no_move.h"
 
-#ifndef implements
-#define implements public
-#endif
-
-namespace dbj_samples {
+namespace dbj::samples {
 
 #if defined(_WIN64)		
 	typedef std::uint64_t			time_ticks_type;
@@ -51,17 +47,25 @@ namespace dbj_samples {
 
 
 	/// <summary>
-	/// win32_timer_engine Interface 
+	/// timer engine Interface 
 	/// </summary>
-	struct ITimer
+	struct __declspec(novtable) ITimer
 	{
 		virtual time_ticks_type	start() = 0;
 		virtual time_ticks_type	elapsed() = 0;
 	};
 
+	inline void sleep_seconds(int seconds_)	{
+		std::this_thread::sleep_for(std::chrono::seconds(seconds_));
+	}
+
+	using itimer_pointer = std::shared_ptr<ITimer>;
+
+	enum class timer_kind : int { win32 = 0, modern };
+
 	namespace internal {
 
-		class  win32_timer_engine final : implements ITimer
+		class  win32_timer_engine final : public ITimer
 		{
 		public:
 			win32_timer_engine  () noexcept
@@ -129,7 +133,7 @@ namespace dbj_samples {
 
 		using namespace std::chrono;
 
-		class modern_timer final  : implements ITimer 
+		class modern_timer final  : public ITimer 
 		{
 			mutable system_clock::time_point start_ =
 				system_clock::now() ;
@@ -152,15 +156,7 @@ namespace dbj_samples {
 
 	} // internal
 
-	inline void sleep_seconds (int seconds_)
-	{
-	// ::Sleep(ms);
-	std::this_thread::sleep_for(std::chrono::seconds(seconds_));
-	}
 
-	using itimer_pointer = std::shared_ptr<ITimer>;
-
-	enum class timer_kind : int { win32 = 0, modern = 0 };
 
 	/// <summary>
 	/// the only visible class
@@ -169,11 +165,11 @@ namespace dbj_samples {
 	/// at construction time by 
 	/// the factory method 
 	/// </summary>
-	class the_timer final 
+	class  __declspec(novtable) the_timer final 
 	{
 		mutable itimer_pointer imp_{};
 		
-		the_timer(itimer_pointer engine_)
+		explicit the_timer(itimer_pointer && engine_)
 	    {
 			imp_ = std::move(engine_);
 		}
@@ -194,19 +190,27 @@ namespace dbj_samples {
 
 		time_ticks_type elapsed()  { return imp_->elapsed(); }
 
+	/// <summary>
+	/// the factory method
+	/// </summary>
+	/// <returns>the_timer instance</returns>
 		friend the_timer create_timer(timer_kind which_);
 
 	}; // the timer
 
+	   /// <summary>
+	   /// the factory method
+	   /// </summary>
+	   /// <returns>the_timer instance</returns>
 	inline the_timer create_timer(timer_kind which_) {
 
 		if (which_ == timer_kind::win32)
 			return  the_timer{
-			std::unique_ptr<ITimer>{ new internal::win32_timer_engine{} }
+			itimer_pointer{ new internal::win32_timer_engine{} }
 		};
 		//
 		return the_timer{
-			std::unique_ptr<ITimer>{ new internal::modern_timer{} }
+			itimer_pointer{ new internal::modern_timer{} }
 		};
 	}
 

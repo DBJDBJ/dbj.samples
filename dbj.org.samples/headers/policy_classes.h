@@ -10,7 +10,7 @@ explained here: https://docs.microsoft.com/en-us/cpp/cpp/interface
 #define implements public
 #endif
 
-namespace dbj_samples {
+namespace dbj::samples {
 	namespace philology {
 		using std::string;
 		using dbj::console::print;
@@ -88,7 +88,7 @@ public:
 
 
 	} // namespace philology 
-} //namespace dbj_samples 
+} //namespace dbj::samples 
 
 /*Copyright 2017 by dbj@dbj.org
 
