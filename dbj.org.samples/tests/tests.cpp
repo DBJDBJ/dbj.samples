@@ -73,19 +73,16 @@ DBJ_TEST_UNIT(_timers_) {
 
 	using namespace dbj::samples;
 
-	auto test = [&]( timer_kind which_ ) {
+	auto test = [&]( timer_kind which_ ) -> time_ticks_type {
 		using namespace dbj::samples;
 		auto timer_ = create_timer(which_) ;
-
-		auto stp = DBJ_TEST_ATOM(timer_.start());
+		time_ticks_type stp = DBJ_TEST_ATOM(timer_.start());
 		sleep_seconds(1);
-		auto esd = DBJ_TEST_ATOM(timer_.elapsed());
-		return esd;
+		time_ticks_type esd = DBJ_TEST_ATOM(timer_.elapsed());
+		 return esd;
 	};
-	dbj::console::print("\nWIN32 Timer");
-	auto elaps_1 = test(timer_kind::win32 );
-	dbj::console::print("\nModern Timer");
-	auto elaps_2 = test(timer_kind::modern );
+	time_ticks_type elaps_1 = DBJ_TEST_ATOM( test(timer_kind::win32 ) );
+	time_ticks_type elaps_2 = DBJ_TEST_ATOM( test(timer_kind::modern ) );
 
 	_ASSERTE( elaps_1 == elaps_2 );
 }

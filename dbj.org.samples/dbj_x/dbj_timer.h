@@ -21,7 +21,6 @@ namespace dbj::samples {
 	typedef std::uint32_t			time_ticks_type;
 	typedef std::uint32_t			frequency_type;
 #endif
-#if 0
 	/// <summary>
 	/// https://stackoverflow.com/questions/23374153/convert-double-to-int-in-c-without-round-down-errors
 	/// </summary>
@@ -33,8 +32,6 @@ namespace dbj::samples {
 	 round_to_tt_type(T  ull_) {
 		return static_cast<time_ticks_type>(ull_ < 0 ? ull_ - 0.5 : ull_ + 0.5);
 	}
-#endif
-
 	/// <summary>
 	/// same but for integrals
 	/// </summary>
@@ -62,7 +59,7 @@ namespace dbj::samples {
 
 	using itimer_pointer = std::shared_ptr<ITimer>;
 
-	enum class timer_kind : int { win32 = 0, modern };
+	enum class timer_kind : int { win32 = 0, modern = 1 };
 
 	namespace internal {
 
@@ -132,27 +129,29 @@ namespace dbj::samples {
 		   }
 		   */
 
-		using namespace std::chrono;
+		using std::chrono::duration_cast;
 
 		class modern_timer final  : public ITimer 
 		{
-			mutable system_clock::time_point start_ =
-				system_clock::now() ;
 		public:
+			using Clock = typename  std::chrono::steady_clock;
+			using Seconds = typename std::chrono::seconds;
+			using MilliSeconds = typename std::chrono::milliseconds;
+			using Microseconds = typename std::chrono::microseconds;
+			using Nanoseconds = typename std::chrono::nanoseconds;
+			using Unit = MilliSeconds;
 			// Inherited via ITimer
 			virtual time_ticks_type start() override {
-				this->start_ = system_clock::now();
-				std::time_t now_c = system_clock::to_time_t(
-					(start_)
-				);
-				return now_c;
+				this->start_ =  Clock::now();
+				return duration_cast<MilliSeconds>(start_.time_since_epoch()).count();
 			}
 
 			virtual time_ticks_type elapsed() override {
-				system_clock::time_point end
-					= system_clock::now();
-				return duration_cast<microseconds>(end - start_).count();
+				typename Unit::rep elapsed = duration_cast<Unit>(Clock::now() - start_).count();
+				return elapsed;
 			}
+		private: 
+			Clock::time_point start_ = Clock::now() ;
 		};
 
 	} // internal
