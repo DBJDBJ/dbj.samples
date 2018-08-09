@@ -10,10 +10,14 @@
 #include <chrono>
 // #include "no_copy_no_move.h"
 
-namespace dbj::samples {
+/// <summary>
+/// dbj std chrono utilities
+/// note: name etimology is here: https://en.wikipedia.org/wiki/Calends
+/// </summary>
+namespace dbj::kalends {
 
 	using Clock = typename  std::chrono::steady_clock;
-	// std chrono cocnepts is that (for example) a Second
+	// std chrono concept is that (for example) a Second
 	// is a duration in time, of a lengt of one second
 	using Seconds		= typename std::chrono::seconds;
 	using MilliSeconds	= typename std::chrono::milliseconds;
@@ -32,14 +36,13 @@ namespace dbj::samples {
 
 	/// <summary>
 	/// unit duration is ticks as std chrono duration
-	/// second template argument is defaulted as
-	/// std::ratio<1>
+	/// second template argument is std::nano
 	/// this is the "core of the trick" for transforming
-	/// ticks to standard std chrono time units 
-	/// aka durations
+	/// ticks to standard std chrono time units aka durations
+	/// this is effectively nanosecond
 	/// NOTE: UnitDiration::rep is the type sam as time_ticks_type
 	/// </summary>
-	using UnitDuration = typename std::chrono::duration<time_ticks_type>;
+	using UnitDuration = typename std::chrono::duration<time_ticks_type, std::nano>;
 
 	/// <summary>
 	/// we use the UnitDuration to transform tick to
@@ -48,11 +51,22 @@ namespace dbj::samples {
 	/// for example 1 second is a duration that has takend 1 second.
 	/// </summary>
 	template< typename Unit >
-	inline typename Unit ticks_to_time_unit(time_ticks_type ticks_ ) {
+	inline typename Unit to_desired_unit(time_ticks_type ticks_ ) {
 		UnitDuration dura{ ticks_ };
 		// we let std lib to create a duration we are transforming to
 		return std::chrono::duration_cast<Unit>(dura);
 	}
+
+	/// <summary>
+	/// transfrom from duration unit (aka "ticks") to desired other 
+	/// std chrono duration , named as particular unit unit
+	/// </summary>
+	template< typename Unit >
+	inline typename Unit to_desired_unit(UnitDuration ticks_) {
+		// we let std lib to create a duration we are transforming to
+		return std::chrono::duration_cast<Unit>(ticks_);
+	}
+
 
 #pragma region rounding to time ticks type
 	/// <summary>
@@ -112,22 +126,38 @@ namespace dbj::samples {
 				_ASSERTE(threadHandle);
 
 				DWORD_PTR systemMask;
-				::GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask, &systemMask);
-				::SetThreadAffinityMask(threadHandle, 1);
+//				::GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask, &systemMask);
+				//::SetThreadAffinityMask(threadHandle, 1);
 				::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
-				::SetThreadAffinityMask(threadHandle, processAffinityMask);
+//				::SetThreadAffinityMask(threadHandle, processAffinityMask);
 			}
 
 			// virtual time_ticks_type start() override
 			virtual time_ticks_type start() override  {
-				return this->startTime = get_time();
+				this->startTime = get_time();
+				return this->startTime ;
 			}
 
-			virtual time_ticks_type elapsed() override {
-				time_ticks_type const elapsedTime = get_time() - startTime;
+			virtual time_ticks_type elapsed() override 
+			{
+				/*
+				std::milli;
+				std::micro;
+				std::nano;
+				*/
+				time_ticks_type elapsed_ticks = get_time() - startTime;
+				return round_to_tt_type( (elapsed_ticks * std::nano::den ) / frequency ) ;
+#if 0
+				{
+					auto wot = elapsedTime;
+					wot *= 1000000 ; // to microseconds
+					wot /= this->frequency;
+					auto dumzy = wot;
+				}
 				// ticks
-					return round_to_tt_type( elapsedTime / frequency );
+				return round_to_tt_type (elapsedTime / frequency) ;
                 // milliseconds is ticks * 1000 ;
+#endif 0
 			}
 
 		private:
@@ -135,9 +165,9 @@ namespace dbj::samples {
 			{
 				_ASSERTE(threadHandle);
 				LARGE_INTEGER curTime{};
-				::SetThreadAffinityMask(threadHandle, 1);
+				//::SetThreadAffinityMask(threadHandle, 1);
 				::QueryPerformanceCounter(&curTime);
-				::SetThreadAffinityMask(threadHandle, processAffinityMask);
+				//::SetThreadAffinityMask(threadHandle, processAffinityMask);
 				return (time_ticks_type)curTime.QuadPart ;
 			}
 
@@ -173,19 +203,17 @@ namespace dbj::samples {
 		class modern_timer final  : public ITimer 
 		{
 		public:
-			using Unit = MilliSeconds;
 			// Inherited via ITimer
 			virtual time_ticks_type start() override {
 				this->start_ =  Clock::now();
-				return duration_cast<MilliSeconds>(start_.time_since_epoch()).count();
+				return this->start_.time_since_epoch().count();
 			}
 
 			virtual time_ticks_type elapsed() override {
-				typename Unit::rep elapsed = duration_cast<Unit>(Clock::now() - start_).count();
-				return elapsed;
+				return (Clock::now() - start_).count() ;
 			}
 		private: 
-			Clock::time_point start_ = Clock::now() ;
+			Clock::time_point start_{ Clock::now() };
 		};
 
 	} // internal

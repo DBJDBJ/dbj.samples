@@ -71,10 +71,10 @@ auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) 
 */
 DBJ_TEST_UNIT(_timers_) {
 
-	using namespace dbj::samples;
+	using namespace dbj::kalends;
 
 	auto test = [&]( timer_kind which_ ) -> time_ticks_type {
-		using namespace dbj::samples;
+		using namespace dbj::kalends;
 		auto timer_ = create_timer(which_) ;
 		time_ticks_type stp = DBJ_TEST_ATOM(timer_.start());
 		sleep_seconds(1);
@@ -82,15 +82,15 @@ DBJ_TEST_UNIT(_timers_) {
 		 return esd;
 	};
 	time_ticks_type elaps_1 = DBJ_TEST_ATOM( test(timer_kind::win32 ) );
-	MilliSeconds elaps_milli_1 = ticks_to_time_unit<MilliSeconds>(elaps_1);
-	MilliSeconds::rep elaps_milli_count_1 = elaps_milli_1.count();
 	time_ticks_type elaps_2 = DBJ_TEST_ATOM( test(timer_kind::modern ) );
 
+	MilliSeconds elaps_1_seconds = to_desired_unit<MilliSeconds>(elaps_1);
+	MilliSeconds elaps_2_seconds = to_desired_unit<MilliSeconds>(elaps_2);
 	// this means the difference can be max 10
 	time_ticks_type tolerance{ 10 + 1 };
 
 	_ASSERTE(tolerance > 
-		 static_cast<time_ticks_type>(std::llabs(elaps_milli_count_1 - elaps_2)) 
+		 static_cast<time_ticks_type>(std::llabs(elaps_1_seconds.count() - elaps_2_seconds.count()))
 	);
 }
 
