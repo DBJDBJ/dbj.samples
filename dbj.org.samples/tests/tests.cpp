@@ -84,7 +84,9 @@ DBJ_TEST_UNIT(_timers_) {
 	time_ticks_type elaps_1 = DBJ_TEST_ATOM( test(timer_kind::win32 ) );
 	time_ticks_type elaps_2 = DBJ_TEST_ATOM( test(timer_kind::modern ) );
 
-	_ASSERTE( elaps_1 == elaps_2 );
+	time_ticks_type tolerance = 10;
+
+	_ASSERTE( std::llabs(elaps_1 - elaps_2) < tolerance );
 }
 
 typedef enum class CODE : UINT {
