@@ -82,11 +82,16 @@ DBJ_TEST_UNIT(_timers_) {
 		 return esd;
 	};
 	time_ticks_type elaps_1 = DBJ_TEST_ATOM( test(timer_kind::win32 ) );
+	MilliSeconds elaps_milli_1 = ticks_to_time_unit<MilliSeconds>(elaps_1);
+	MilliSeconds::rep elaps_milli_count_1 = elaps_milli_1.count();
 	time_ticks_type elaps_2 = DBJ_TEST_ATOM( test(timer_kind::modern ) );
 
-	time_ticks_type tolerance = 10;
+	// this means the difference can be max 10
+	time_ticks_type tolerance{ 10 + 1 };
 
-	_ASSERTE( std::llabs(elaps_1 - elaps_2) < tolerance );
+	_ASSERTE(tolerance > 
+		 static_cast<time_ticks_type>(std::llabs(elaps_milli_count_1 - elaps_2)) 
+	);
 }
 
 typedef enum class CODE : UINT {

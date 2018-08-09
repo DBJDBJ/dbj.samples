@@ -1,8 +1,6 @@
 #pragma once
-/*
-Taken form UntiTest++ then modified by dbj.org
-This is WIN32 implementation
-*/
+
+#define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #ifndef _ASSERTE
@@ -14,13 +12,49 @@ This is WIN32 implementation
 
 namespace dbj::samples {
 
+	using Clock = typename  std::chrono::steady_clock;
+	// std chrono cocnepts is that (for example) a Second
+	// is a duration in time, of a lengt of one second
+	using Seconds		= typename std::chrono::seconds;
+	using MilliSeconds	= typename std::chrono::milliseconds;
+	using Microseconds	= typename std::chrono::microseconds;
+	using Nanoseconds	= typename std::chrono::nanoseconds;
+
 #if defined(_WIN64)		
+	// unsigned long long
 	typedef std::uint64_t			time_ticks_type;
 	typedef std::uint64_t			frequency_type;
 #else
+	// unsigned int
 	typedef std::uint32_t			time_ticks_type;
 	typedef std::uint32_t			frequency_type;
 #endif
+
+	/// <summary>
+	/// unit duration is ticks as std chrono duration
+	/// second template argument is defaulted as
+	/// std::ratio<1>
+	/// this is the "core of the trick" for transforming
+	/// ticks to standard std chrono time units 
+	/// aka durations
+	/// NOTE: UnitDiration::rep is the type sam as time_ticks_type
+	/// </summary>
+	using UnitDuration = typename std::chrono::duration<time_ticks_type>;
+
+	/// <summary>
+	/// we use the UnitDuration to transform tick to
+	/// different time units
+	/// remonder: Time Unit is std chrono duration
+	/// for example 1 second is a duration that has takend 1 second.
+	/// </summary>
+	template< typename Unit >
+	inline typename Unit ticks_to_time_unit(time_ticks_type ticks_ ) {
+		UnitDuration dura{ ticks_ };
+		// we let std lib to create a duration we are transforming to
+		return std::chrono::duration_cast<Unit>(dura);
+	}
+
+#pragma region rounding to time ticks type
 	/// <summary>
 	/// https://stackoverflow.com/questions/23374153/convert-double-to-int-in-c-without-round-down-errors
 	/// </summary>
@@ -43,6 +77,13 @@ namespace dbj::samples {
 		round_to_tt_type(T  int_) {
 		return static_cast<time_ticks_type>(int_);
 	}
+#pragma endregion 
+
+	inline void sleep_seconds(int seconds_) {
+		std::this_thread::sleep_for(std::chrono::seconds(seconds_));
+	}
+
+	enum class timer_kind : int { win32 = 0, modern = 1 };
 
 	/// <summary>
 	/// timer engine Interface 
@@ -53,16 +94,14 @@ namespace dbj::samples {
 		virtual time_ticks_type	elapsed() = 0;
 	};
 
-	inline void sleep_seconds(int seconds_)	{
-		std::this_thread::sleep_for(std::chrono::seconds(seconds_));
-	}
-
 	using itimer_pointer = std::shared_ptr<ITimer>;
-
-	enum class timer_kind : int { win32 = 0, modern = 1 };
 
 	namespace internal {
 
+		/*
+		Taken form UntiTest++ then modified by dbj.org
+		This is WIN32 implementation
+		*/
 		class  win32_timer_engine final : public ITimer
 		{
 		public:
@@ -86,9 +125,9 @@ namespace dbj::samples {
 
 			virtual time_ticks_type elapsed() override {
 				time_ticks_type const elapsedTime = get_time() - startTime;
-				time_ticks_type const seconds = 
-					round_to_tt_type( elapsedTime / frequency );
-				return seconds * 1000 ;
+				// ticks
+					return round_to_tt_type( elapsedTime / frequency );
+                // milliseconds is ticks * 1000 ;
 			}
 
 		private:
@@ -134,11 +173,6 @@ namespace dbj::samples {
 		class modern_timer final  : public ITimer 
 		{
 		public:
-			using Clock = typename  std::chrono::steady_clock;
-			using Seconds = typename std::chrono::seconds;
-			using MilliSeconds = typename std::chrono::milliseconds;
-			using Microseconds = typename std::chrono::microseconds;
-			using Nanoseconds = typename std::chrono::nanoseconds;
 			using Unit = MilliSeconds;
 			// Inherited via ITimer
 			virtual time_ticks_type start() override {
