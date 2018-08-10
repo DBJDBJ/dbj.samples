@@ -8,14 +8,20 @@
 #endif
 #include <cstdint>
 #include <chrono>
-// #include "no_copy_no_move.h"
 
+extern "C" inline void dbj_sleep_seconds(int seconds_) {
+	std::this_thread::sleep_for(std::chrono::seconds(seconds_));
+}
 /// <summary>
-/// dbj std chrono utilities
+/// `Kalends` are dbj std chrono utilities
 /// note: name etimology is here: https://en.wikipedia.org/wiki/Calends
 /// </summary>
 namespace dbj::kalends {
 
+	/// <summary>
+	/// all abstractions in this namespace do use 
+	/// the same std chrono clock
+	/// </summary>
 	using Clock = typename  std::chrono::steady_clock;
 	// std chrono concept is that (for example) a Second
 	// is a duration in time, of a lengt of one second
@@ -24,25 +30,17 @@ namespace dbj::kalends {
 	using Microseconds	= typename std::chrono::microseconds;
 	using Nanoseconds	= typename std::chrono::nanoseconds;
 
-#if defined(_WIN64)		
-	// unsigned long long
-	typedef std::uint64_t			time_ticks_type;
-	typedef std::uint64_t			frequency_type;
-#else
-	// unsigned int
-	typedef std::uint32_t			time_ticks_type;
-	typedef std::uint32_t			frequency_type;
-#endif
+	using time_ticks_type	= Clock::rep	;
+	using frequency_type	= Clock::rep	;
 
 	/// <summary>
 	/// unit duration is ticks as std chrono duration
 	/// second template argument is std::nano
 	/// this is the "core of the trick" for transforming
 	/// ticks to standard std chrono time units aka durations
-	/// this is effectively nanosecond
-	/// NOTE: UnitDiration::rep is the type sam as time_ticks_type
+	/// NOTE: UnitDiration::rep is the type same as time_ticks_type
 	/// </summary>
-	using UnitDuration = typename std::chrono::duration<time_ticks_type, std::nano>;
+	using UnitDuration = typename Clock::duration ;
 
 	/// <summary>
 	/// we use the UnitDuration to transform tick to
@@ -52,8 +50,9 @@ namespace dbj::kalends {
 	/// </summary>
 	template< typename Unit >
 	inline typename Unit to_desired_unit(time_ticks_type ticks_ ) {
+		// create unit duration from ticks
 		UnitDuration dura{ ticks_ };
-		// we let std lib to create a duration we are transforming to
+		// we let std lib create a duration we are transforming to
 		return std::chrono::duration_cast<Unit>(dura);
 	}
 
@@ -75,7 +74,7 @@ namespace dbj::kalends {
 	/// <param name="ull_">floating type</param>
 	/// <returns>rounded to time_ticks_type</returns>
 	template<typename T>
-	inline 
+	inline constexpr
 	typename std::enable_if_t< std::is_floating_point_v< T >, time_ticks_type >
 	 round_to_tt_type(T  ull_) {
 		return static_cast<time_ticks_type>(ull_ < 0 ? ull_ - 0.5 : ull_ + 0.5);
@@ -86,16 +85,12 @@ namespace dbj::kalends {
 	/// <param name="ull_">int type</param>
 	/// <returns>narrowed to time_ticks_type</returns>
 	template<typename T>
-	inline
+	inline constexpr
 		typename std::enable_if_t< std::is_integral_v< T >, time_ticks_type >
 		round_to_tt_type(T  int_) {
 		return static_cast<time_ticks_type>(int_);
 	}
 #pragma endregion 
-
-	inline void sleep_seconds(int seconds_) {
-		std::this_thread::sleep_for(std::chrono::seconds(seconds_));
-	}
 
 	enum class timer_kind : int { win32 = 0, modern = 1 };
 
@@ -104,11 +99,12 @@ namespace dbj::kalends {
 	/// </summary>
 	struct __declspec(novtable) ITimer
 	{
+		using pointer = std::shared_ptr<ITimer>;
+
 		virtual time_ticks_type	start() = 0;
 		virtual time_ticks_type	elapsed() = 0;
 	};
 
-	using itimer_pointer = std::shared_ptr<ITimer>;
 
 	namespace internal {
 
@@ -123,56 +119,56 @@ namespace dbj::kalends {
 				: threadHandle(::GetCurrentThread())
 				, startTime(0)
 			{
+				// https://docs.microsoft.com/en-us/windows/desktop/ProcThread/multiple-processors
 				_ASSERTE(threadHandle);
-
-				DWORD_PTR systemMask;
-//				::GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask, &systemMask);
-				//::SetThreadAffinityMask(threadHandle, 1);
+				DWORD_PTR systemMask{};
+				::GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask, &systemMask);
+				// Set a processor affinity mask for the current thread
+				// to the same CPU always?
+				::SetThreadAffinityMask(threadHandle, 1);
 				::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&frequency));
-//				::SetThreadAffinityMask(threadHandle, processAffinityMask);
+				::SetThreadAffinityMask(threadHandle, processAffinityMask);
 			}
 
-			// virtual time_ticks_type start() override
+			// 
 			virtual time_ticks_type start() override  {
 				this->startTime = get_time();
-				return this->startTime ;
+				return reconcile_and_round( this->startTime );
 			}
 
 			virtual time_ticks_type elapsed() override 
 			{
-				/*
-				std::milli;
-				std::micro;
-				std::nano;
-				*/
-				time_ticks_type elapsed_ticks = get_time() - startTime;
-				return round_to_tt_type( (elapsed_ticks * std::nano::den ) / frequency ) ;
-#if 0
-				{
-					auto wot = elapsedTime;
-					wot *= 1000000 ; // to microseconds
-					wot /= this->frequency;
-					auto dumzy = wot;
-				}
-				// ticks
-				return round_to_tt_type (elapsedTime / frequency) ;
-                // milliseconds is ticks * 1000 ;
-#endif 0
+				// time_ticks_type elapsed_ticks = get_time() - startTime;
+				return reconcile_and_round(get_time() - startTime);
+				// round_to_tt_type((elapsed_ticks * Clock::period::den) / frequency);
 			}
 
 		private:
+			/*
+			IMPORTANT!
+			Clock::period::den is required to reconcile win32 ticks
+			to the ticks of the std chrono clock we use
+			`den` is denominator part of the std::ratio
+			for example if Clock is `steady_clock` 
+			`period` is std::chrono::steady_clock::period
+			which happens to be the alias for std::nano
+			*/
+			constexpr time_ticks_type reconcile_and_round(time_ticks_type win32_ticks) noexcept {
+				return round_to_tt_type((win32_ticks * Clock::period::den) / frequency);
+			}
+
 			time_ticks_type	get_time() const
 			{
 				_ASSERTE(threadHandle);
 				LARGE_INTEGER curTime{};
-				//::SetThreadAffinityMask(threadHandle, 1);
+				::SetThreadAffinityMask(threadHandle, 1);
 				::QueryPerformanceCounter(&curTime);
-				//::SetThreadAffinityMask(threadHandle, processAffinityMask);
+				::SetThreadAffinityMask(threadHandle, processAffinityMask);
 				return (time_ticks_type)curTime.QuadPart ;
 			}
 
 			void*			threadHandle{};
-			frequency_type  processAffinityMask{};
+			DWORD_PTR		processAffinityMask{};
 			time_ticks_type startTime{};
 			frequency_type  frequency{};
 		}; // win32_timer_engine
@@ -227,9 +223,9 @@ namespace dbj::kalends {
 	/// </summary>
 	class  __declspec(novtable) the_timer final 
 	{
-		mutable itimer_pointer imp_{};
+		mutable ITimer::pointer imp_{};
 		
-		explicit the_timer(itimer_pointer && engine_)
+		explicit the_timer(ITimer::pointer && engine_)
 	    {
 			imp_ = std::move(engine_);
 		}
@@ -266,13 +262,42 @@ namespace dbj::kalends {
 
 		if (which_ == timer_kind::win32)
 			return  the_timer{
-			itimer_pointer{ new internal::win32_timer_engine{} }
+			ITimer::pointer{ new internal::win32_timer_engine{} }
 		};
 		//
 		return the_timer{
-			itimer_pointer{ new internal::modern_timer{} }
+			ITimer::pointer{ new internal::modern_timer{} }
 		};
 	}
 
-} // dbj
+} // dbj::kalends
 
+DBJ_TEST_UNIT( dbj_timers_ ) {
+
+	using namespace dbj::kalends;
+
+	auto test = [&](timer_kind which_) -> time_ticks_type {
+		using namespace dbj::kalends;
+		auto timer_ = create_timer(which_);
+		time_ticks_type stp = DBJ_TEST_ATOM(timer_.start());
+		dbj_sleep_seconds(1);
+		time_ticks_type esd = DBJ_TEST_ATOM(timer_.elapsed());
+		return esd;
+	};
+
+	MilliSeconds elaps_1 = to_desired_unit<MilliSeconds>(test(timer_kind::win32));
+	MilliSeconds elaps_2 = to_desired_unit<MilliSeconds>(test(timer_kind::modern));
+
+	// this means the difference can be max 10
+	time_ticks_type tolerance{ 10  };
+
+	bool is_inside_tolerance = ((tolerance+1) >
+		static_cast<time_ticks_type>(std::llabs(elaps_1.count() - elaps_2.count()))
+		);
+
+	dbj::console::print(
+		"\nWIN32  timer has measured ", elaps_1.count(), " milliseconds",
+		"\nModern timer has measured ", elaps_2.count(), " milliseconds",
+		"\nThe difference is ", (is_inside_tolerance ? "" : "not"), " inside tolerance of ", tolerance, " milliseconds"
+	);
+}

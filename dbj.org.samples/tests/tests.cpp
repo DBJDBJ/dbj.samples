@@ -69,30 +69,7 @@ auto reporter = [&](const char * prompt = "", const void * this_ptr = nullptr ) 
 	dbj::console::print("\n[", address_str, "]\t", prompt );
 };
 */
-DBJ_TEST_UNIT(_timers_) {
 
-	using namespace dbj::kalends;
-
-	auto test = [&]( timer_kind which_ ) -> time_ticks_type {
-		using namespace dbj::kalends;
-		auto timer_ = create_timer(which_) ;
-		time_ticks_type stp = DBJ_TEST_ATOM(timer_.start());
-		sleep_seconds(1);
-		time_ticks_type esd = DBJ_TEST_ATOM(timer_.elapsed());
-		 return esd;
-	};
-	time_ticks_type elaps_1 = DBJ_TEST_ATOM( test(timer_kind::win32 ) );
-	time_ticks_type elaps_2 = DBJ_TEST_ATOM( test(timer_kind::modern ) );
-
-	MilliSeconds elaps_1_seconds = to_desired_unit<MilliSeconds>(elaps_1);
-	MilliSeconds elaps_2_seconds = to_desired_unit<MilliSeconds>(elaps_2);
-	// this means the difference can be max 10
-	time_ticks_type tolerance{ 10 + 1 };
-
-	_ASSERTE(tolerance > 
-		 static_cast<time_ticks_type>(std::llabs(elaps_1_seconds.count() - elaps_2_seconds.count()))
-	);
-}
 
 typedef enum class CODE : UINT {
 	page_1252 = 1252u,   // western european windows
