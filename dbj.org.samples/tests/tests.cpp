@@ -10,7 +10,9 @@
 #include "../headers/dbj_lambda_lists.h"
 #include "../dbj_any/dbj_any_node.h"
 #include "../dbjtree\dbj_tree_tests.h"
-#include "../dbj_x/dbj_timer.h"
+
+#include <dbj_kalends_test.h>
+#include <dbj_string_util_test.h>
 
 DBJ_TEST_SPACE_OPEN(local_tests)
 

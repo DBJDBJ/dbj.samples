@@ -62,9 +62,6 @@
     <ClInclude Include="dbj_x\dbj_micro_printf.h">
       <Filter>dbj_x</Filter>
     </ClInclude>
-    <ClInclude Include="dbj_x\dbj_timer.h">
-      <Filter>dbj_x</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_x\string_literals_with_universal_character_names.h">
       <Filter>dbj_x</Filter>
     </ClInclude>
