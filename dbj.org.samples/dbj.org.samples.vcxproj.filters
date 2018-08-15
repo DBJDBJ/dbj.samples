@@ -18,6 +18,7 @@
     <ClCompile Include="tests\dbj_traits_testing.cpp" />
     <ClCompile Include="tests\string_transformations.cpp" />
     <ClCompile Include="tests\console_tests.cpp" />
+    <ClCompile Include="tests\pretty_printer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dbjtree\dbjtree.h">
