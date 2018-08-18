@@ -11,7 +11,7 @@ namespace dbj::samples {
 	auto out = [&]( const auto & s_) 
 	{
 		using namespace std;
-		using FT = dbj::tt::reduce_to_fundamental_t< decltype(s_) >;
+		using FT = dbj::tt::to_base_t< decltype(s_) >;
 		auto type_name_ = dbj::tt::name_<FT>();
 
 		if constexpr (dbj::tt::same_types<FT, char>) {

@@ -18,7 +18,51 @@
 #include <test/dbj_string_util_test.h>
 #include <test/dbj_kv_store_test.h>
 
+#include <string_view>
+
 DBJ_TEST_SPACE_OPEN(local_tests)
+
+/**************************************************************************************************/
+using namespace std::literals;
+
+struct STANDARD {
+	constexpr static const auto compiletime_static_string_view_constant() {
+		return "compile time"sv;
+	}
+};
+
+DBJ_TEST_UNIT(compiletime_static_string_constant)
+{
+	auto return_by_val = []()  {
+		auto return_by_val = []()  {
+			auto return_by_val = []()  {
+				auto return_by_val = []()  {
+					return STANDARD::compiletime_static_string_view_constant();
+				};
+				return return_by_val();
+			};
+			return return_by_val();
+		};
+		return return_by_val();
+	};
+
+	// std artefacts conformance
+	auto the_constant = return_by_val();
+
+	_ASSERTE(the_constant == "compile time");
+
+	static_assert(STANDARD::compiletime_static_string_view_constant() == "compile time" );
+
+	// make init list
+	auto ref_w = { the_constant  } ;
+	// make vector
+	const std::vector <char> vcarr{
+		the_constant.data(), the_constant.data() + the_constant.size() 
+	};
+
+	auto where = the_constant.find('e');
+}
+/**************************************************************************************************/
 
 template< typename T>
 void array_analyzer (const T & specimen) {
