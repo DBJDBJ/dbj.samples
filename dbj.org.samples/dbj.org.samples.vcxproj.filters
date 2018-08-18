@@ -78,9 +78,6 @@
     <ClInclude Include="dbj_x\dbj_swapable_engines.h">
       <Filter>dbj_x</Filter>
     </ClInclude>
-    <ClInclude Include="headers\no_copy_no_move.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="dbj_x\dbj_polymorph.h" />
     <ClInclude Include="dbj_x\no_copy_no_move.h" />
   </ItemGroup>

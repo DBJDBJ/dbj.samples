@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace dbj_samples {
+namespace dbj::samples {
 
 
 	namespace {
