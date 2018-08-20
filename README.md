@@ -1,6 +1,6 @@
 
-# Feasible and Modern C++ 
-## Libary and Mechanisms 
+# Standard C++ is Feasible 
+## Developing and Testing [dbj++ Libary](https://github.com/dbj-systems/dbjplusplus) and Mechanisms 
 ### As presented and used throughout https://dbj.org 
 
 -------------------------------------
