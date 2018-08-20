@@ -53,30 +53,33 @@ namespace dbj::samples {
 	}
 
 	struct A;
-	extern const A not_a ;
+	extern const A empty_a ;
 	struct A
 	{
-		const A& a_ref_{ not_a }; // OK
-		char payload{ '?' };
-		A() {}
-		A( const A & other_ ) : 
-			a_ref_(other_ ), payload((char)other_.payload) {  }
-		A & operator = (A  other_) { std::swap(payload, other_.payload);  return *this; }
+		char state ;
+		const A& ref{ empty_a }; // OK
+		A( ) : state((char)127) {}
+		// copy
+		A(const A & other_) : ref(other_), state(other_.state) { }
+		A & operator = (const A  & other_) = delete; //  { state = other_.state;  return *this; }
+		// move
+		A(A && other_) : ref(other_) { std::swap(state, other_.state); }
+		A & operator = (A && other_) { std::swap(state, other_.state);  return *this; }
 	};
 	
-	inline const A not_a{ };                  // OK
+	inline const A empty_a{ }; // OK
 
 	DBJ_TEST_UNIT(no_copy_no_move) {
 
-		A a_1;  a_1.payload = '*';
-		A a_2{ a_1 };
-		A a_3{ a_2 };
+		auto test = []() {
+			// create a_3 ref a_2 ref a_1 ref empty_a
+			A a_3{     }; a_3.state = '3';
+			A a_2{ a_3 }; a_2.state = '2';
+			A a_1{ a_2 }; a_1.state = '1';
+			return a_3;
+		};
 
-		a_1 = a_2;
-
-		auto r1 = a_1.payload;
-
-		auto r3 = a_1.a_ref_.a_ref_.a_ref_.payload;
+		auto r1 = test();
 	}
 
 	DBJ_TEST_SPACE_CLOSE
